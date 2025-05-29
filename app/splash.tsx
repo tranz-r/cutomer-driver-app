@@ -13,16 +13,20 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View className="flex-1 bg-blue-600 justify-center items-center">
+    <View className="flex-1 bg-blue-600 justify-center items-center px-4 pt-12">
       <StatusBar style="light" />
 
-      <View className="items-center">
-        <View className="bg-white rounded-full p-6 mb-6">
-          <Text className="text-4xl font-bold text-blue-600">T</Text>
+      <View className="items-center w-full max-w-sm">
+        <View className="bg-white rounded-full p-4 mb-4">
+          <Text className="text-3xl font-bold text-blue-600">T</Text>
         </View>
 
-        <Text className="text-4xl font-bold text-white mb-2">Tranzr</Text>
-        <Text className="text-lg text-blue-100">Moving Made Simple</Text>
+        <Text className="text-3xl font-bold text-white mb-2 text-center">
+          Tranzr
+        </Text>
+        <Text className="text-base text-blue-100 text-center">
+          Moving Made Simple
+        </Text>
       </View>
     </View>
   );

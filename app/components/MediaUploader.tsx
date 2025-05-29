@@ -126,7 +126,7 @@ const MediaUploader = ({
   };
 
   return (
-    <View className="bg-white p-4 rounded-lg shadow-sm w-full">
+    <View className="bg-white p-4 rounded-lg shadow-sm w-full pt-4">
       <Text className="text-lg font-semibold text-center mb-2">
         Upload Media
       </Text>
@@ -182,27 +182,28 @@ const MediaUploader = ({
               <View key={item.id} className="mr-3 relative">
                 <Image
                   source={{ uri: item.uri }}
-                  className="w-20 h-20 rounded-md"
+                  className="w-24 h-24 rounded-md"
                 />
                 {item.type === "video" && (
                   <BlurView
                     intensity={30}
-                    className="absolute bottom-0 left-0 right-0 py-1 items-center"
+                    className="absolute bottom-0 left-0 right-0 py-1 items-center rounded-b-md"
                   >
                     <Video size={16} color="#ffffff" />
                   </BlurView>
                 )}
                 <TouchableOpacity
-                  className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1"
+                  className="absolute -top-1 -right-1 bg-red-500 rounded-full p-1.5 shadow-lg"
                   onPress={() => removeMedia(item.id)}
                   disabled={isProcessing}
+                  style={{ zIndex: 10 }}
                 >
-                  <X size={12} color="#ffffff" />
+                  <X size={14} color="#ffffff" />
                 </TouchableOpacity>
               </View>
             ))}
             <TouchableOpacity
-              className="w-20 h-20 bg-gray-100 rounded-md items-center justify-center"
+              className="w-24 h-24 bg-gray-100 rounded-md items-center justify-center"
               onPress={pickMedia}
               disabled={isProcessing}
             >
@@ -210,8 +211,8 @@ const MediaUploader = ({
             </TouchableOpacity>
           </ScrollView>
         ) : (
-          <View className="h-20 bg-gray-50 rounded-md items-center justify-center">
-            <Text className="text-gray-400">No media uploaded yet</Text>
+          <View className="h-24 bg-gray-50 rounded-md items-center justify-center">
+            <Text className="text-gray-400 text-sm">No media uploaded yet</Text>
           </View>
         )}
       </View>

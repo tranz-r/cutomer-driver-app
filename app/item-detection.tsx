@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ChevronRight } from "lucide-react-native";
+import { router } from "expo-router";
 import MediaUploader from "./components/MediaUploader";
 import DetectedItemsList from "./components/DetectedItemsList";
 import ProcessingIndicator from "./components/ProcessingIndicator";
@@ -67,19 +68,40 @@ export default function ItemDetectionScreen() {
     }
   };
 
+  const handleContinueToLocation = () => {
+    // Navigate to van selection with detected items data
+    console.log("Navigating to van selection...");
+    router.push("/van-selection");
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white pt-4">
       <StatusBar style="dark" />
 
-      <ScrollView className="flex-1">
-        <View className="px-4 py-6">
-          <Text className="text-3xl font-bold text-gray-800 mb-2">
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-4">
+          <Text className="text-2xl font-bold text-gray-800 mb-2">
             Item Detection
           </Text>
-          <Text className="text-base text-gray-600 mb-6">
+          <Text className="text-sm text-gray-600 mb-4">
             Upload photos or videos of items you want to move and get an instant
             quote.
           </Text>
+
+          {/* Skip Option */}
+          <View className="bg-blue-50 rounded-lg p-4 mb-4">
+            <Text className="text-sm font-medium text-blue-800 mb-2">
+              Already know your move size?
+            </Text>
+            <TouchableOpacity
+              className="bg-orange-500 py-2 px-4 rounded-md"
+              onPress={() => router.push("/van-selection")}
+            >
+              <Text className="text-white text-center text-sm font-medium">
+                Skip to Van and Driver Selection
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           <MediaUploader
             onMediaCaptured={handleMediaCaptured}
@@ -114,9 +136,12 @@ export default function ItemDetectionScreen() {
             <View className="mt-6">
               <DetectedItemsList />
 
-              <TouchableOpacity className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center">
+              <TouchableOpacity
+                className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center"
+                onPress={handleContinueToLocation}
+              >
                 <Text className="text-white text-center font-semibold text-lg mr-2">
-                  Continue to Location
+                  Continue to Van Selection
                 </Text>
                 <ChevronRight size={20} color="white" />
               </TouchableOpacity>

@@ -27,68 +27,68 @@ export default function LandingScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white pt-4">
       <StatusBar style="dark" />
 
-      <ScrollView className="flex-1">
-        <View className="px-6 py-8">
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-6">
           {/* Header */}
-          <View className="items-center mb-8">
-            <View className="bg-blue-600 rounded-full p-4 mb-4">
-              <Text className="text-2xl font-bold text-white">T</Text>
+          <View className="items-center mb-6">
+            <View className="bg-blue-600 rounded-full p-3 mb-3">
+              <Text className="text-xl font-bold text-white">T</Text>
             </View>
-            <Text className="text-3xl font-bold text-gray-800 mb-2">
+            <Text className="text-2xl font-bold text-gray-800 mb-2 text-center">
               Tranzr
             </Text>
-            <Text className="text-lg text-gray-600 text-center">
+            <Text className="text-base text-gray-600 text-center px-2">
               Professional moving services at your fingertips
             </Text>
           </View>
 
           {/* Services Overview */}
-          <View className="mb-8">
-            <Text className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          <View className="mb-6">
+            <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Why Choose Tranzr?
             </Text>
 
-            <View className="space-y-4">
-              <View className="flex-row items-center bg-blue-50 p-4 rounded-xl">
-                <View className="bg-blue-100 p-3 rounded-full mr-4">
-                  <Clock size={24} color="#3b82f6" />
+            <View className="space-y-3">
+              <View className="flex-row items-center bg-blue-50 p-3 rounded-xl">
+                <View className="bg-blue-100 p-2 rounded-full mr-3">
+                  <Clock size={20} color="#3b82f6" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-lg font-semibold text-gray-800">
+                  <Text className="text-base font-semibold text-gray-800">
                     Quick Quotes
                   </Text>
-                  <Text className="text-gray-600">
+                  <Text className="text-sm text-gray-600">
                     Get instant estimates using AI-powered item detection
                   </Text>
                 </View>
               </View>
 
-              <View className="flex-row items-center bg-green-50 p-4 rounded-xl">
-                <View className="bg-green-100 p-3 rounded-full mr-4">
-                  <Shield size={24} color="#10b981" />
+              <View className="flex-row items-center bg-green-50 p-3 rounded-xl">
+                <View className="bg-green-100 p-2 rounded-full mr-3">
+                  <Shield size={20} color="#10b981" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-lg font-semibold text-gray-800">
+                  <Text className="text-base font-semibold text-gray-800">
                     Verified Drivers
                   </Text>
-                  <Text className="text-gray-600">
+                  <Text className="text-sm text-gray-600">
                     All our drivers are background-checked and insured
                   </Text>
                 </View>
               </View>
 
-              <View className="flex-row items-center bg-purple-50 p-4 rounded-xl">
-                <View className="bg-purple-100 p-3 rounded-full mr-4">
-                  <Calendar size={24} color="#8b5cf6" />
+              <View className="flex-row items-center bg-purple-50 p-3 rounded-xl">
+                <View className="bg-purple-100 p-2 rounded-full mr-3">
+                  <Calendar size={20} color="#8b5cf6" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-lg font-semibold text-gray-800">
+                  <Text className="text-base font-semibold text-gray-800">
                     Easy Bookings
                   </Text>
-                  <Text className="text-gray-600">
+                  <Text className="text-sm text-gray-600">
                     Schedule your move with just a few taps
                   </Text>
                 </View>
@@ -98,25 +98,25 @@ export default function LandingScreen() {
 
           {/* Get Started Button */}
           <TouchableOpacity
-            className="bg-blue-600 py-4 px-6 rounded-xl flex-row justify-center items-center mb-6"
+            className="bg-blue-600 py-3 px-4 rounded-xl flex-row justify-center items-center mb-4"
             onPress={handleGetStarted}
           >
-            <Text className="text-white text-center font-semibold text-lg mr-2">
+            <Text className="text-white text-center font-semibold text-base mr-2">
               Get Moving Quote
             </Text>
-            <ArrowRight size={20} color="white" />
+            <ArrowRight size={18} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>
 
       {/* Driver option at bottom */}
-      <View className="border-t border-gray-200 py-4 px-6">
+      <View className="border-t border-gray-200 py-3 px-4">
         <TouchableOpacity
           className="flex-row items-center justify-center"
           onPress={handleDriverFlow}
         >
-          <Truck size={16} color="#6B7280" />
-          <Text className="text-gray-500 ml-2 text-sm">I'm a driver</Text>
+          <Truck size={14} color="#6B7280" />
+          <Text className="text-gray-500 ml-2 text-xs">I'm a driver</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
