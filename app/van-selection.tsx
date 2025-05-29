@@ -27,7 +27,7 @@ type DriverOption = {
 };
 
 export default function VanSelectionScreen() {
-  const [selectedVan, setSelectedVan] = useState<string | null>(null);
+  const [selectedVan, setSelectedVan] = useState<string | null>("large");
   const [selectedDrivers, setSelectedDrivers] = useState<string>("1");
 
   const vanTypes: VanType[] = [
@@ -49,7 +49,7 @@ export default function VanSelectionScreen() {
     },
     {
       id: "large",
-      name: "Large Van",
+      name: "Luton Van",
       capacity: "Up to 35m³",
       dimensions: "5.5m × 2.1m × 2.2m",
       price: "£85/hour",
@@ -96,7 +96,7 @@ export default function VanSelectionScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white pt-4">
+    <SafeAreaView className="flex-1 bg-white pt-12">
       <StatusBar style="dark" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -119,32 +119,65 @@ export default function VanSelectionScreen() {
                 className={`border rounded-lg p-4 mb-3 ${
                   selectedVan === van.id
                     ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    : van.id === "large"
+                      ? "border-gray-200 bg-white"
+                      : "border-gray-200 bg-gray-100"
                 }`}
-                onPress={() => setSelectedVan(van.id)}
+                onPress={() => van.id === "large" && setSelectedVan(van.id)}
+                disabled={van.id !== "large"}
               >
                 <View className="flex-row items-center justify-between mb-2">
                   <View className="flex-row items-center">
-                    <View className="bg-blue-100 p-2 rounded-full mr-3">
-                      <Truck size={20} color="#3b82f6" />
+                    <View
+                      className={`p-2 rounded-full mr-3 ${
+                        van.id === "large" ? "bg-blue-100" : "bg-gray-200"
+                      }`}
+                    >
+                      <Truck
+                        size={20}
+                        color={van.id === "large" ? "#3b82f6" : "#9ca3af"}
+                      />
                     </View>
                     <View>
-                      <Text className="text-base font-semibold text-gray-800">
+                      <Text
+                        className={`text-base font-semibold ${
+                          van.id === "large" ? "text-gray-800" : "text-gray-400"
+                        }`}
+                      >
                         {van.name}
+                        {van.id !== "large" && " (Unavailable)"}
                       </Text>
-                      <Text className="text-sm text-gray-600">
+                      <Text
+                        className={`text-sm ${
+                          van.id === "large" ? "text-gray-600" : "text-gray-400"
+                        }`}
+                      >
                         {van.capacity}
                       </Text>
                     </View>
                   </View>
-                  <Text className="text-lg font-bold text-blue-600">
+                  <Text
+                    className={`text-lg font-bold ${
+                      van.id === "large" ? "text-blue-600" : "text-gray-400"
+                    }`}
+                  >
                     {van.price}
                   </Text>
                 </View>
-                <Text className="text-xs text-gray-500 mb-1">
+                <Text
+                  className={`text-xs mb-1 ${
+                    van.id === "large" ? "text-gray-500" : "text-gray-400"
+                  }`}
+                >
                   Dimensions: {van.dimensions}
                 </Text>
-                <Text className="text-sm text-gray-600">{van.description}</Text>
+                <Text
+                  className={`text-sm ${
+                    van.id === "large" ? "text-gray-600" : "text-gray-400"
+                  }`}
+                >
+                  {van.description}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>

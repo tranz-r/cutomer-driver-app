@@ -75,7 +75,7 @@ export default function ItemDetectionScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white pt-4">
+    <SafeAreaView className="flex-1 bg-white pt-12">
       <StatusBar style="dark" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
