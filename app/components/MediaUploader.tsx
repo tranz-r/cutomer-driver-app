@@ -158,17 +158,6 @@ const MediaUploader = ({
           </View>
           <Text className="text-sm text-gray-700">Record Video</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          className="items-center"
-          onPress={pickMedia}
-          disabled={isProcessing}
-        >
-          <View className="bg-green-100 p-4 rounded-full mb-2">
-            <Upload size={24} color="#10b981" />
-          </View>
-          <Text className="text-sm text-gray-700">Upload</Text>
-        </TouchableOpacity>
       </View>
 
       {/* A4 paper reminder */}
