@@ -48,6 +48,8 @@ export default function RootLayout() {
           name="origin-destination"
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="date-time" options={{ headerShown: false }} />
+        <Stack.Screen name="summary" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />

@@ -72,7 +72,7 @@ export default function OriginDestinationScreen() {
 
   const handleContinue = () => {
     if (!origin.trim() || !destination.trim()) return;
-    // Navigate to booking confirmation with all data
+    // Navigate to date and time selection with all data
     console.log("Origin:", origin);
     console.log("Destination:", destination);
     console.log("Origin Floor:", originFloor);
@@ -80,12 +80,13 @@ export default function OriginDestinationScreen() {
     console.log("Origin Elevator:", originElevator);
     console.log("Destination Elevator:", destinationElevator);
     console.log("Extra Cost:", calculateExtraCost());
-    // router.push('/booking-confirmation');
+    router.push("/date-time");
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="dark" />
+      <StatusBar style="light" backgroundColor="#1f2937" />
+      <View className="bg-gray-800 h-12" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-4 pt-16">
@@ -305,7 +306,7 @@ export default function OriginDestinationScreen() {
             disabled={!origin.trim() || !destination.trim()}
           >
             <Text className="text-white text-center font-semibold text-lg mr-2">
-              Continue to Booking
+              Continue to Date & Time
             </Text>
             <ChevronRight size={20} color="white" />
           </TouchableOpacity>

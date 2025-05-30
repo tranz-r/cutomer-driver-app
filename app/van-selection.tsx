@@ -96,7 +96,8 @@ export default function VanSelectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="dark" />
+      <StatusBar style="light" backgroundColor="#1f2937" />
+      <View className="bg-gray-800 h-12" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 py-4 pt-16">
