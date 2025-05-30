@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ChevronRight, Truck, Users, Package } from "lucide-react-native";
+import { ChevronRight, Truck, Users } from "lucide-react-native";
 import { router } from "expo-router";
 
 type VanType = {
@@ -88,182 +88,209 @@ export default function VanSelectionScreen() {
 
   const handleContinueToLocation = () => {
     if (!selectedVan) return;
-    // Navigate to location workflow with selected options
+    // Navigate to origin-destination with selected options
     console.log("Selected van:", selectedVan);
     console.log("Selected drivers:", selectedDrivers);
-    // TODO: Pass data to location screen
-    // router.push('/location-workflow');
+    router.push("/origin-destination");
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white pt-12">
+    <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
+        <View className="px-6 py-4 pt-16">
+          <Text className="text-3xl font-bold text-gray-900 mb-3">
             Select Van & Crew
           </Text>
-          <Text className="text-sm text-gray-600 mb-6">
+          <Text className="text-base text-gray-600 mb-8 leading-relaxed">
             Choose the right van size and crew for your move.
           </Text>
 
           {/* Van Selection */}
-          <View className="mb-6">
-            <Text className="text-lg font-semibold text-gray-800 mb-3">
+          <View className="mb-8">
+            <Text className="text-xl font-bold text-gray-900 mb-4">
               Choose Van Type
             </Text>
-            {vanTypes.map((van) => (
-              <TouchableOpacity
-                key={van.id}
-                className={`border rounded-lg p-4 mb-3 ${
-                  selectedVan === van.id
-                    ? "border-blue-500 bg-blue-50"
-                    : van.id === "large"
-                      ? "border-gray-200 bg-white"
-                      : "border-gray-200 bg-gray-100"
-                }`}
-                onPress={() => van.id === "large" && setSelectedVan(van.id)}
-                disabled={van.id !== "large"}
-              >
-                <View className="flex-row items-center justify-between mb-2">
-                  <View className="flex-row items-center">
-                    <View
-                      className={`p-2 rounded-full mr-3 ${
-                        van.id === "large" ? "bg-blue-100" : "bg-gray-200"
-                      }`}
-                    >
-                      <Truck
-                        size={20}
-                        color={van.id === "large" ? "#3b82f6" : "#9ca3af"}
-                      />
+            <View className="space-y-3">
+              {vanTypes.map((van) => (
+                <TouchableOpacity
+                  key={van.id}
+                  className={`rounded-xl p-5 shadow-sm border-2 ${
+                    selectedVan === van.id
+                      ? "border-blue-500 bg-blue-50"
+                      : van.id === "large"
+                        ? "border-gray-200 bg-white"
+                        : "border-gray-100 bg-gray-50"
+                  } ${van.id !== "large" ? "opacity-50" : ""}`}
+                  onPress={() => van.id === "large" && setSelectedVan(van.id)}
+                  disabled={van.id !== "large"}
+                  style={{ marginBottom: 12 }}
+                >
+                  <View className="flex-row items-start justify-between">
+                    <View className="flex-row items-start flex-1">
+                      <View
+                        className={`p-3 rounded-xl mr-4 ${
+                          van.id === "large" ? "bg-blue-100" : "bg-gray-200"
+                        }`}
+                      >
+                        <Truck
+                          size={24}
+                          color={van.id === "large" ? "#3b82f6" : "#9ca3af"}
+                        />
+                      </View>
+                      <View className="flex-1">
+                        <View className="flex-row items-center mb-1">
+                          <Text
+                            className={`text-lg font-bold ${
+                              van.id === "large"
+                                ? "text-gray-900"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            {van.name}
+                          </Text>
+                          {van.id !== "large" && (
+                            <View className="ml-3 bg-red-100 px-3 py-1 rounded-full">
+                              <Text className="text-red-600 text-xs font-semibold">
+                                Unavailable
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text
+                          className={`text-base font-medium mb-2 ${
+                            van.id === "large"
+                              ? "text-blue-600"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          {van.capacity}
+                        </Text>
+                        <Text
+                          className={`text-sm mb-1 ${
+                            van.id === "large"
+                              ? "text-gray-500"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          Dimensions: {van.dimensions}
+                        </Text>
+                        <Text
+                          className={`text-sm ${
+                            van.id === "large"
+                              ? "text-gray-600"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          {van.description}
+                        </Text>
+                      </View>
                     </View>
-                    <View>
+                    <View className="ml-4">
                       <Text
-                        className={`text-base font-semibold ${
-                          van.id === "large" ? "text-gray-800" : "text-gray-400"
+                        className={`text-xl font-bold ${
+                          van.id === "large" ? "text-blue-600" : "text-gray-400"
                         }`}
                       >
-                        {van.name}
-                        {van.id !== "large" && " (Unavailable)"}
-                      </Text>
-                      <Text
-                        className={`text-sm ${
-                          van.id === "large" ? "text-gray-600" : "text-gray-400"
-                        }`}
-                      >
-                        {van.capacity}
+                        {van.price}
                       </Text>
                     </View>
                   </View>
-                  <Text
-                    className={`text-lg font-bold ${
-                      van.id === "large" ? "text-blue-600" : "text-gray-400"
-                    }`}
-                  >
-                    {van.price}
-                  </Text>
-                </View>
-                <Text
-                  className={`text-xs mb-1 ${
-                    van.id === "large" ? "text-gray-500" : "text-gray-400"
-                  }`}
-                >
-                  Dimensions: {van.dimensions}
-                </Text>
-                <Text
-                  className={`text-sm ${
-                    van.id === "large" ? "text-gray-600" : "text-gray-400"
-                  }`}
-                >
-                  {van.description}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           {/* Driver Selection */}
-          <View className="mb-6">
-            <Text className="text-lg font-semibold text-gray-800 mb-3">
+          <View className="mb-8">
+            <Text className="text-xl font-bold text-gray-900 mb-4">
               Choose Crew Size
             </Text>
-            {driverOptions.map((option) => (
-              <TouchableOpacity
-                key={option.id}
-                className={`border rounded-lg p-4 mb-3 ${
-                  selectedDrivers === option.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white"
-                }`}
-                onPress={() => setSelectedDrivers(option.id)}
-              >
-                <View className="flex-row items-center justify-between mb-2">
-                  <View className="flex-row items-center">
-                    <View className="bg-green-100 p-2 rounded-full mr-3">
-                      <Users size={20} color="#10b981" />
+            <View className="space-y-3">
+              {driverOptions.map((option) => (
+                <TouchableOpacity
+                  key={option.id}
+                  className={`rounded-xl p-5 shadow-sm border-2 ${
+                    selectedDrivers === option.id
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 bg-white"
+                  }`}
+                  onPress={() => setSelectedDrivers(option.id)}
+                  style={{ marginBottom: 12 }}
+                >
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-row items-center flex-1">
+                      <View className="bg-green-100 p-3 rounded-xl mr-4">
+                        <Users size={24} color="#10b981" />
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-lg font-bold text-gray-900 mb-1">
+                          {option.count} Person{option.count > 1 ? "s" : ""}
+                        </Text>
+                        <Text className="text-sm text-gray-600 leading-relaxed">
+                          {option.description}
+                        </Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text className="text-base font-semibold text-gray-800">
-                        {option.count} Person{option.count > 1 ? "s" : ""}
-                      </Text>
-                      <Text className="text-sm text-gray-600">
-                        {option.description}
+                    <View className="ml-4">
+                      <Text className="text-base font-bold text-green-600">
+                        {option.additionalCost}
                       </Text>
                     </View>
                   </View>
-                  <Text className="text-sm font-medium text-green-600">
-                    {option.additionalCost}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           {/* Summary */}
           {selectedVan && (
-            <View className="bg-gray-50 rounded-lg p-4 mb-6">
-              <Text className="text-base font-semibold text-gray-800 mb-2">
+            <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8 border border-blue-100">
+              <Text className="text-xl font-bold text-gray-900 mb-4">
                 Your Selection
               </Text>
-              <View className="flex-row justify-between items-center mb-1">
-                <Text className="text-sm text-gray-600">Van:</Text>
-                <Text className="text-sm font-medium text-gray-800">
-                  {vanTypes.find((v) => v.id === selectedVan)?.name}
-                </Text>
-              </View>
-              <View className="flex-row justify-between items-center mb-1">
-                <Text className="text-sm text-gray-600">Crew:</Text>
-                <Text className="text-sm font-medium text-gray-800">
-                  {driverOptions.find((d) => d.id === selectedDrivers)?.count}{" "}
-                  person{selectedDrivers !== "1" ? "s" : ""}
-                </Text>
-              </View>
-              <View className="border-t border-gray-200 mt-2 pt-2">
+              <View className="space-y-3">
                 <View className="flex-row justify-between items-center">
-                  <Text className="text-base font-semibold text-gray-800">
-                    Estimated Rate:
+                  <Text className="text-base text-gray-600">Van:</Text>
+                  <Text className="text-base font-semibold text-gray-900">
+                    {vanTypes.find((v) => v.id === selectedVan)?.name}
                   </Text>
-                  <Text className="text-base font-bold text-blue-600">
-                    {vanTypes.find((v) => v.id === selectedVan)?.price}
-                    {selectedDrivers !== "1" &&
-                      ` ${driverOptions.find((d) => d.id === selectedDrivers)?.additionalCost}`}
+                </View>
+                <View className="flex-row justify-between items-center">
+                  <Text className="text-base text-gray-600">Crew:</Text>
+                  <Text className="text-base font-semibold text-gray-900">
+                    {driverOptions.find((d) => d.id === selectedDrivers)?.count}{" "}
+                    person{selectedDrivers !== "1" ? "s" : ""}
                   </Text>
+                </View>
+                <View className="border-t border-blue-200 mt-4 pt-4">
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-lg font-bold text-gray-900">
+                      Estimated Rate:
+                    </Text>
+                    <Text className="text-lg font-bold text-blue-600">
+                      {vanTypes.find((v) => v.id === selectedVan)?.price}
+                      {selectedDrivers !== "1" &&
+                        ` ${driverOptions.find((d) => d.id === selectedDrivers)?.additionalCost}`}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           )}
 
           <TouchableOpacity
-            className={`py-4 px-6 rounded-xl flex-row justify-center items-center ${
+            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
               selectedVan ? "bg-blue-600" : "bg-gray-300"
             }`}
             onPress={handleContinueToLocation}
             disabled={!selectedVan}
           >
-            <Text className="text-white text-center font-semibold text-lg mr-2">
-              Continue to Location
+            <Text className="text-white text-center font-bold text-lg mr-3">
+              Continue to Origin & Destination
             </Text>
-            <ChevronRight size={20} color="white" />
+            <ChevronRight size={22} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -68,18 +68,18 @@ export default function ItemDetectionScreen() {
     }
   };
 
-  const handleContinueToLocation = () => {
-    // Navigate to van selection with detected items data
-    console.log("Navigating to van selection...");
+  const handleContinueToVanSelection = () => {
+    // Navigate to van-selection with detected items data
+    console.log("Navigating to van-selection...");
     router.push("/van-selection");
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white pt-12">
+    <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4">
+        <View className="px-4 py-4 pt-16">
           <Text className="text-2xl font-bold text-gray-800 mb-2">
             Item Detection
           </Text>
@@ -138,10 +138,10 @@ export default function ItemDetectionScreen() {
 
               <TouchableOpacity
                 className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center"
-                onPress={handleContinueToLocation}
+                onPress={handleContinueToVanSelection}
               >
                 <Text className="text-white text-center font-semibold text-lg mr-2">
-                  Continue to Van Selection
+                  Continue to Van and Driver Selection
                 </Text>
                 <ChevronRight size={20} color="white" />
               </TouchableOpacity>

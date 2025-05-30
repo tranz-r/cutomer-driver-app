@@ -27,11 +27,11 @@ export default function LandingScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white pt-12">
+    <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-6">
+        <View className="px-4 py-6 pt-16">
           {/* Header */}
           <View className="items-center mb-6">
             <View className="bg-blue-600 rounded-full p-3 mb-3">
@@ -109,14 +109,16 @@ export default function LandingScreen() {
         </View>
       </ScrollView>
 
-      {/* Driver option at bottom */}
-      <View className="border-t border-gray-200 py-3 px-4">
+      {/* Driver option - moved to more visible location */}
+      <View className="border-t border-gray-200 py-4 px-4 bg-gray-50">
         <TouchableOpacity
-          className="flex-row items-center justify-center"
+          className="flex-row items-center justify-center py-3 px-4 bg-white rounded-lg border border-gray-200"
           onPress={handleDriverFlow}
         >
-          <Truck size={14} color="#6B7280" />
-          <Text className="text-gray-500 ml-2 text-xs">I'm a driver</Text>
+          <Truck size={18} color="#4B5563" />
+          <Text className="text-gray-700 ml-2 text-sm font-medium">
+            I'm a driver - Join our team
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

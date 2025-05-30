@@ -44,6 +44,10 @@ export default function RootLayout() {
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="item-detection" options={{ headerShown: false }} />
         <Stack.Screen name="van-selection" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="origin-destination"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
