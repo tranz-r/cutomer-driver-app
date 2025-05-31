@@ -93,13 +93,13 @@ export default function ItemDetectionScreen() {
         <View className="px-4 py-6">
           {!showMediaUpload && (
             <View>
-              <Text className="text-lg font-semibold text-gray-800 mb-4 text-center">
+              <Text className="text-lg font-semibold text-gray-800 mb-6 text-center">
                 Do you know your move size?
               </Text>
 
-              <View className="space-y-4 mb-6">
+              <View className="mb-6">
                 <TouchableOpacity
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6 rounded-xl shadow-lg"
+                  className="bg-blue-600 py-4 px-6 rounded-xl shadow-lg mb-4"
                   onPress={() => router.push("/van-selection")}
                 >
                   <Text className="text-white text-center font-semibold text-lg">
@@ -111,7 +111,7 @@ export default function ItemDetectionScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 py-4 px-6 rounded-xl shadow-lg"
+                  className="bg-emerald-600 py-4 px-6 rounded-xl shadow-lg"
                   onPress={() => setShowMediaUpload(true)}
                 >
                   <Text className="text-white text-center font-semibold text-lg">
@@ -125,8 +125,10 @@ export default function ItemDetectionScreen() {
 
               <View className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <Text className="text-amber-800 text-sm text-center font-medium">
-                  💡 Smart Detection provides more accurate quotes by analyzing
-                  your items
+                  💡 Tranzr Smart Detection uses AI to give you an inventory and
+                  estimate your items' volume from photos and videos. Review,
+                  adjust, or manually add items to get faster, more accurate
+                  quotes
                 </Text>
               </View>
             </View>

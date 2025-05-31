@@ -178,20 +178,6 @@ export default function VanSelectionScreen() {
                           >
                             {van.name}
                           </Text>
-                          {van.id === "large" && (
-                            <View className="ml-3 bg-green-100 px-3 py-1 rounded-full">
-                              <Text className="text-green-600 text-xs font-semibold">
-                                Double-tap for details
-                              </Text>
-                            </View>
-                          )}
-                          {van.id !== "large" && (
-                            <View className="ml-3 bg-red-100 px-3 py-1 rounded-full">
-                              <Text className="text-red-600 text-xs font-semibold">
-                                Unavailable
-                              </Text>
-                            </View>
-                          )}
                         </View>
                         <Text
                           className={`text-base font-medium mb-2 ${
@@ -212,7 +198,7 @@ export default function VanSelectionScreen() {
                           Dimensions: {van.dimensions}
                         </Text>
                         <Text
-                          className={`text-sm ${
+                          className={`text-sm mb-3 ${
                             van.id === "large"
                               ? "text-gray-600"
                               : "text-gray-400"
@@ -220,6 +206,31 @@ export default function VanSelectionScreen() {
                         >
                           {van.description}
                         </Text>
+
+                        {/* Status and action info moved to bottom */}
+                        <View className="flex-row items-center justify-between">
+                          {van.id === "large" ? (
+                            <View className="bg-green-100 px-3 py-1 rounded-full">
+                              <Text className="text-green-600 text-xs font-semibold">
+                                Available
+                              </Text>
+                            </View>
+                          ) : (
+                            <View className="bg-red-100 px-3 py-1 rounded-full">
+                              <Text className="text-red-600 text-xs font-semibold">
+                                Unavailable
+                              </Text>
+                            </View>
+                          )}
+
+                          {van.id === "large" && (
+                            <View className="bg-blue-100 px-3 py-1 rounded-full">
+                              <Text className="text-blue-600 text-xs font-semibold">
+                                Double-tap for details
+                              </Text>
+                            </View>
+                          )}
+                        </View>
                       </View>
                     </View>
                     <View className="ml-4">
@@ -335,13 +346,13 @@ export default function VanSelectionScreen() {
       <Modal
         visible={showVanModal}
         transparent={true}
-        animationType="fade"
+        animationType="slide"
         onRequestClose={() => setShowVanModal(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/80 px-4">
-          <View className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-5/6">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-2xl p-6 max-h-5/6">
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-3xl font-bold text-gray-900">
+              <Text className="text-2xl font-bold text-gray-900">
                 {selectedVanDetails?.name}
               </Text>
               <TouchableOpacity
@@ -352,19 +363,19 @@ export default function VanSelectionScreen() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
               <View className="mb-6">
                 <Image
                   source={{
                     uri: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
                   }}
-                  className="w-full h-56 rounded-xl"
+                  className="w-full h-48 rounded-xl"
                   resizeMode="cover"
                 />
               </View>
 
-              <View className="space-y-6 mb-6">
-                <View className="bg-blue-50 p-5 rounded-xl">
+              <View className="space-y-4 mb-6">
+                <View className="bg-blue-50 p-4 rounded-xl">
                   <Text className="text-blue-800 font-semibold text-lg mb-2">
                     About This Van
                   </Text>
@@ -405,11 +416,11 @@ export default function VanSelectionScreen() {
                   </View>
                 </View>
 
-                <View className="bg-green-50 p-5 rounded-xl">
+                <View className="bg-green-50 p-4 rounded-xl">
                   <Text className="text-green-800 font-semibold text-lg mb-3">
                     Van Features
                   </Text>
-                  <View className="space-y-2">
+                  <View className="space-y-1">
                     <Text className="text-green-700 text-base">
                       • Tail lift for easy loading
                     </Text>
@@ -428,7 +439,7 @@ export default function VanSelectionScreen() {
                   </View>
                 </View>
 
-                <View className="bg-amber-50 p-5 rounded-xl">
+                <View className="bg-amber-50 p-4 rounded-xl">
                   <Text className="text-amber-800 font-semibold text-lg mb-2">
                     What Can Fit?
                   </Text>
@@ -441,19 +452,21 @@ export default function VanSelectionScreen() {
               </View>
             </ScrollView>
 
-            <TouchableOpacity
-              className="bg-blue-600 py-4 px-6 rounded-xl mt-4"
-              onPress={() => {
-                setShowVanModal(false);
-                if (selectedVanDetails) {
-                  setSelectedVan(selectedVanDetails.id);
-                }
-              }}
-            >
-              <Text className="text-white text-center font-semibold text-lg">
-                Select This Van
-              </Text>
-            </TouchableOpacity>
+            <View className="pt-4 border-t border-gray-200">
+              <TouchableOpacity
+                className="bg-blue-600 py-4 px-6 rounded-xl"
+                onPress={() => {
+                  setShowVanModal(false);
+                  if (selectedVanDetails) {
+                    setSelectedVan(selectedVanDetails.id);
+                  }
+                }}
+              >
+                <Text className="text-white text-center font-semibold text-lg">
+                  Select This Van
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
