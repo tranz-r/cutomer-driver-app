@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Modal,
+} from "react-native";
 import {
   Camera,
   Image as ImageIcon,
@@ -7,6 +14,8 @@ import {
   Upload,
   Plus,
   X,
+  Play,
+  Eye,
 } from "lucide-react-native";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
@@ -39,6 +48,8 @@ const MediaUploader = ({
       id: "2",
     },
   ]);
+  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   const takePhoto = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -125,97 +136,236 @@ const MediaUploader = ({
     onMediaCaptured(updatedMedia);
   };
 
+  const viewMedia = (media: MediaItem) => {
+    setSelectedMedia(media);
+    setShowMediaModal(true);
+  };
+
   return (
-    <View className="bg-white p-4 rounded-lg shadow-sm w-full pt-4">
-      <Text className="text-lg font-semibold text-center mb-2">
-        Upload Media
-      </Text>
-      <Text className="text-sm text-gray-500 text-center mb-4">
-        Take photos or videos of items to be moved. Include an A4 paper for
-        scale.
-      </Text>
+    <View className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl shadow-lg border border-blue-100 w-full">
+      {/* Header Section */}
+      <View className="items-center mb-6">
+        <View className="bg-blue-100 p-4 rounded-full mb-3">
+          <Camera size={32} color="#3b82f6" />
+        </View>
+        <Text className="text-2xl font-bold text-gray-900 mb-2">
+          Capture Your Items
+        </Text>
+        <Text className="text-base text-gray-600 text-center leading-relaxed">
+          Take clear photos or videos of items to be moved.
+          {"\n"}Include an A4 paper for accurate scale reference.
+        </Text>
+      </View>
 
       {/* Media capture buttons */}
-      <View className="flex-row justify-around mb-6">
+      <View className="flex-row justify-center space-x-6 mb-8">
         <TouchableOpacity
-          className="items-center"
+          className="items-center flex-1 max-w-32"
           onPress={takePhoto}
           disabled={isProcessing}
         >
-          <View className="bg-blue-100 p-4 rounded-full mb-2">
-            <Camera size={24} color="#3b82f6" />
+          <View className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-2xl mb-3 shadow-lg">
+            <Camera size={28} color="#ffffff" />
           </View>
-          <Text className="text-sm text-gray-700">Take Photo</Text>
+          <Text className="text-base font-semibold text-gray-800">
+            Take Photo
+          </Text>
+          <Text className="text-sm text-gray-500 text-center mt-1">
+            Capture items
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="items-center"
+          className="items-center flex-1 max-w-32"
           onPress={recordVideo}
           disabled={isProcessing}
         >
-          <View className="bg-red-100 p-4 rounded-full mb-2">
-            <Video size={24} color="#ef4444" />
+          <View className="bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-2xl mb-3 shadow-lg">
+            <Video size={28} color="#ffffff" />
           </View>
-          <Text className="text-sm text-gray-700">Record Video</Text>
+          <Text className="text-base font-semibold text-gray-800">
+            Record Video
+          </Text>
+          <Text className="text-sm text-gray-500 text-center mt-1">
+            Show details
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="items-center flex-1 max-w-32"
+          onPress={pickMedia}
+          disabled={isProcessing}
+        >
+          <View className="bg-gradient-to-br from-purple-500 to-purple-600 p-6 rounded-2xl mb-3 shadow-lg">
+            <Upload size={28} color="#ffffff" />
+          </View>
+          <Text className="text-base font-semibold text-gray-800">Upload</Text>
+          <Text className="text-sm text-gray-500 text-center mt-1">
+            From gallery
+          </Text>
         </TouchableOpacity>
       </View>
 
       {/* A4 paper reminder */}
-      <View className="bg-yellow-50 p-3 rounded-md mb-4 flex-row items-center">
-        <ImageIcon size={20} color="#d97706" />
-        <Text className="text-yellow-700 ml-2 text-sm">
-          Remember to include an A4 paper in at least one photo for scale
-          reference
-        </Text>
+      <View className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl mb-6 border border-amber-200">
+        <View className="flex-row items-center">
+          <View className="bg-amber-100 p-2 rounded-full mr-3">
+            <ImageIcon size={20} color="#d97706" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-amber-800 font-semibold text-base mb-1">
+              📄 Scale Reference Tip
+            </Text>
+            <Text className="text-amber-700 text-sm leading-relaxed">
+              Place an A4 paper next to items in at least one photo for accurate
+              size detection
+            </Text>
+          </View>
+        </View>
       </View>
 
       {/* Media preview section */}
       <View className="mb-4">
-        <Text className="text-md font-medium mb-2">Media Preview</Text>
+        <View className="flex-row items-center justify-between mb-4">
+          <Text className="text-xl font-bold text-gray-900">Media Preview</Text>
+          <View className="bg-blue-100 px-3 py-1 rounded-full">
+            <Text className="text-blue-700 font-semibold text-sm">
+              {mediaItems.length} item{mediaItems.length !== 1 ? "s" : ""}
+            </Text>
+          </View>
+        </View>
+
         {mediaItems.length > 0 ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             className="flex-row"
+            contentContainerStyle={{ paddingHorizontal: 4 }}
           >
             {mediaItems.map((item) => (
-              <View key={item.id} className="mr-3 relative">
-                <Image
-                  source={{ uri: item.uri }}
-                  className="w-24 h-24 rounded-md"
-                />
-                {item.type === "video" && (
-                  <BlurView
-                    intensity={30}
-                    className="absolute bottom-0 left-0 right-0 py-1 items-center rounded-b-md"
+              <TouchableOpacity
+                key={item.id}
+                className="mr-4 relative"
+                onPress={() => viewMedia(item)}
+                disabled={isProcessing}
+              >
+                <View className="relative">
+                  <Image
+                    source={{ uri: item.uri }}
+                    className="w-28 h-28 rounded-xl shadow-md"
+                    resizeMode="cover"
+                  />
+
+                  {/* Media type indicator */}
+                  <View className="absolute top-2 left-2">
+                    {item.type === "video" ? (
+                      <View className="bg-red-500 p-1.5 rounded-full">
+                        <Video size={12} color="#ffffff" />
+                      </View>
+                    ) : (
+                      <View className="bg-blue-500 p-1.5 rounded-full">
+                        <ImageIcon size={12} color="#ffffff" />
+                      </View>
+                    )}
+                  </View>
+
+                  {/* View overlay */}
+                  <View className="absolute inset-0 bg-black/20 rounded-xl items-center justify-center">
+                    <View className="bg-white/90 p-2 rounded-full">
+                      <Eye size={16} color="#374151" />
+                    </View>
+                  </View>
+
+                  {/* Remove button */}
+                  <TouchableOpacity
+                    className="absolute -top-2 -right-2 bg-red-500 rounded-full p-2 shadow-lg"
+                    onPress={() => removeMedia(item.id)}
+                    disabled={isProcessing}
+                    style={{ zIndex: 10 }}
                   >
-                    <Video size={16} color="#ffffff" />
-                  </BlurView>
-                )}
-                <TouchableOpacity
-                  className="absolute -top-1 -right-1 bg-red-500 rounded-full p-1.5 shadow-lg"
-                  onPress={() => removeMedia(item.id)}
-                  disabled={isProcessing}
-                  style={{ zIndex: 10 }}
-                >
-                  <X size={14} color="#ffffff" />
-                </TouchableOpacity>
-              </View>
+                    <X size={12} color="#ffffff" />
+                  </TouchableOpacity>
+                </View>
+
+                <Text className="text-center text-xs text-gray-600 mt-2 font-medium">
+                  Tap to view
+                </Text>
+              </TouchableOpacity>
             ))}
+
+            {/* Add more button */}
             <TouchableOpacity
-              className="w-24 h-24 bg-gray-100 rounded-md items-center justify-center"
+              className="w-28 h-28 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl items-center justify-center border-2 border-dashed border-gray-300"
               onPress={pickMedia}
               disabled={isProcessing}
             >
-              <Plus size={24} color="#9ca3af" />
+              <Plus size={24} color="#6b7280" />
+              <Text className="text-gray-600 text-xs font-medium mt-1">
+                Add More
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         ) : (
-          <View className="h-24 bg-gray-50 rounded-md items-center justify-center">
-            <Text className="text-gray-400 text-sm">No media uploaded yet</Text>
+          <View className="h-32 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl items-center justify-center border-2 border-dashed border-gray-300">
+            <ImageIcon size={32} color="#9ca3af" />
+            <Text className="text-gray-500 text-base font-medium mt-2">
+              No media uploaded yet
+            </Text>
+            <Text className="text-gray-400 text-sm">
+              Start by taking a photo or video
+            </Text>
           </View>
         )}
       </View>
+
+      {/* Media Viewer Modal */}
+      <Modal
+        visible={showMediaModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowMediaModal(false)}
+      >
+        <View className="flex-1 bg-black/90 justify-center items-center">
+          <View className="w-full h-full relative">
+            {selectedMedia && (
+              <>
+                <Image
+                  source={{ uri: selectedMedia.uri }}
+                  className="w-full h-full"
+                  resizeMode="contain"
+                />
+
+                {/* Close button */}
+                <TouchableOpacity
+                  className="absolute top-16 right-6 bg-black/50 p-3 rounded-full"
+                  onPress={() => setShowMediaModal(false)}
+                >
+                  <X size={24} color="#ffffff" />
+                </TouchableOpacity>
+
+                {/* Media info */}
+                <View className="absolute bottom-16 left-6 right-6">
+                  <View className="bg-black/70 p-4 rounded-xl">
+                    <View className="flex-row items-center">
+                      {selectedMedia.type === "video" ? (
+                        <Video size={20} color="#ffffff" />
+                      ) : (
+                        <ImageIcon size={20} color="#ffffff" />
+                      )}
+                      <Text className="text-white font-semibold text-lg ml-2">
+                        {selectedMedia.type === "video" ? "Video" : "Photo"}
+                      </Text>
+                    </View>
+                    <Text className="text-white/80 text-sm mt-1">
+                      Tap outside to close
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

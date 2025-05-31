@@ -7,7 +7,7 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import { Trash2, Edit, Plus, RefreshCw, X } from "lucide-react-native";
+import { Trash2, Edit, Plus, RefreshCw, X, Package } from "lucide-react-native";
 
 type Item = {
   id: string;
@@ -28,7 +28,7 @@ type DetectedItemsListProps = {
 };
 
 const DetectedItemsList = ({
-  items = [
+  items: initialItems = [
     { id: "1", name: "Sofa", height: 85, width: 200, length: 90, volume: 1.53 },
     {
       id: "2",
@@ -53,6 +53,7 @@ const DetectedItemsList = ({
   onRecalculate = () => {},
   isVisible = true,
 }: DetectedItemsListProps) => {
+  const [items, setItems] = useState<Item[]>(initialItems);
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [newItem, setNewItem] = useState<{
     name: string;
@@ -61,7 +62,6 @@ const DetectedItemsList = ({
     length: string;
   }>({ name: "", height: "", width: "", length: "" });
   const [showAddModal, setShowAddModal] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
   if (!isVisible) return null;
@@ -85,38 +85,48 @@ const DetectedItemsList = ({
         length,
         volume,
       };
+      const updatedItems = [...items, newItemData];
+      setItems(updatedItems);
       onAddItem(newItemData);
       setNewItem({ name: "", height: "", width: "", length: "" });
       setShowAddModal(false);
-      setHasChanges(true);
     }
   };
 
   const handleUpdateItem = (item: Item) => {
+    const updatedItems = items.map((i) => (i.id === item.id ? item : i));
+    setItems(updatedItems);
     onUpdateItem(item);
     setIsEditing(null);
-    setHasChanges(true);
   };
 
   const handleRemoveItem = (id: string) => {
+    const updatedItems = items.filter((item) => item.id !== id);
+    setItems(updatedItems);
     onRemoveItem(id);
-    setHasChanges(true);
-  };
-
-  const handleRecalculate = () => {
-    onRecalculate();
-    setHasChanges(false);
   };
 
   return (
-    <View className="bg-white p-4 rounded-lg shadow-md">
+    <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-xl font-bold">Detected Items</Text>
+        <View className="flex-row items-center">
+          <View className="bg-blue-100 p-2 rounded-full mr-3">
+            <Package size={20} color="#3b82f6" />
+          </View>
+          <View>
+            <Text className="text-xl font-bold text-gray-900">
+              Detected Items
+            </Text>
+            <Text className="text-xs text-gray-500">
+              AI-powered item recognition
+            </Text>
+          </View>
+        </View>
         <TouchableOpacity
           onPress={() => setIsExpanded(!isExpanded)}
-          className="p-2"
+          className="bg-blue-50 px-3 py-1 rounded-lg"
         >
-          <Text className="text-blue-600 font-medium">
+          <Text className="text-blue-700 font-semibold text-sm">
             {isExpanded ? "Collapse" : "Expand"}
           </Text>
         </TouchableOpacity>
@@ -124,33 +134,33 @@ const DetectedItemsList = ({
 
       {isExpanded && (
         <ScrollView
-          className="max-h-96"
+          className="max-h-80"
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
         >
-          {items.map((item) => (
-            <View key={item.id} className="mb-4 border-b border-gray-200 pb-3">
+          {items.map((item, index) => (
+            <View key={item.id} className="mb-3">
               {isEditing === item.id ? (
-                <View className="bg-gray-50 p-3 rounded-md">
+                <View className="bg-blue-50 p-3 rounded-lg border border-blue-200">
                   <TextInput
-                    className="border border-gray-300 rounded-md p-2 mb-2"
+                    className="border border-blue-300 rounded-lg p-2 mb-2 bg-white text-sm font-medium"
                     value={item.name}
                     onChangeText={(text) =>
-                      onUpdateItem({ ...item, name: text })
+                      handleUpdateItem({ ...item, name: text })
                     }
                     placeholder="Item name"
                   />
-                  <View className="flex-row justify-between mb-2">
-                    <View className="flex-1 mr-2">
-                      <Text className="text-xs text-gray-500 mb-1">
+                  <View className="flex-row justify-between mb-2 space-x-2">
+                    <View className="flex-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-1">
                         Height (cm)
                       </Text>
                       <TextInput
-                        className="border border-gray-300 rounded-md p-2"
+                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
                         value={item.height.toString()}
                         onChangeText={(text) => {
                           const height = parseFloat(text) || 0;
-                          onUpdateItem({
+                          handleUpdateItem({
                             ...item,
                             height,
                             volume:
@@ -160,16 +170,16 @@ const DetectedItemsList = ({
                         keyboardType="numeric"
                       />
                     </View>
-                    <View className="flex-1 mr-2">
-                      <Text className="text-xs text-gray-500 mb-1">
+                    <View className="flex-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-1">
                         Width (cm)
                       </Text>
                       <TextInput
-                        className="border border-gray-300 rounded-md p-2"
+                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
                         value={item.width.toString()}
                         onChangeText={(text) => {
                           const width = parseFloat(text) || 0;
-                          onUpdateItem({
+                          handleUpdateItem({
                             ...item,
                             width,
                             volume:
@@ -180,15 +190,15 @@ const DetectedItemsList = ({
                       />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-xs text-gray-500 mb-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-1">
                         Length (cm)
                       </Text>
                       <TextInput
-                        className="border border-gray-300 rounded-md p-2"
+                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
                         value={item.length.toString()}
                         onChangeText={(text) => {
                           const length = parseFloat(text) || 0;
-                          onUpdateItem({
+                          handleUpdateItem({
                             ...item,
                             length,
                             volume:
@@ -199,47 +209,60 @@ const DetectedItemsList = ({
                       />
                     </View>
                   </View>
-                  <View className="flex-row justify-end mt-2">
+                  <View className="flex-row justify-end space-x-2">
                     <TouchableOpacity
-                      className="bg-gray-200 px-3 py-2 rounded-md mr-2"
+                      className="bg-gray-200 px-3 py-2 rounded-lg"
                       onPress={() => setIsEditing(null)}
                     >
-                      <Text>Cancel</Text>
+                      <Text className="font-semibold text-gray-700 text-sm">
+                        Cancel
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      className="bg-blue-500 px-3 py-2 rounded-md"
-                      onPress={() => handleUpdateItem(item)}
+                      className="bg-blue-600 px-3 py-2 rounded-lg"
+                      onPress={() => setIsEditing(null)}
                     >
-                      <Text className="text-white">Save</Text>
+                      <Text className="text-white font-semibold text-sm">
+                        Save
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
               ) : (
-                <View>
+                <View className="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
                   <View className="flex-row justify-between items-center">
-                    <Text className="font-semibold text-lg">{item.name}</Text>
-                    <View className="flex-row">
+                    <View className="flex-row items-center flex-1">
+                      <View className="bg-blue-100 p-1.5 rounded-full mr-2">
+                        <Text className="text-blue-600 font-bold text-sm">
+                          {index + 1}
+                        </Text>
+                      </View>
+                      <View className="flex-1">
+                        <Text className="font-bold text-lg text-gray-900">
+                          {item.name}
+                        </Text>
+                        <Text className="text-gray-600 text-sm">
+                          {item.height} × {item.width} × {item.length} cm
+                        </Text>
+                        <Text className="text-gray-500 text-xs mt-1">
+                          Volume: {item.volume.toFixed(2)} m³
+                        </Text>
+                      </View>
+                    </View>
+                    <View className="flex-row items-center space-x-1">
                       <TouchableOpacity
-                        className="p-2"
+                        className="bg-blue-50 p-1.5 rounded-full"
                         onPress={() => setIsEditing(item.id)}
                       >
-                        <Edit size={18} color="#4B5563" />
+                        <Edit size={16} color="#3b82f6" />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        className="p-2"
+                        className="bg-red-50 p-1.5 rounded-full"
                         onPress={() => handleRemoveItem(item.id)}
                       >
-                        <Trash2 size={18} color="#EF4444" />
+                        <Trash2 size={16} color="#ef4444" />
                       </TouchableOpacity>
                     </View>
-                  </View>
-                  <View className="flex-row mt-1">
-                    <Text className="text-gray-600 text-sm">
-                      {item.height} × {item.width} × {item.length} cm
-                    </Text>
-                    <Text className="text-gray-600 text-sm ml-auto">
-                      Volume: {item.volume.toFixed(2)} m³
-                    </Text>
                   </View>
                 </View>
               )}
@@ -248,31 +271,36 @@ const DetectedItemsList = ({
         </ScrollView>
       )}
 
-      <View className="mt-4 border-t border-gray-200 pt-3">
-        <View className="flex-row justify-between items-center mb-4">
-          <Text className="font-semibold">Total Volume:</Text>
-          <Text className="font-bold text-lg">{totalVolume} m³</Text>
+      <View className="mt-4 pt-4 border-t border-gray-200">
+        {/* Total Volume Summary */}
+        <View className="bg-blue-600 p-4 rounded-xl mb-4 shadow-sm">
+          <View className="flex-row justify-between items-center">
+            <View>
+              <Text className="text-blue-100 font-medium text-sm mb-1">
+                Total Estimated Volume
+              </Text>
+              <Text className="text-white font-bold text-2xl">
+                {totalVolume} m³
+              </Text>
+            </View>
+            <View className="bg-white/20 p-3 rounded-full">
+              <Package size={24} color="#ffffff" />
+            </View>
+          </View>
         </View>
 
-        <View className="flex-row justify-between flex-wrap gap-2">
-          <TouchableOpacity
-            className="bg-blue-500 px-3 py-2 rounded-md flex-row items-center flex-1 min-w-0"
-            onPress={() => setShowAddModal(true)}
-          >
-            <Plus size={16} color="white" />
-            <Text className="text-white ml-2 text-sm">Add Custom Item</Text>
-          </TouchableOpacity>
-
-          {hasChanges && (
-            <TouchableOpacity
-              className="bg-green-500 px-3 py-2 rounded-md flex-row items-center flex-1 min-w-0"
-              onPress={handleRecalculate}
-            >
-              <RefreshCw size={16} color="white" />
-              <Text className="text-white ml-2 text-sm">Recalculate</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        {/* Add Custom Item Button */}
+        <TouchableOpacity
+          className="bg-purple-500 p-3 rounded-xl shadow-sm"
+          onPress={() => setShowAddModal(true)}
+        >
+          <View className="flex-row items-center justify-center">
+            <Plus size={18} color="white" />
+            <Text className="text-white font-bold text-base ml-2">
+              Add Custom Item
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Add Item Modal */}
@@ -282,44 +310,45 @@ const DetectedItemsList = ({
         animationType="slide"
         onRequestClose={() => setShowAddModal(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/50 px-4">
-          <View className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
-            <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold text-gray-800">
+        <View className="flex-1 justify-end bg-black/50">
+          <View className="bg-white rounded-t-2xl p-4 shadow-lg">
+            {/* Header */}
+            <View className="items-center mb-4">
+              <View className="w-10 h-1 bg-gray-300 rounded-full mb-3" />
+              <Text className="text-xl font-bold text-gray-900 mb-1">
                 Add Custom Item
               </Text>
-              <TouchableOpacity
-                onPress={() => setShowAddModal(false)}
-                className="p-1 rounded-full bg-gray-100"
-              >
-                <X size={20} color="#6B7280" />
-              </TouchableOpacity>
+              <Text className="text-gray-500 text-center text-sm">
+                Manually add items that weren't detected
+              </Text>
             </View>
 
+            {/* Item Name Input */}
             <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-2">
+              <Text className="text-sm font-bold text-gray-800 mb-2">
                 Item Name
               </Text>
               <TextInput
-                className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 focus:bg-white focus:border-blue-500"
+                className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50"
                 value={newItem.name}
                 onChangeText={(text) => setNewItem({ ...newItem, name: text })}
-                placeholder="e.g., Coffee Table"
+                placeholder="e.g., Coffee Table, Wardrobe"
                 placeholderTextColor="#9CA3AF"
               />
             </View>
 
+            {/* Dimensions Input */}
             <View className="mb-6">
-              <Text className="text-sm font-medium text-gray-700 mb-3">
-                Dimensions (cm)
+              <Text className="text-sm font-bold text-gray-800 mb-3">
+                Dimensions (centimeters)
               </Text>
-              <View className="flex-row justify-between gap-3">
+              <View className="flex-row justify-between space-x-2">
                 <View className="flex-1">
-                  <Text className="text-xs font-medium text-gray-600 mb-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
                     Height
                   </Text>
                   <TextInput
-                    className="border border-gray-300 rounded-lg p-3 text-center bg-gray-50 focus:bg-white focus:border-blue-500"
+                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.height}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, height: text })
@@ -330,11 +359,11 @@ const DetectedItemsList = ({
                   />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-xs font-medium text-gray-600 mb-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
                     Width
                   </Text>
                   <TextInput
-                    className="border border-gray-300 rounded-lg p-3 text-center bg-gray-50 focus:bg-white focus:border-blue-500"
+                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.width}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, width: text })
@@ -345,11 +374,11 @@ const DetectedItemsList = ({
                   />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-xs font-medium text-gray-600 mb-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
                     Length
                   </Text>
                   <TextInput
-                    className="border border-gray-300 rounded-lg p-3 text-center bg-gray-50 focus:bg-white focus:border-blue-500"
+                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.length}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, length: text })
@@ -362,20 +391,21 @@ const DetectedItemsList = ({
               </View>
             </View>
 
-            <View className="flex-row justify-end gap-3">
+            {/* Action Buttons */}
+            <View className="flex-row space-x-3">
               <TouchableOpacity
-                className="bg-gray-100 px-6 py-3 rounded-lg flex-1"
+                className="bg-gray-100 px-4 py-3 rounded-lg flex-1"
                 onPress={() => setShowAddModal(false)}
               >
-                <Text className="text-gray-700 font-medium text-center">
+                <Text className="text-gray-700 font-bold text-base text-center">
                   Cancel
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="bg-blue-600 px-6 py-3 rounded-lg flex-1"
+                className="bg-purple-500 px-4 py-3 rounded-lg flex-1 shadow-sm"
                 onPress={handleAddItem}
               >
-                <Text className="text-white font-medium text-center">
+                <Text className="text-white font-bold text-base text-center">
                   Add Item
                 </Text>
               </TouchableOpacity>
