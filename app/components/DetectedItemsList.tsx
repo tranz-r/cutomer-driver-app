@@ -150,13 +150,13 @@ const DetectedItemsList = ({
                     }
                     placeholder="Item name"
                   />
-                  <View className="flex-row justify-between mb-2 space-x-2">
-                    <View className="flex-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-1">
+                  <View className="flex-row justify-between mb-4">
+                    <View className="flex-1 mx-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-2">
                         Height (cm)
                       </Text>
                       <TextInput
-                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
+                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
                         value={item.height.toString()}
                         onChangeText={(text) => {
                           const height = parseFloat(text) || 0;
@@ -170,12 +170,12 @@ const DetectedItemsList = ({
                         keyboardType="numeric"
                       />
                     </View>
-                    <View className="flex-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-1">
+                    <View className="flex-1 mx-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-2">
                         Width (cm)
                       </Text>
                       <TextInput
-                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
+                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
                         value={item.width.toString()}
                         onChangeText={(text) => {
                           const width = parseFloat(text) || 0;
@@ -189,12 +189,12 @@ const DetectedItemsList = ({
                         keyboardType="numeric"
                       />
                     </View>
-                    <View className="flex-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-1">
+                    <View className="flex-1 mx-1">
+                      <Text className="text-xs font-semibold text-blue-700 mb-2">
                         Length (cm)
                       </Text>
                       <TextInput
-                        className="border border-blue-300 rounded-lg p-2 bg-white text-center font-medium text-sm"
+                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
                         value={item.length.toString()}
                         onChangeText={(text) => {
                           const length = parseFloat(text) || 0;
@@ -209,20 +209,20 @@ const DetectedItemsList = ({
                       />
                     </View>
                   </View>
-                  <View className="flex-row justify-end space-x-2">
+                  <View className="flex-row justify-between mt-6">
                     <TouchableOpacity
-                      className="bg-gray-200 px-3 py-2 rounded-lg"
+                      className="bg-gray-200 px-8 py-3 rounded-lg flex-1 mr-4"
                       onPress={() => setIsEditing(null)}
                     >
-                      <Text className="font-semibold text-gray-700 text-sm">
+                      <Text className="font-semibold text-gray-700 text-sm text-center">
                         Cancel
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      className="bg-blue-600 px-3 py-2 rounded-lg"
+                      className="bg-blue-600 px-8 py-3 rounded-lg flex-1"
                       onPress={() => setIsEditing(null)}
                     >
-                      <Text className="text-white font-semibold text-sm">
+                      <Text className="text-white font-semibold text-sm text-center">
                         Save
                       </Text>
                     </TouchableOpacity>
@@ -272,8 +272,21 @@ const DetectedItemsList = ({
       )}
 
       <View className="mt-4 pt-4 border-t border-gray-200">
+        {/* Add Custom Item Button */}
+        <TouchableOpacity
+          className="bg-purple-500 p-3 rounded-xl shadow-sm mb-4"
+          onPress={() => setShowAddModal(true)}
+        >
+          <View className="flex-row items-center justify-center">
+            <Plus size={18} color="white" />
+            <Text className="text-white font-bold text-base ml-2">
+              Add Custom Item
+            </Text>
+          </View>
+        </TouchableOpacity>
+
         {/* Total Volume Summary */}
-        <View className="bg-blue-600 p-4 rounded-xl mb-4 shadow-sm">
+        <View className="bg-blue-600 p-4 rounded-xl shadow-sm">
           <View className="flex-row justify-between items-center">
             <View>
               <Text className="text-blue-100 font-medium text-sm mb-1">
@@ -288,19 +301,6 @@ const DetectedItemsList = ({
             </View>
           </View>
         </View>
-
-        {/* Add Custom Item Button */}
-        <TouchableOpacity
-          className="bg-purple-500 p-3 rounded-xl shadow-sm"
-          onPress={() => setShowAddModal(true)}
-        >
-          <View className="flex-row items-center justify-center">
-            <Plus size={18} color="white" />
-            <Text className="text-white font-bold text-base ml-2">
-              Add Custom Item
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
 
       {/* Add Item Modal */}
@@ -338,17 +338,17 @@ const DetectedItemsList = ({
             </View>
 
             {/* Dimensions Input */}
-            <View className="mb-6">
-              <Text className="text-sm font-bold text-gray-800 mb-3">
+            <View className="mb-8">
+              <Text className="text-sm font-bold text-gray-800 mb-4">
                 Dimensions (centimeters)
               </Text>
-              <View className="flex-row justify-between space-x-2">
-                <View className="flex-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
+              <View className="flex-row justify-between">
+                <View className="flex-1 mx-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
                     Height
                   </Text>
                   <TextInput
-                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
+                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.height}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, height: text })
@@ -358,12 +358,12 @@ const DetectedItemsList = ({
                     placeholderTextColor="#9CA3AF"
                   />
                 </View>
-                <View className="flex-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
+                <View className="flex-1 mx-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
                     Width
                   </Text>
                   <TextInput
-                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
+                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.width}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, width: text })
@@ -373,12 +373,12 @@ const DetectedItemsList = ({
                     placeholderTextColor="#9CA3AF"
                   />
                 </View>
-                <View className="flex-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-1 text-center">
+                <View className="flex-1 mx-1">
+                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
                     Length
                   </Text>
                   <TextInput
-                    className="border border-purple-200 rounded-lg p-2 text-center text-sm bg-purple-50 font-medium"
+                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
                     value={newItem.length}
                     onChangeText={(text) =>
                       setNewItem({ ...newItem, length: text })
@@ -392,9 +392,9 @@ const DetectedItemsList = ({
             </View>
 
             {/* Action Buttons */}
-            <View className="flex-row space-x-3">
+            <View className="flex-row justify-between mt-4">
               <TouchableOpacity
-                className="bg-gray-100 px-4 py-3 rounded-lg flex-1"
+                className="bg-gray-100 px-8 py-4 rounded-lg flex-1 mr-4"
                 onPress={() => setShowAddModal(false)}
               >
                 <Text className="text-gray-700 font-bold text-base text-center">
@@ -402,7 +402,7 @@ const DetectedItemsList = ({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="bg-purple-500 px-4 py-3 rounded-lg flex-1 shadow-sm"
+                className="bg-purple-500 px-8 py-4 rounded-lg flex-1 shadow-sm"
                 onPress={handleAddItem}
               >
                 <Text className="text-white font-bold text-base text-center">
