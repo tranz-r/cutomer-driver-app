@@ -28,11 +28,20 @@ export default function LandingScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-16" />
+      <StatusBar style="light" backgroundColor="#2563eb" />
+      <View className="bg-blue-600 pt-16 pb-6">
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
+            Welcome to Tranzr
+          </Text>
+          <Text className="text-sm text-blue-200">
+            Professional moving services at your fingertips
+          </Text>
+        </View>
+      </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-6 pt-16">
+        <View className="px-4 py-6">
           {/* Header */}
           <View className="items-center mb-6">
             <View className="bg-blue-600 rounded-full p-3 mb-3">
@@ -40,9 +49,6 @@ export default function LandingScreen() {
             </View>
             <Text className="text-2xl font-bold text-gray-800 mb-2 text-center">
               Tranzr
-            </Text>
-            <Text className="text-base text-gray-600 text-center px-2">
-              Professional moving services at your fingertips
             </Text>
           </View>
 

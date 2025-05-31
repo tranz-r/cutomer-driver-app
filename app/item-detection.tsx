@@ -26,6 +26,7 @@ export default function ItemDetectionScreen() {
   const [progress, setProgress] = useState(0);
   const [processingMessage, setProcessingMessage] =
     useState("Detecting items...");
+  const [showMediaUpload, setShowMediaUpload] = useState(false);
 
   const handleDetectItems = () => {
     if (mediaItems.length === 0) return;
@@ -76,80 +77,112 @@ export default function ItemDetectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-16" />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4 pt-16">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
+      <StatusBar style="light" backgroundColor="#059669" />
+      <View className="bg-emerald-600 pt-16 pb-6">
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
             Item Detection
           </Text>
-          <Text className="text-sm text-gray-600 mb-4">
-            Upload photos or videos of items you want to move and get an instant
-            quote.
+          <Text className="text-sm text-emerald-200">
+            Get an instant quote for your move
           </Text>
+        </View>
+      </View>
 
-          {/* Skip Option */}
-          <View className="bg-blue-50 rounded-lg p-4 mb-4">
-            <Text className="text-sm font-medium text-blue-800 mb-2">
-              Already know your move size?
-            </Text>
-            <TouchableOpacity
-              className="bg-orange-500 py-2 px-4 rounded-md"
-              onPress={() => router.push("/van-selection")}
-            >
-              <Text className="text-white text-center text-sm font-medium">
-                Skip to Van and Driver Selection
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-6">
+          {!showMediaUpload && (
+            <View>
+              <Text className="text-lg font-semibold text-gray-800 mb-4 text-center">
+                Do you know your move size?
               </Text>
-            </TouchableOpacity>
-          </View>
 
-          <MediaUploader
-            onMediaCaptured={handleMediaCaptured}
-            isProcessing={isProcessing}
-          />
+              <View className="space-y-4 mb-6">
+                <TouchableOpacity
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6 rounded-xl shadow-lg"
+                  onPress={() => router.push("/van-selection")}
+                >
+                  <Text className="text-white text-center font-semibold text-lg">
+                    Yes, Skip to Van Selection
+                  </Text>
+                  <Text className="text-blue-100 text-center text-sm mt-1">
+                    I already know what van size I need
+                  </Text>
+                </TouchableOpacity>
 
-          {!isProcessing && !showDetectedItems && (
-            <TouchableOpacity
-              className={`mt-6 py-4 px-6 rounded-xl ${
-                mediaItems.length > 0 ? "bg-blue-600" : "bg-gray-300"
-              }`}
-              onPress={handleDetectItems}
-              disabled={mediaItems.length === 0}
-            >
-              <Text className="text-white text-center font-semibold text-lg">
-                Detect Items ({mediaItems.length} media files)
-              </Text>
-            </TouchableOpacity>
-          )}
+                <TouchableOpacity
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 py-4 px-6 rounded-xl shadow-lg"
+                  onPress={() => setShowMediaUpload(true)}
+                >
+                  <Text className="text-white text-center font-semibold text-lg">
+                    No, Use Tranzr Smart Detection
+                  </Text>
+                  <Text className="text-emerald-100 text-center text-sm mt-1">
+                    Upload photos/videos to get accurate sizing
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-          {isProcessing && (
-            <View className="mt-6">
-              <ProcessingIndicator
-                isProcessing={isProcessing}
-                progress={progress}
-                message={processingMessage}
-              />
+              <View className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <Text className="text-amber-800 text-sm text-center font-medium">
+                  💡 Smart Detection provides more accurate quotes by analyzing
+                  your items
+                </Text>
+              </View>
             </View>
           )}
 
-          {showDetectedItems && (
-            <View className="mt-6">
-              <DetectedItemsList />
+          {showMediaUpload && (
+            <View>
+              <MediaUploader
+                onMediaCaptured={handleMediaCaptured}
+                isProcessing={isProcessing}
+              />
 
-              <TouchableOpacity
-                className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center"
-                onPress={handleContinueToVanSelection}
-              >
-                <Text className="text-white text-center font-semibold text-lg mr-2">
-                  Continue to Van and Driver Selection
-                </Text>
-                <ChevronRight size={20} color="white" />
-              </TouchableOpacity>
+              {!isProcessing && !showDetectedItems && (
+                <TouchableOpacity
+                  className={`mt-6 py-4 px-6 rounded-xl ${
+                    mediaItems.length > 0 ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                  onPress={handleDetectItems}
+                  disabled={mediaItems.length === 0}
+                >
+                  <Text className="text-white text-center font-semibold text-lg">
+                    Detect Items ({mediaItems.length} media files)
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {isProcessing && (
+                <View className="mt-6">
+                  <ProcessingIndicator
+                    isProcessing={isProcessing}
+                    progress={progress}
+                    message={processingMessage}
+                  />
+                </View>
+              )}
+
+              {showDetectedItems && (
+                <View className="mt-6">
+                  <DetectedItemsList />
+
+                  <TouchableOpacity
+                    className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center"
+                    onPress={handleContinueToVanSelection}
+                  >
+                    <Text className="text-white text-center font-semibold text-lg mr-2">
+                      Continue to Van and Driver Selection
+                    </Text>
+                    <ChevronRight size={20} color="white" />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
         </View>
       </ScrollView>
+      <View className="h-8" />
     </SafeAreaView>
   );
 }

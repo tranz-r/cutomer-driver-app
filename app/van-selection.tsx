@@ -5,9 +5,12 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Modal,
+  Image,
+  Animated,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ChevronRight, Truck, Users } from "lucide-react-native";
+import { ChevronRight, Truck, Users, X, Package } from "lucide-react-native";
 import { router } from "expo-router";
 
 type VanType = {
@@ -29,6 +32,11 @@ type DriverOption = {
 export default function VanSelectionScreen() {
   const [selectedVan, setSelectedVan] = useState<string | null>("large");
   const [selectedDrivers, setSelectedDrivers] = useState<string>("1");
+  const [showVanModal, setShowVanModal] = useState(false);
+  const [selectedVanDetails, setSelectedVanDetails] = useState<VanType | null>(
+    null,
+  );
+  const [lastTap, setLastTap] = useState<number>(0);
 
   const vanTypes: VanType[] = [
     {
@@ -86,6 +94,23 @@ export default function VanSelectionScreen() {
     },
   ];
 
+  const handleVanTap = (van: VanType) => {
+    if (van.id !== "large") return;
+
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (lastTap && now - lastTap < DOUBLE_TAP_DELAY) {
+      // Double tap detected
+      setSelectedVanDetails(van);
+      setShowVanModal(true);
+    } else {
+      // Single tap
+      setSelectedVan(van.id);
+    }
+    setLastTap(now);
+  };
+
   const handleContinueToLocation = () => {
     if (!selectedVan) return;
     // Navigate to origin-destination with selected options
@@ -96,18 +121,20 @@ export default function VanSelectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-16" />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-6 py-4 pt-16">
-          <Text className="text-3xl font-bold text-gray-900 mb-3">
+      <StatusBar style="light" backgroundColor="#ea580c" />
+      <View className="bg-orange-600 pt-16 pb-6">
+        <View className="px-6">
+          <Text className="text-2xl font-bold text-white mb-1">
             Select Van & Crew
           </Text>
-          <Text className="text-base text-gray-600 mb-8 leading-relaxed">
+          <Text className="text-sm text-orange-200">
             Choose the right van size and crew for your move.
           </Text>
+        </View>
+      </View>
 
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-6 py-6">
           {/* Van Selection */}
           <View className="mb-8">
             <Text className="text-xl font-bold text-gray-900 mb-4">
@@ -124,7 +151,7 @@ export default function VanSelectionScreen() {
                         ? "border-gray-200 bg-white"
                         : "border-gray-100 bg-gray-50"
                   } ${van.id !== "large" ? "opacity-50" : ""}`}
-                  onPress={() => van.id === "large" && setSelectedVan(van.id)}
+                  onPress={() => handleVanTap(van)}
                   disabled={van.id !== "large"}
                   style={{ marginBottom: 12 }}
                 >
@@ -151,6 +178,13 @@ export default function VanSelectionScreen() {
                           >
                             {van.name}
                           </Text>
+                          {van.id === "large" && (
+                            <View className="ml-3 bg-green-100 px-3 py-1 rounded-full">
+                              <Text className="text-green-600 text-xs font-semibold">
+                                Double-tap for details
+                              </Text>
+                            </View>
+                          )}
                           {van.id !== "large" && (
                             <View className="ml-3 bg-red-100 px-3 py-1 rounded-full">
                               <Text className="text-red-600 text-xs font-semibold">
@@ -295,6 +329,134 @@ export default function VanSelectionScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <View className="h-8" />
+
+      {/* Van Details Modal */}
+      <Modal
+        visible={showVanModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowVanModal(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/80 px-4">
+          <View className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-5/6">
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-3xl font-bold text-gray-900">
+                {selectedVanDetails?.name}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowVanModal(false)}
+                className="p-2 rounded-full bg-gray-100"
+              >
+                <X size={24} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View className="mb-6">
+                <Image
+                  source={{
+                    uri: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
+                  }}
+                  className="w-full h-56 rounded-xl"
+                  resizeMode="cover"
+                />
+              </View>
+
+              <View className="space-y-6 mb-6">
+                <View className="bg-blue-50 p-5 rounded-xl">
+                  <Text className="text-blue-800 font-semibold text-lg mb-2">
+                    About This Van
+                  </Text>
+                  <Text className="text-blue-700 text-base leading-relaxed">
+                    {selectedVanDetails?.description}. This van is perfect for
+                    medium to large moves and comes equipped with professional
+                    moving equipment.
+                  </Text>
+                </View>
+
+                <View className="flex-row items-start">
+                  <Package size={24} color="#3b82f6" />
+                  <View className="ml-4 flex-1">
+                    <Text className="text-sm text-gray-600 uppercase tracking-wide font-medium">
+                      Load Capacity
+                    </Text>
+                    <Text className="text-xl font-bold text-gray-900 mt-1">
+                      {selectedVanDetails?.capacity}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      Suitable for 3-4 bedroom houses with furniture and boxes
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="flex-row items-start">
+                  <Truck size={24} color="#10b981" />
+                  <View className="ml-4 flex-1">
+                    <Text className="text-sm text-gray-600 uppercase tracking-wide font-medium">
+                      Dimensions
+                    </Text>
+                    <Text className="text-xl font-bold text-gray-900 mt-1">
+                      {selectedVanDetails?.dimensions}
+                    </Text>
+                    <Text className="text-sm text-gray-500 mt-1">
+                      Length × Width × Height (internal cargo space)
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="bg-green-50 p-5 rounded-xl">
+                  <Text className="text-green-800 font-semibold text-lg mb-3">
+                    Van Features
+                  </Text>
+                  <View className="space-y-2">
+                    <Text className="text-green-700 text-base">
+                      • Tail lift for easy loading
+                    </Text>
+                    <Text className="text-green-700 text-base">
+                      • Professional moving blankets included
+                    </Text>
+                    <Text className="text-green-700 text-base">
+                      • Secure tie-down points
+                    </Text>
+                    <Text className="text-green-700 text-base">
+                      • GPS tracking for peace of mind
+                    </Text>
+                    <Text className="text-green-700 text-base">
+                      • Fully insured and licensed
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="bg-amber-50 p-5 rounded-xl">
+                  <Text className="text-amber-800 font-semibold text-lg mb-2">
+                    What Can Fit?
+                  </Text>
+                  <Text className="text-amber-700 text-base leading-relaxed">
+                    Typically accommodates: 3-4 bedroom house contents,
+                    including sofas, beds, wardrobes, dining sets, appliances,
+                    and 40-60 moving boxes.
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              className="bg-blue-600 py-4 px-6 rounded-xl mt-4"
+              onPress={() => {
+                setShowVanModal(false);
+                if (selectedVanDetails) {
+                  setSelectedVan(selectedVanDetails.id);
+                }
+              }}
+            >
+              <Text className="text-white text-center font-semibold text-lg">
+                Select This Van
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

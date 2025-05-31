@@ -85,19 +85,21 @@ export default function OriginDestinationScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-16" />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4 pt-16">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
+      <StatusBar style="light" backgroundColor="#0891b2" />
+      <View className="bg-cyan-600 pt-16 pb-6">
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
             Origin & Destination
           </Text>
-          <Text className="text-sm text-gray-600 mb-6">
+          <Text className="text-sm text-cyan-200">
             Enter your pickup and delivery addresses to calculate the route and
             costs.
           </Text>
+        </View>
+      </View>
 
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-6">
           {/* Origin Address */}
           <View className="mb-4">
             <Text className="text-base font-semibold text-gray-800 mb-2">
@@ -312,6 +314,7 @@ export default function OriginDestinationScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <View className="h-8" />
 
       {/* Origin Floor Modal */}
       <Modal
@@ -320,8 +323,8 @@ export default function OriginDestinationScreen() {
         animationType="slide"
         onRequestClose={() => setShowOriginFloors(false)}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-xl p-6">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-xl p-6 max-h-4/5">
             <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Select Pickup Floor
             </Text>
@@ -368,8 +371,8 @@ export default function OriginDestinationScreen() {
         animationType="slide"
         onRequestClose={() => setShowDestinationFloors(false)}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-xl p-6">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-xl p-6 max-h-4/5">
             <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Select Delivery Floor
             </Text>

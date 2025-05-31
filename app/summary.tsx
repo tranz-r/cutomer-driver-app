@@ -69,18 +69,20 @@ export default function SummaryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-12" />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4 pt-8">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
+      <StatusBar style="light" backgroundColor="#475569" />
+      <View className="bg-slate-600 pt-16 pb-6">
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
           </Text>
-          <Text className="text-sm text-gray-600 mb-6">
+          <Text className="text-sm text-slate-200">
             Review your booking details before completing your reservation.
           </Text>
+        </View>
+      </View>
 
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-6">
           {/* Service Details */}
           <View className="bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100">
             <Text className="text-lg font-bold text-gray-900 mb-4">
@@ -267,6 +269,7 @@ export default function SummaryScreen() {
           )}
         </View>
       </ScrollView>
+      <View className="h-8" />
 
       {/* Sign In Modal */}
       <Modal
@@ -275,7 +278,7 @@ export default function SummaryScreen() {
         animationType="slide"
         onRequestClose={() => setShowSignInModal(false)}
       >
-        <View className="flex-1 justify-center bg-black/50 px-6">
+        <View className="flex-1 justify-center bg-black/70 px-6">
           <View className="bg-white rounded-2xl p-6">
             <View className="flex-row justify-between items-center mb-6">
               <Text className="text-xl font-bold text-gray-900">

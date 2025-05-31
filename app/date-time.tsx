@@ -15,6 +15,7 @@ import {
   Percent,
   CheckCircle,
   Circle,
+  X,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -139,18 +140,20 @@ export default function DateTimeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-16" />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-4 pt-8">
-          <Text className="text-2xl font-bold text-gray-800 mb-2">
+      <StatusBar style="light" backgroundColor="#4f46e5" />
+      <View className="bg-indigo-600 pt-16 pb-6">
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
             Date & Time
           </Text>
-          <Text className="text-sm text-gray-600 mb-6">
+          <Text className="text-sm text-indigo-200">
             Select your preferred moving date, duration, and time slot.
           </Text>
+        </View>
+      </View>
 
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4 py-6">
           {/* Date Selection */}
           <View className="mb-6">
             <Text className="text-lg font-semibold text-gray-800 mb-3">
@@ -335,6 +338,7 @@ export default function DateTimeScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <View className="h-8" />
 
       {/* Date Picker Modal */}
       <Modal
@@ -343,8 +347,8 @@ export default function DateTimeScreen() {
         animationType="slide"
         onRequestClose={() => setShowDatePicker(false)}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-xl p-6">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-xl p-6 shadow-2xl border border-gray-200 max-h-4/5">
             <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Select Moving Date
             </Text>
@@ -436,12 +440,11 @@ export default function DateTimeScreen() {
             </View>
 
             <TouchableOpacity
-              className="mt-4 bg-gray-200 py-3 rounded-lg"
+              className="mt-6 bg-red-50 py-3 px-6 rounded-xl flex-row items-center justify-center border border-red-200 self-center"
               onPress={() => setShowDatePicker(false)}
             >
-              <Text className="text-center text-gray-700 font-medium">
-                Cancel
-              </Text>
+              <X size={18} color="#dc2626" />
+              <Text className="text-red-600 font-semibold ml-2">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -454,8 +457,8 @@ export default function DateTimeScreen() {
         animationType="slide"
         onRequestClose={() => setShowHoursPicker(false)}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-xl p-6">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-xl p-6 max-h-4/5">
             <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Select Duration
             </Text>
@@ -484,10 +487,11 @@ export default function DateTimeScreen() {
               ))}
             </ScrollView>
             <TouchableOpacity
-              className="mt-4 bg-gray-200 py-3 rounded-lg"
+              className="mt-4 bg-red-50 py-3 px-4 rounded-xl flex-row items-center justify-center border border-red-200"
               onPress={() => setShowHoursPicker(false)}
             >
-              <Text className="text-center text-gray-700 font-medium">
+              <X size={18} color="#dc2626" />
+              <Text className="text-center text-red-600 font-semibold ml-2">
                 Cancel
               </Text>
             </TouchableOpacity>
