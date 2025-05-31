@@ -86,7 +86,7 @@ export default function OriginDestinationScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-12" />
+      <View className="bg-gray-800 h-16" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-4 pt-16">

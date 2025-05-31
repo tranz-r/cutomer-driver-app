@@ -28,7 +28,8 @@ export default function LandingScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="dark" />
+      <StatusBar style="light" backgroundColor="#1f2937" />
+      <View className="bg-gray-800 h-16" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6 pt-16">

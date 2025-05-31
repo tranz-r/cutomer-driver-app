@@ -77,12 +77,55 @@ export default function DateTimeScreen() {
   const generateDateOptions = () => {
     const dates = [];
     const today = new Date();
-    for (let i = 0; i < 14; i++) {
+    // Start from today (i = 0) to ensure no past dates
+    for (let i = 0; i < 30; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       dates.push(date);
     }
     return dates;
+  };
+
+  const generateCalendarDays = () => {
+    const today = new Date();
+    const currentMonth = selectedDate.getMonth();
+    const currentYear = selectedDate.getFullYear();
+
+    // Get first day of the month and how many days in month
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      const isPastDate = date < today.setHours(0, 0, 0, 0);
+      days.push({ date, day, isPastDate });
+    }
+
+    return days;
+  };
+
+  const navigateMonth = (direction: "prev" | "next") => {
+    const newDate = new Date(selectedDate);
+    if (direction === "prev") {
+      newDate.setMonth(newDate.getMonth() - 1);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setSelectedDate(newDate);
+  };
+
+  const getMonthYearString = (date: Date) => {
+    return date.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
   };
 
   const handleContinue = () => {
@@ -97,7 +140,7 @@ export default function DateTimeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#1f2937" />
-      <View className="bg-gray-800 h-12" />
+      <View className="bg-gray-800 h-16" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-4 pt-8">
@@ -305,32 +348,93 @@ export default function DateTimeScreen() {
             <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
               Select Moving Date
             </Text>
-            <ScrollView className="max-h-80">
-              {generateDateOptions().map((date, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className={`p-4 border-b border-gray-100 ${
-                    selectedDate.toDateString() === date.toDateString()
-                      ? "bg-blue-50"
-                      : ""
-                  }`}
-                  onPress={() => {
-                    setSelectedDate(date);
-                    setShowDatePicker(false);
-                  }}
-                >
-                  <Text
-                    className={`text-base ${
-                      selectedDate.toDateString() === date.toDateString()
-                        ? "text-blue-600 font-semibold"
-                        : "text-gray-800"
-                    }`}
-                  >
-                    {formatDate(date)}
+
+            {/* Calendar Header */}
+            <View className="flex-row items-center justify-between mb-4">
+              <TouchableOpacity
+                className="p-2 rounded-lg bg-gray-100"
+                onPress={() => navigateMonth("prev")}
+              >
+                <Text className="text-lg font-bold text-gray-600">‹</Text>
+              </TouchableOpacity>
+
+              <Text className="text-lg font-semibold text-gray-800">
+                {getMonthYearString(selectedDate)}
+              </Text>
+
+              <TouchableOpacity
+                className="p-2 rounded-lg bg-gray-100"
+                onPress={() => navigateMonth("next")}
+              >
+                <Text className="text-lg font-bold text-gray-600">›</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Days of Week Header */}
+            <View className="flex-row mb-2">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <View key={day} className="flex-1 items-center py-2">
+                  <Text className="text-sm font-medium text-gray-500">
+                    {day}
                   </Text>
-                </TouchableOpacity>
+                </View>
               ))}
-            </ScrollView>
+            </View>
+
+            {/* Calendar Grid */}
+            <View className="max-h-80">
+              <View className="flex-row flex-wrap">
+                {generateCalendarDays().map((dayData, index) => {
+                  if (!dayData) {
+                    return <View key={index} className="w-1/7 aspect-square" />;
+                  }
+
+                  const { date, day, isPastDate } = dayData;
+                  const isSelected =
+                    selectedDate.toDateString() === date.toDateString();
+                  const isToday =
+                    new Date().toDateString() === date.toDateString();
+
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      className={`w-1/7 aspect-square items-center justify-center m-0.5 rounded-lg ${
+                        isPastDate
+                          ? "bg-gray-100"
+                          : isSelected
+                            ? "bg-blue-500"
+                            : isToday
+                              ? "bg-blue-100"
+                              : "bg-white hover:bg-gray-50"
+                      }`}
+                      onPress={() => {
+                        if (!isPastDate) {
+                          setSelectedDate(date);
+                          setShowDatePicker(false);
+                        }
+                      }}
+                      disabled={isPastDate}
+                      style={{ width: "13.5%", aspectRatio: 1 }}
+                    >
+                      <Text
+                        className={`text-sm font-medium ${
+                          isPastDate
+                            ? "text-gray-400"
+                            : isSelected
+                              ? "text-white"
+                              : isToday
+                                ? "text-blue-600"
+                                : "text-gray-800"
+                        }`}
+                      >
+                        {day}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+
             <TouchableOpacity
               className="mt-4 bg-gray-200 py-3 rounded-lg"
               onPress={() => setShowDatePicker(false)}
