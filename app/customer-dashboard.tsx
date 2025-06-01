@@ -8,6 +8,8 @@ import {
   Modal,
   TextInput,
   Alert,
+  Platform,
+  Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -29,8 +31,11 @@ import {
   Star,
   ChevronRight,
   Package,
+  LogOut,
+  Navigation,
+  Map,
 } from "lucide-react-native";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
 
@@ -55,6 +60,7 @@ type Booking = {
 };
 
 export default function CustomerDashboard() {
+  const navigation = useRouter();
   const [activeTab, setActiveTab] = useState<"active" | "pending" | "history">(
     "active",
   );
@@ -63,6 +69,9 @@ export default function CustomerDashboard() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [additionalHours, setAdditionalHours] = useState("1");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showDriverLocation, setShowDriverLocation] = useState(false);
+  const [selectedActiveBooking, setSelectedActiveBooking] =
+    useState<Booking | null>(null);
 
   // Mock user data
   const user = {
@@ -92,6 +101,13 @@ export default function CustomerDashboard() {
       driverName: "Mike Johnson",
       driverPhone: "+44 7700 900456",
       invoiceUrl: "invoice-001.pdf",
+      driverLocation: {
+        lat: 51.5074,
+        lng: -0.1278,
+        address: "Currently at: Oxford Street, London",
+        eta: "15 minutes",
+        status: "On the way to pickup location",
+      },
     },
     {
       id: "BK002",
@@ -256,6 +272,29 @@ export default function CustomerDashboard() {
     Alert.alert("Call Driver", `Calling ${phone}`);
   };
 
+  const handleLogout = () => {
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: () => {
+          try {
+            // Clear any stored auth data here
+            navigation.replace("/landing");
+          } catch (error) {
+            console.log("Navigation not available in this context");
+          }
+        },
+      },
+    ]);
+  };
+
+  const handleShowDriverLocation = (booking: Booking) => {
+    setSelectedActiveBooking(booking);
+    setShowDriverLocation(true);
+  };
+
   const renderBookingCard = (booking: Booking) => (
     <View
       key={booking.id}
@@ -265,7 +304,7 @@ export default function CustomerDashboard() {
       <View className="flex-row justify-between items-center mb-3">
         <View className="flex-row items-center">
           <View
-            className={`px-2 py-1 rounded-full flex-row items-center ${getStatusColor(booking.status)}`}
+            className={`px-3 py-2 rounded-full flex-row items-center ${getStatusColor(booking.status)}`}
           >
             {getStatusIcon(booking.status)}
             <Text
@@ -281,13 +320,15 @@ export default function CustomerDashboard() {
       </View>
 
       {/* Date & Time */}
-      <View className="flex-row items-center mb-2">
-        <Calendar size={16} color="#6b7280" />
-        <Text className="text-sm text-gray-600 ml-2">{booking.date}</Text>
-        <View className="ml-4">
-          <Clock size={16} color="#6b7280" />
+      <View className="flex-row items-center mb-3">
+        <View className="flex-row items-center mr-4 mb-1">
+          <Calendar size={16} color="#6b7280" />
+          <Text className="text-sm text-gray-600 ml-2">{booking.date}</Text>
         </View>
-        <Text className="text-sm text-gray-600 ml-2">{booking.time}</Text>
+        <View className="flex-row items-center mb-1">
+          <Clock size={16} color="#6b7280" />
+          <Text className="text-sm text-gray-600 ml-2">{booking.time}</Text>
+        </View>
       </View>
 
       {/* Locations */}
@@ -323,23 +364,53 @@ export default function CustomerDashboard() {
 
       {/* Driver Info (for active bookings) */}
       {booking.status === "active" && booking.driverName && (
-        <View className="bg-blue-50 rounded-lg p-3 mb-3">
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-sm font-semibold text-blue-900">
-                Driver: {booking.driverName}
+        <View className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-200">
+          <View className="flex-row justify-between items-center mb-3">
+            <View className="flex-1">
+              <View className="flex-row items-center mb-2">
+                <View className="bg-blue-100 p-2 rounded-full mr-3">
+                  <User size={16} color="#3b82f6" />
+                </View>
+                <View>
+                  <Text className="text-base font-bold text-blue-900">
+                    {booking.driverName}
+                  </Text>
+                  <Text className="text-sm text-blue-700">
+                    {booking.driverPhone}
+                  </Text>
+                </View>
+              </View>
+              {booking.driverLocation && (
+                <Text className="text-sm text-green-600 font-medium">
+                  {booking.driverLocation.status}
+                </Text>
+              )}
+            </View>
+            <View className="flex-row">
+              <TouchableOpacity
+                className="bg-green-500 px-3 py-2 rounded-lg mr-2"
+                onPress={() => handleShowDriverLocation(booking)}
+              >
+                <Map size={16} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-blue-500 px-3 py-2 rounded-lg"
+                onPress={() => callDriver(booking.driverPhone!)}
+              >
+                <Phone size={16} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {booking.driverLocation && (
+            <View className="bg-white rounded-lg p-3">
+              <Text className="text-sm text-gray-700 mb-1">
+                {booking.driverLocation.address}
               </Text>
-              <Text className="text-xs text-blue-700">
-                {booking.driverPhone}
+              <Text className="text-sm font-bold text-green-600">
+                ETA: {booking.driverLocation.eta}
               </Text>
             </View>
-            <TouchableOpacity
-              className="bg-blue-600 px-3 py-2 rounded-lg"
-              onPress={() => callDriver(booking.driverPhone!)}
-            >
-              <Phone size={16} color="white" />
-            </TouchableOpacity>
-          </View>
+          )}
         </View>
       )}
 
@@ -435,61 +506,86 @@ export default function CustomerDashboard() {
     </View>
   );
 
+  const { width: screenWidth } = Dimensions.get("window");
+  const isTablet = screenWidth > 768;
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <StatusBar style="light" backgroundColor="#1f2937" />
+      <StatusBar style="light" backgroundColor="#1e40af" translucent={false} />
 
       {/* Header */}
-      <View className="bg-gray-800 pt-16 pb-6">
+      <View className="bg-blue-600 pt-20 pb-8">
         <View className="px-4">
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-2xl font-bold text-white mb-1">
-                Welcome back, {user.name.split(" ")[0]}!
+          <View className="flex-row justify-between items-center mb-4">
+            <View className="flex-1">
+              <Text className="text-2xl font-bold text-white mb-2">
+                Hello, {user.name.split(" ")[0]}! 👋
               </Text>
-              <Text className="text-sm text-gray-300">
+              <Text className="text-sm text-blue-100">
                 Manage your bookings and account
               </Text>
             </View>
-            <TouchableOpacity
-              className="relative"
-              onPress={() => setShowNotifications(true)}
-            >
-              <Bell size={24} color="white" />
-              {notifications.some((n) => n.unread) && (
-                <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3" />
-              )}
-            </TouchableOpacity>
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                className="relative p-3 rounded-full bg-white/20 mr-3"
+                onPress={() => setShowNotifications(true)}
+              >
+                <Bell size={20} color="white" />
+                {notifications.some((n) => n.unread) && (
+                  <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-3 h-3 border border-white" />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="p-3 rounded-full bg-white/20"
+                onPress={handleLogout}
+              >
+                <LogOut size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* User Stats Row */}
+          <View className="flex-row items-center mt-2">
+            <View className="bg-white/15 rounded-full px-3 py-1 mr-3">
+              <Text className="text-white text-xs font-medium">
+                Member since {user.memberSince}
+              </Text>
+            </View>
+            <View className="bg-white/15 rounded-full px-3 py-1">
+              <Text className="text-white text-xs font-medium">
+                Premium Customer
+              </Text>
+            </View>
           </View>
         </View>
       </View>
 
       {/* Quick Stats */}
-      <View className="px-4 py-4">
+      <View className="px-4 -mt-4 mb-6">
         <View className="flex-row justify-between">
           <View className="bg-white rounded-xl p-4 flex-1 mr-2 shadow-sm">
             <View className="flex-row items-center justify-between">
               <View>
-                <Text className="text-2xl font-bold text-gray-900">
+                <Text className="text-2xl font-bold text-gray-900 mb-1">
                   {bookings.filter((b) => b.status === "active").length}
                 </Text>
-                <Text className="text-sm text-gray-600">Active Jobs</Text>
+                <Text className="text-sm text-gray-600">Active Moves</Text>
               </View>
-              <View className="bg-green-100 p-2 rounded-full">
-                <Truck size={20} color="#059669" />
+              <View className="bg-green-500 p-3 rounded-xl">
+                <Truck size={20} color="white" />
               </View>
             </View>
           </View>
           <View className="bg-white rounded-xl p-4 flex-1 ml-2 shadow-sm">
             <View className="flex-row items-center justify-between">
               <View>
-                <Text className="text-2xl font-bold text-gray-900">
+                <Text className="text-2xl font-bold text-gray-900 mb-1">
                   {user.totalBookings}
                 </Text>
                 <Text className="text-sm text-gray-600">Total Moves</Text>
               </View>
-              <View className="bg-blue-100 p-2 rounded-full">
-                <Package size={20} color="#2563eb" />
+              <View className="bg-blue-500 p-3 rounded-xl">
+                <Package size={20} color="white" />
               </View>
             </View>
           </View>
@@ -497,13 +593,13 @@ export default function CustomerDashboard() {
       </View>
 
       {/* Tab Navigation */}
-      <View className="px-4 mb-4">
+      <View className="px-4 mb-6">
         <View className="bg-white rounded-xl p-1 flex-row shadow-sm">
           {["active", "pending", "history"].map((tab) => (
             <TouchableOpacity
               key={tab}
               className={`flex-1 py-3 rounded-lg ${
-                activeTab === tab ? "bg-blue-600" : "bg-transparent"
+                activeTab === tab ? "bg-blue-500" : "bg-transparent"
               }`}
               onPress={() => setActiveTab(tab as any)}
             >
@@ -524,9 +620,11 @@ export default function CustomerDashboard() {
         {filteredBookings.length > 0 ? (
           filteredBookings.map(renderBookingCard)
         ) : (
-          <View className="bg-white rounded-xl p-8 items-center">
-            <Package size={48} color="#9ca3af" />
-            <Text className="text-lg font-semibold text-gray-900 mt-4 mb-2">
+          <View className="bg-white rounded-xl p-8 items-center shadow-sm">
+            <View className="bg-gray-100 p-4 rounded-full mb-4">
+              <Package size={32} color="#9ca3af" />
+            </View>
+            <Text className="text-lg font-bold text-gray-900 mb-2">
               No {activeTab} bookings
             </Text>
             <Text className="text-sm text-gray-600 text-center mb-6">
@@ -536,8 +634,14 @@ export default function CustomerDashboard() {
               {activeTab === "history" && "Your move history will appear here."}
             </Text>
             <TouchableOpacity
-              className="bg-blue-600 px-6 py-3 rounded-xl"
-              onPress={() => router.push("/item-detection")}
+              className="bg-blue-500 px-6 py-3 rounded-xl"
+              onPress={() => {
+                try {
+                  navigation.push("/item-detection");
+                } catch (error) {
+                  console.log("Navigation not available in this context");
+                }
+              }}
             >
               <Text className="text-white font-semibold">Book a Move</Text>
             </TouchableOpacity>
@@ -547,10 +651,17 @@ export default function CustomerDashboard() {
 
       {/* Floating Action Button */}
       <TouchableOpacity
-        className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg"
-        onPress={() => router.push("/item-detection")}
+        className="absolute bottom-6 right-4 bg-blue-500 rounded-xl shadow-lg flex-row items-center px-4 py-3"
+        onPress={() => {
+          try {
+            navigation.push("/item-detection");
+          } catch (error) {
+            console.log("Navigation not available in this context");
+          }
+        }}
       >
-        <Plus size={24} color="white" />
+        <Plus size={16} color="white" />
+        <Text className="text-white font-semibold text-sm ml-2">New Move</Text>
       </TouchableOpacity>
 
       {/* Extend Booking Modal */}
@@ -673,6 +784,86 @@ export default function CustomerDashboard() {
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Driver Location Modal */}
+      <Modal
+        visible={showDriverLocation}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowDriverLocation(false)}
+      >
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="bg-white rounded-t-2xl p-6 max-h-4/5">
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-xl font-bold text-gray-900">
+                🚛 Driver Location
+              </Text>
+              <TouchableOpacity onPress={() => setShowDriverLocation(false)}>
+                <X size={24} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            {selectedActiveBooking?.driverLocation && (
+              <View>
+                {/* Map Placeholder */}
+                <View className="bg-gray-100 rounded-xl h-64 mb-6 items-center justify-center">
+                  <Navigation size={48} color="#6b7280" />
+                  <Text className="text-gray-600 font-semibold mt-2">
+                    Live Map Integration
+                  </Text>
+                  <Text className="text-gray-500 text-sm text-center mt-1">
+                    Real-time driver tracking will be implemented here
+                  </Text>
+                </View>
+
+                {/* Driver Status */}
+                <View className="bg-blue-50 rounded-xl p-4 mb-4">
+                  <Text className="text-blue-900 font-semibold mb-2">
+                    Current Status
+                  </Text>
+                  <Text className="text-blue-800">
+                    {selectedActiveBooking.driverLocation.status}
+                  </Text>
+                </View>
+
+                {/* Location Details */}
+                <View className="space-y-3">
+                  <View className="flex-row items-center">
+                    <MapPin size={20} color="#059669" />
+                    <Text className="text-gray-700 ml-3 flex-1">
+                      {selectedActiveBooking.driverLocation.address}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Clock size={20} color="#f59e0b" />
+                    <Text className="text-gray-700 ml-3">
+                      ETA: {selectedActiveBooking.driverLocation.eta}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Phone size={20} color="#3b82f6" />
+                    <Text className="text-gray-700 ml-3">
+                      {selectedActiveBooking.driverPhone}
+                    </Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  className="bg-blue-600 py-4 px-6 rounded-xl mt-6"
+                  onPress={() => callDriver(selectedActiveBooking.driverPhone!)}
+                >
+                  <View className="flex-row items-center justify-center">
+                    <Phone size={20} color="white" />
+                    <Text className="text-white font-semibold ml-2">
+                      Call Driver
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
       </Modal>

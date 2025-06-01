@@ -50,6 +50,13 @@ export default function RootLayout() {
         />
         <Stack.Screen name="date-time" options={{ headerShown: false }} />
         <Stack.Screen name="summary" options={{ headerShown: false }} />
+        <Stack.Screen name="auth" options={{ headerShown: false }} />
+        <Stack.Screen name="payment" options={{ headerShown: false }} />
+        <Stack.Screen name="success" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="customer-dashboard"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />

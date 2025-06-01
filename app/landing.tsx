@@ -29,7 +29,7 @@ export default function LandingScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#2563eb" />
-      <View className="bg-blue-600 pt-16 pb-6">
+      <View className="bg-blue-600 pt-20 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Welcome to Tranzr
@@ -101,6 +101,18 @@ export default function LandingScreen() {
                 </View>
               </View>
             </View>
+          </View>
+
+          {/* Sign In Option */}
+          <View className="mb-4">
+            <TouchableOpacity
+              className="bg-gray-100 py-3 px-4 rounded-xl flex-row justify-center items-center mb-3 border border-gray-200"
+              onPress={() => router.push("/auth")}
+            >
+              <Text className="text-gray-700 text-center font-semibold text-base">
+                Already have an account? Sign In
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {/* Get Started Button */}

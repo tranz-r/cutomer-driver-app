@@ -52,11 +52,11 @@ export default function SummaryScreen() {
 
   const handleCompleteBooking = () => {
     if (!isSignedIn) {
-      setShowSignInModal(true);
+      // Navigate to auth screen instead of showing modal
+      router.push("/auth");
     } else {
-      // Process booking
-      console.log("Processing booking...");
-      // Navigate to confirmation or payment
+      // Navigate to payment screen
+      router.push("/payment");
     }
   };
 
@@ -71,7 +71,7 @@ export default function SummaryScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#475569" />
-      <View className="bg-slate-600 pt-16 pb-6">
+      <View className="bg-slate-600 pt-20 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
@@ -259,7 +259,7 @@ export default function SummaryScreen() {
           >
             <CheckCircle size={22} color="white" />
             <Text className="text-white text-center font-bold text-lg ml-3">
-              {isSignedIn ? "Complete Booking" : "Sign In to Complete Booking"}
+              {isSignedIn ? "Proceed to Payment" : "Sign In to Continue"}
             </Text>
           </TouchableOpacity>
 
