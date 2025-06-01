@@ -122,7 +122,7 @@ export default function VanSelectionScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#ea580c" />
-      <View className="bg-orange-600 pt-40 pb-6">
+      <View className="bg-orange-600 pt-20 pb-6">
         <View className="px-6">
           <Text className="text-2xl font-bold text-white mb-1">
             Select Van & Crew

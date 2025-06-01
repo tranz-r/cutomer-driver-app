@@ -23,6 +23,7 @@ import { router } from "expo-router";
 export default function SummaryScreen() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(false);
 
   // Mock data - in real app this would come from previous screens
   const bookingData = {
@@ -51,13 +52,19 @@ export default function SummaryScreen() {
   };
 
   const handleCompleteBooking = () => {
-    if (!isSignedIn) {
-      // Navigate to auth screen instead of showing modal
-      router.push("/auth");
-    } else {
-      // Navigate to payment screen
-      router.push("/payment");
-    }
+    setIsCheckingAuth(true);
+
+    // Simulate checking authentication status
+    setTimeout(() => {
+      setIsCheckingAuth(false);
+      if (!isSignedIn) {
+        // Navigate to auth screen - user will be redirected to payment after registration
+        router.push("/auth");
+      } else {
+        // User is logged in, go directly to payment
+        router.push("/payment");
+      }
+    }, 500);
   };
 
   const handleSignIn = (method: string) => {
@@ -71,7 +78,7 @@ export default function SummaryScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#475569" />
-      <View className="bg-slate-600 pt-40 pb-6">
+      <View className="bg-slate-600 pt-20 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
@@ -254,20 +261,31 @@ export default function SummaryScreen() {
 
           {/* Complete Booking Button */}
           <TouchableOpacity
-            className="py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg bg-green-600"
+            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
+              isCheckingAuth ? "bg-gray-400" : "bg-green-600"
+            }`}
             onPress={handleCompleteBooking}
+            disabled={isCheckingAuth}
           >
-            <CheckCircle size={22} color="white" />
-            <Text className="text-white text-center font-bold text-lg ml-3">
-              {isSignedIn ? "Proceed to Payment" : "Sign In to Continue"}
-            </Text>
+            {isCheckingAuth ? (
+              <Text className="text-white text-center font-bold text-lg">
+                Checking...
+              </Text>
+            ) : (
+              <>
+                <CheckCircle size={22} color="white" />
+                <Text className="text-white text-center font-bold text-lg ml-3">
+                  Checkout
+                </Text>
+              </>
+            )}
           </TouchableOpacity>
 
-          {!isSignedIn && (
-            <Text className="text-center text-sm text-gray-500 mt-3">
-              You'll need to sign in to complete your booking
-            </Text>
-          )}
+          <Text className="text-center text-sm text-gray-500 mt-3">
+            {isSignedIn
+              ? "Proceed to secure payment"
+              : "You'll be asked to sign in to complete your booking"}
+          </Text>
         </View>
       </ScrollView>
       <View className="h-8" />

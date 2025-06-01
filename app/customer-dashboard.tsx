@@ -514,7 +514,7 @@ export default function CustomerDashboard() {
       <StatusBar style="light" backgroundColor="#1e40af" translucent={false} />
 
       {/* Header */}
-      <View className="bg-blue-600 pt-40 pb-8">
+      <View className="bg-blue-600 pt-20 pb-8">
         <View className="px-4">
           <View className="flex-row justify-between items-center mb-4">
             <View className="flex-1">

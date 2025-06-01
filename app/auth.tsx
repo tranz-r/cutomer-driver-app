@@ -68,32 +68,71 @@ export default function AuthScreen() {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      Alert.alert(
-        "Success",
-        isSignUp ? "Account created successfully!" : "Welcome back!",
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/customer-dashboard"),
-          },
-        ],
-      );
+
+      // Check if user came from booking flow (summary screen)
+      const fromBooking = router.canGoBack();
+
+      if (fromBooking) {
+        // User came from booking flow, redirect to payment
+        Alert.alert(
+          "Success",
+          isSignUp
+            ? "Account created successfully! Redirecting to payment..."
+            : "Welcome back! Redirecting to payment...",
+          [
+            {
+              text: "OK",
+              onPress: () => router.replace("/payment"),
+            },
+          ],
+        );
+      } else {
+        // Normal login flow, go to dashboard
+        Alert.alert(
+          "Success",
+          isSignUp ? "Account created successfully!" : "Welcome back!",
+          [
+            {
+              text: "OK",
+              onPress: () => router.replace("/customer-dashboard"),
+            },
+          ],
+        );
+      }
     }, 1500);
   };
 
   const handleSocialAuth = (provider: string) => {
-    Alert.alert("Success", `Signed in with ${provider}!`, [
-      {
-        text: "OK",
-        onPress: () => router.replace("/customer-dashboard"),
-      },
-    ]);
+    // Check if user came from booking flow (summary screen)
+    const fromBooking = router.canGoBack();
+
+    if (fromBooking) {
+      // User came from booking flow, redirect to payment
+      Alert.alert(
+        "Success",
+        `Signed in with ${provider}! Redirecting to payment...`,
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/payment"),
+          },
+        ],
+      );
+    } else {
+      // Normal login flow, go to dashboard
+      Alert.alert("Success", `Signed in with ${provider}!`, [
+        {
+          text: "OK",
+          onPress: () => router.replace("/customer-dashboard"),
+        },
+      ]);
+    }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#2563eb" translucent={false} />
-      <View className="bg-blue-600 pt-40 pb-6">
+      <View className="bg-blue-600 pt-20 pb-6">
         <View className="px-4">
           <View className="flex-row items-center mb-4">
             <TouchableOpacity
@@ -138,9 +177,7 @@ export default function AuthScreen() {
             className="flex-row items-center justify-center py-4 px-6 bg-[#1877F2] rounded-2xl mb-4 shadow-lg"
             onPress={() => handleSocialAuth("Facebook")}
           >
-            <View className="bg-white rounded-full p-1 mr-3">
-              <Text className="text-[#1877F2] text-sm font-bold">f</Text>
-            </View>
+            <Text className="text-white text-lg font-bold mr-3">f</Text>
             <Text className="text-white font-semibold text-base">
               Continue with Facebook
             </Text>
@@ -150,9 +187,7 @@ export default function AuthScreen() {
             className="flex-row items-center justify-center py-4 px-6 bg-white border border-gray-200 rounded-2xl mb-4 shadow-sm"
             onPress={() => handleSocialAuth("Google")}
           >
-            <View className="bg-white rounded-full p-1 mr-3 border border-gray-200">
-              <Text className="text-[#4285F4] text-sm font-bold">G</Text>
-            </View>
+            <Text className="text-[#4285F4] text-lg font-bold mr-3">G</Text>
             <Text className="text-gray-700 font-semibold text-base">
               Continue with Google
             </Text>
@@ -162,9 +197,7 @@ export default function AuthScreen() {
             className="flex-row items-center justify-center py-4 px-6 bg-black rounded-2xl mb-4 shadow-lg"
             onPress={() => handleSocialAuth("Apple")}
           >
-            <View className="bg-white rounded-full p-1 mr-3">
-              <Text className="text-black text-sm font-bold">A</Text>
-            </View>
+            <Text className="text-white text-lg font-bold mr-3">🍎</Text>
             <Text className="text-white font-semibold text-base">
               Continue with Apple
             </Text>
