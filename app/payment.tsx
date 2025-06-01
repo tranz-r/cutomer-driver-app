@@ -126,7 +126,26 @@ export default function PaymentScreen() {
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="flex-row items-center px-4 py-4 border-b border-gray-200">
+      <View className="bg-blue-600 pt-24 pb-6">
+        <View className="px-4">
+          <View className="flex-row items-center">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="p-2 rounded-full bg-white/20 mr-4"
+            >
+              <ArrowLeft size={20} color="white" />
+            </TouchableOpacity>
+            <Text className="text-2xl font-bold text-white">
+              Payment Details
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View
+        className="flex-row items-center px-4 py-4 border-b border-gray-200"
+        style={{ display: "none" }}
+      >
         <TouchableOpacity
           onPress={() => router.back()}
           className="p-2 rounded-full bg-gray-100"

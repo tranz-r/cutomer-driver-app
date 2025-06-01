@@ -86,7 +86,7 @@ export default function OriginDestinationScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#0891b2" />
-      <View className="bg-cyan-600 pt-20 pb-6">
+      <View className="bg-cyan-600 pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Origin & Destination

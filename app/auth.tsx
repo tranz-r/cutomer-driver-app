@@ -132,7 +132,7 @@ export default function AuthScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#2563eb" translucent={false} />
-      <View className="bg-blue-600 pt-20 pb-6">
+      <View className="bg-blue-600 pt-24 pb-6">
         <View className="px-4">
           <View className="flex-row items-center mb-4">
             <TouchableOpacity
