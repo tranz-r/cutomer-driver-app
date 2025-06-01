@@ -64,7 +64,8 @@ export default function SummaryScreen() {
     console.log(`Signing in with ${method}`);
     setIsSignedIn(true);
     setShowSignInModal(false);
-    // In real app, implement actual authentication
+    // Simulate successful login and navigate to customer dashboard
+    router.replace("/customer-dashboard");
   };
 
   return (
