@@ -29,7 +29,7 @@ export default function LandingScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#2563eb" />
-      <View className="bg-blue-600 pt-20 pb-6">
+      <View className="bg-blue-600 pt-40 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Welcome to Tranzr
@@ -140,6 +140,7 @@ export default function LandingScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+      <View className="h-8" />
     </SafeAreaView>
   );
 }

@@ -238,7 +238,7 @@ const MediaUploader = ({
           <Text className="text-xl font-bold text-gray-900">Media Preview</Text>
           <View className="bg-blue-100 px-3 py-1 rounded-full">
             <Text className="text-blue-700 font-semibold text-sm">
-              {mediaItems.length} upload{mediaItems.length !== 1 ? "s" : ""}
+              {mediaItems.length} media file{mediaItems.length !== 1 ? "s" : ""}
             </Text>
           </View>
         </View>

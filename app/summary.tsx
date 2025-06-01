@@ -71,7 +71,7 @@ export default function SummaryScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#475569" />
-      <View className="bg-slate-600 pt-20 pb-6">
+      <View className="bg-slate-600 pt-40 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
