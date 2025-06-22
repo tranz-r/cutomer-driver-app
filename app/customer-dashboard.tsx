@@ -294,7 +294,7 @@ export default function CustomerDashboard() {
   useEffect(() => {
     // Simulate checking if user is authenticated
     // In a real app, this would check stored auth tokens
-    const isAuthenticated = false; // This would be your actual auth check
+    const isAuthenticated = true; // Set to true for now since user just authenticated
 
     if (!isAuthenticated) {
       // Redirect to auth if not authenticated

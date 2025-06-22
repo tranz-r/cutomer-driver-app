@@ -65,8 +65,8 @@ export default function SuccessScreen() {
   }, [confirmation]);
 
   const handleGoToDashboard = () => {
-    // Navigate to auth screen first, then to dashboard after authentication
-    router.replace("/auth");
+    // Navigate to auth screen with redirect parameter
+    router.push("/auth?redirectTo=dashboard");
   };
 
   return (

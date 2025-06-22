@@ -19,9 +19,10 @@ import {
   ArrowLeft,
   CheckCircle,
 } from "lucide-react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function AuthScreen() {
+  const { redirectTo } = useLocalSearchParams();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,25 +70,9 @@ export default function AuthScreen() {
     setTimeout(() => {
       setIsLoading(false);
 
-      // Check if user came from booking flow (summary screen)
-      const fromBooking = router.canGoBack();
-
-      if (fromBooking) {
-        // User came from booking flow, redirect to payment
-        Alert.alert(
-          "Success",
-          isSignUp
-            ? "Account created successfully! Redirecting to payment..."
-            : "Welcome back! Redirecting to payment...",
-          [
-            {
-              text: "OK",
-              onPress: () => router.replace("/payment"),
-            },
-          ],
-        );
-      } else {
-        // Normal login flow, go to dashboard
+      // Check if redirectTo parameter is set to dashboard
+      if (redirectTo === "dashboard") {
+        // User came from success screen, redirect to dashboard
         Alert.alert(
           "Success",
           isSignUp ? "Account created successfully!" : "Welcome back!",
@@ -98,34 +83,76 @@ export default function AuthScreen() {
             },
           ],
         );
+      } else {
+        // Check if user came from booking flow (summary screen)
+        const fromBooking = router.canGoBack();
+
+        if (fromBooking) {
+          // User came from booking flow, redirect to payment
+          Alert.alert(
+            "Success",
+            isSignUp
+              ? "Account created successfully! Redirecting to payment..."
+              : "Welcome back! Redirecting to payment...",
+            [
+              {
+                text: "OK",
+                onPress: () => router.replace("/payment"),
+              },
+            ],
+          );
+        } else {
+          // Normal login flow, go to dashboard
+          Alert.alert(
+            "Success",
+            isSignUp ? "Account created successfully!" : "Welcome back!",
+            [
+              {
+                text: "OK",
+                onPress: () => router.replace("/customer-dashboard"),
+              },
+            ],
+          );
+        }
       }
     }, 1500);
   };
 
   const handleSocialAuth = (provider: string) => {
-    // Check if user came from booking flow (summary screen)
-    const fromBooking = router.canGoBack();
-
-    if (fromBooking) {
-      // User came from booking flow, redirect to payment
-      Alert.alert(
-        "Success",
-        `Signed in with ${provider}! Redirecting to payment...`,
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/payment"),
-          },
-        ],
-      );
-    } else {
-      // Normal login flow, go to dashboard
+    // Check if redirectTo parameter is set to dashboard
+    if (redirectTo === "dashboard") {
+      // User came from success screen, redirect to dashboard
       Alert.alert("Success", `Signed in with ${provider}!`, [
         {
           text: "OK",
           onPress: () => router.replace("/customer-dashboard"),
         },
       ]);
+    } else {
+      // Check if user came from booking flow (summary screen)
+      const fromBooking = router.canGoBack();
+
+      if (fromBooking) {
+        // User came from booking flow, redirect to payment
+        Alert.alert(
+          "Success",
+          `Signed in with ${provider}! Redirecting to payment...`,
+          [
+            {
+              text: "OK",
+              onPress: () => router.replace("/payment"),
+            },
+          ],
+        );
+      } else {
+        // Normal login flow, go to dashboard
+        Alert.alert("Success", `Signed in with ${provider}!`, [
+          {
+            text: "OK",
+            onPress: () => router.replace("/customer-dashboard"),
+          },
+        ]);
+      }
     }
   };
 
