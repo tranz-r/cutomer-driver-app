@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -17,6 +18,7 @@ import {
   MapPin,
   ArrowLeft,
   CheckCircle,
+  Smartphone,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -27,6 +29,9 @@ export default function PaymentScreen() {
   const [cardholderName, setCardholderName] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<
+    "card" | "apple" | "google"
+  >("card");
 
   // Mock booking data - in real app this would come from state/props
   const bookingData = {
@@ -54,7 +59,43 @@ export default function PaymentScreen() {
     return cleaned;
   };
 
-  const handlePayment = async () => {
+  const handleApplePayment = async () => {
+    setIsProcessing(true);
+    try {
+      // Simulate Apple Pay processing
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Generate booking confirmation number and pass to success page
+      const confirmationNumber = "TRZ" + Date.now().toString().slice(-6);
+      router.replace(`/success?confirmation=${confirmationNumber}`);
+    } catch (error) {
+      setIsProcessing(false);
+      Alert.alert(
+        "Payment Failed",
+        "Apple Pay payment was cancelled or failed.",
+      );
+    }
+  };
+
+  const handleGooglePayment = async () => {
+    setIsProcessing(true);
+    try {
+      // Simulate Google Pay processing
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Generate booking confirmation number and pass to success page
+      const confirmationNumber = "TRZ" + Date.now().toString().slice(-6);
+      router.replace(`/success?confirmation=${confirmationNumber}`);
+    } catch (error) {
+      setIsProcessing(false);
+      Alert.alert(
+        "Payment Failed",
+        "Google Pay payment was cancelled or failed.",
+      );
+    }
+  };
+
+  const handleCardPayment = async () => {
     if (
       !cardNumber.trim() ||
       !expiryDate.trim() ||
@@ -108,7 +149,9 @@ export default function PaymentScreen() {
 
       if (paymentResult.success) {
         setIsProcessing(false);
-        router.replace("/success");
+        // Generate booking confirmation number and pass to success page
+        const confirmationNumber = "TRZ" + Date.now().toString().slice(-6);
+        router.replace(`/success?confirmation=${confirmationNumber}`);
       } else {
         throw new Error("Payment failed");
       }
@@ -118,6 +161,16 @@ export default function PaymentScreen() {
         "Payment Failed",
         "There was an issue processing your payment. Please check your card details and try again.",
       );
+    }
+  };
+
+  const handlePayment = () => {
+    if (paymentMethod === "apple") {
+      handleApplePayment();
+    } else if (paymentMethod === "google") {
+      handleGooglePayment();
+    } else {
+      handleCardPayment();
     }
   };
 
@@ -201,124 +254,216 @@ export default function PaymentScreen() {
             Payment Information
           </Text>
 
+          {/* Payment Method Selection */}
+          <View className="mb-6">
+            <Text className="text-sm font-semibold text-gray-700 mb-3">
+              Choose Payment Method
+            </Text>
+            <View className="space-y-3">
+              {/* Apple Pay (iOS only) */}
+              {Platform.OS === "ios" && (
+                <TouchableOpacity
+                  className={`flex-row items-center p-4 rounded-xl border-2 ${
+                    paymentMethod === "apple"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 bg-white"
+                  }`}
+                  onPress={() => setPaymentMethod("apple")}
+                >
+                  <View className="bg-black rounded-lg p-2 mr-3">
+                    <Smartphone size={20} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="font-semibold text-gray-900">
+                      Apple Pay
+                    </Text>
+                    <Text className="text-sm text-gray-600">
+                      Pay with Touch ID or Face ID
+                    </Text>
+                  </View>
+                  {paymentMethod === "apple" && (
+                    <CheckCircle size={20} color="#3b82f6" />
+                  )}
+                </TouchableOpacity>
+              )}
+
+              {/* Google Pay (Android only) */}
+              {Platform.OS === "android" && (
+                <TouchableOpacity
+                  className={`flex-row items-center p-4 rounded-xl border-2 ${
+                    paymentMethod === "google"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 bg-white"
+                  }`}
+                  onPress={() => setPaymentMethod("google")}
+                >
+                  <View className="bg-blue-600 rounded-lg p-2 mr-3">
+                    <Smartphone size={20} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="font-semibold text-gray-900">
+                      Google Pay
+                    </Text>
+                    <Text className="text-sm text-gray-600">
+                      Pay with your saved cards
+                    </Text>
+                  </View>
+                  {paymentMethod === "google" && (
+                    <CheckCircle size={20} color="#3b82f6" />
+                  )}
+                </TouchableOpacity>
+              )}
+
+              {/* Credit/Debit Card */}
+              <TouchableOpacity
+                className={`flex-row items-center p-4 rounded-xl border-2 ${
+                  paymentMethod === "card"
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-white"
+                }`}
+                onPress={() => setPaymentMethod("card")}
+              >
+                <View className="bg-gray-600 rounded-lg p-2 mr-3">
+                  <CreditCard size={20} color="white" />
+                </View>
+                <View className="flex-1">
+                  <Text className="font-semibold text-gray-900">
+                    Credit/Debit Card
+                  </Text>
+                  <Text className="text-sm text-gray-600">
+                    Visa, Mastercard, Amex
+                  </Text>
+                </View>
+                {paymentMethod === "card" && (
+                  <CheckCircle size={20} color="#3b82f6" />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
           {/* Stripe Integration Notice */}
           <View className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
             <Text className="text-blue-800 font-semibold mb-2">
               🔒 Secure Payment with Stripe
             </Text>
             <Text className="text-blue-700 text-sm">
-              Your payment is processed securely through Stripe. All card
+              Your payment is processed securely through Stripe. All payment
               details are encrypted and never stored on our servers.
             </Text>
           </View>
 
-          {/* Card Number */}
-          <View className="mb-4">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Card Number
-            </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-              <CreditCard size={20} color="#6b7280" />
-              <TextInput
-                className="flex-1 ml-3 text-base text-gray-900"
-                value={cardNumber}
-                onChangeText={(text) => {
-                  const formatted = formatCardNumber(text);
-                  if (formatted.replace(/\s/g, "").length <= 16) {
-                    setCardNumber(formatted);
-                  }
-                }}
-                placeholder="1234 5678 9012 3456"
-                placeholderTextColor="#9ca3af"
-                keyboardType="numeric"
-                maxLength={19}
-              />
-            </View>
-          </View>
-
-          {/* Expiry and CVV */}
-          <View className="flex-row mb-4">
-            <View className="flex-1 mr-2">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Expiry Date
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Calendar size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={expiryDate}
-                  onChangeText={(text) => {
-                    const formatted = formatExpiryDate(text);
-                    if (formatted.length <= 5) {
-                      setExpiryDate(formatted);
-                    }
-                  }}
-                  placeholder="MM/YY"
-                  placeholderTextColor="#9ca3af"
-                  keyboardType="numeric"
-                  maxLength={5}
-                />
+          {/* Card Details (only show when card payment is selected) */}
+          {paymentMethod === "card" && (
+            <>
+              {/* Card Number */}
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Card Number
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <CreditCard size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={cardNumber}
+                    onChangeText={(text) => {
+                      const formatted = formatCardNumber(text);
+                      if (formatted.replace(/\s/g, "").length <= 16) {
+                        setCardNumber(formatted);
+                      }
+                    }}
+                    placeholder="1234 5678 9012 3456"
+                    placeholderTextColor="#9ca3af"
+                    keyboardType="numeric"
+                    maxLength={19}
+                  />
+                </View>
               </View>
-            </View>
-            <View className="flex-1 ml-2">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                CVV
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Lock size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={cvv}
-                  onChangeText={(text) => {
-                    if (text.length <= 4) {
-                      setCvv(text.replace(/\D/g, ""));
-                    }
-                  }}
-                  placeholder="123"
-                  placeholderTextColor="#9ca3af"
-                  keyboardType="numeric"
-                  maxLength={4}
-                  secureTextEntry
-                />
+
+              {/* Expiry and CVV */}
+              <View className="flex-row mb-4">
+                <View className="flex-1 mr-2">
+                  <Text className="text-sm font-semibold text-gray-700 mb-2">
+                    Expiry Date
+                  </Text>
+                  <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                    <Calendar size={20} color="#6b7280" />
+                    <TextInput
+                      className="flex-1 ml-3 text-base text-gray-900"
+                      value={expiryDate}
+                      onChangeText={(text) => {
+                        const formatted = formatExpiryDate(text);
+                        if (formatted.length <= 5) {
+                          setExpiryDate(formatted);
+                        }
+                      }}
+                      placeholder="MM/YY"
+                      placeholderTextColor="#9ca3af"
+                      keyboardType="numeric"
+                      maxLength={5}
+                    />
+                  </View>
+                </View>
+                <View className="flex-1 ml-2">
+                  <Text className="text-sm font-semibold text-gray-700 mb-2">
+                    CVV
+                  </Text>
+                  <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                    <Lock size={20} color="#6b7280" />
+                    <TextInput
+                      className="flex-1 ml-3 text-base text-gray-900"
+                      value={cvv}
+                      onChangeText={(text) => {
+                        if (text.length <= 4) {
+                          setCvv(text.replace(/\D/g, ""));
+                        }
+                      }}
+                      placeholder="123"
+                      placeholderTextColor="#9ca3af"
+                      keyboardType="numeric"
+                      maxLength={4}
+                      secureTextEntry
+                    />
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
 
-          {/* Cardholder Name */}
-          <View className="mb-4">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Cardholder Name
-            </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-              <User size={20} color="#6b7280" />
-              <TextInput
-                className="flex-1 ml-3 text-base text-gray-900"
-                value={cardholderName}
-                onChangeText={setCardholderName}
-                placeholder="John Smith"
-                placeholderTextColor="#9ca3af"
-                autoCapitalize="words"
-              />
-            </View>
-          </View>
+              {/* Cardholder Name */}
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Cardholder Name
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <User size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={cardholderName}
+                    onChangeText={setCardholderName}
+                    placeholder="John Smith"
+                    placeholderTextColor="#9ca3af"
+                    autoCapitalize="words"
+                  />
+                </View>
+              </View>
 
-          {/* Billing Address */}
-          <View className="mb-6">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Billing Address
-            </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-              <MapPin size={20} color="#6b7280" />
-              <TextInput
-                className="flex-1 ml-3 text-base text-gray-900"
-                value={billingAddress}
-                onChangeText={setBillingAddress}
-                placeholder="123 Main Street, London, UK"
-                placeholderTextColor="#9ca3af"
-                multiline
-              />
-            </View>
-          </View>
+              {/* Billing Address */}
+              <View className="mb-6">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Billing Address
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <MapPin size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={billingAddress}
+                    onChangeText={setBillingAddress}
+                    placeholder="123 Main Street, London, UK"
+                    placeholderTextColor="#9ca3af"
+                    multiline
+                  />
+                </View>
+              </View>
+            </>
+          )}
 
           {/* Security Notice */}
           <View className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
@@ -344,13 +489,21 @@ export default function PaymentScreen() {
           >
             {isProcessing ? (
               <Text className="text-white font-semibold text-lg">
-                Processing Payment...
+                {paymentMethod === "apple"
+                  ? "Processing Apple Pay..."
+                  : paymentMethod === "google"
+                    ? "Processing Google Pay..."
+                    : "Processing Payment..."}
               </Text>
             ) : (
               <>
                 <CheckCircle size={22} color="white" />
                 <Text className="text-white font-semibold text-lg ml-2">
-                  Pay £{bookingData.total}
+                  {paymentMethod === "apple"
+                    ? `Pay with Apple Pay £${bookingData.total}`
+                    : paymentMethod === "google"
+                      ? `Pay with Google Pay £${bookingData.total}`
+                      : `Pay £${bookingData.total}`}
                 </Text>
               </>
             )}

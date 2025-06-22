@@ -52,19 +52,8 @@ export default function SummaryScreen() {
   };
 
   const handleCompleteBooking = () => {
-    setIsCheckingAuth(true);
-
-    // Simulate checking authentication status
-    setTimeout(() => {
-      setIsCheckingAuth(false);
-      if (!isSignedIn) {
-        // Navigate to auth screen - user will be redirected to payment after registration
-        router.push("/auth");
-      } else {
-        // User is logged in, go directly to payment
-        router.push("/payment");
-      }
-    }, 500);
+    // Navigate directly to payment without authentication
+    router.push("/payment");
   };
 
   const handleSignIn = (method: string) => {
@@ -261,30 +250,17 @@ export default function SummaryScreen() {
 
           {/* Complete Booking Button */}
           <TouchableOpacity
-            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
-              isCheckingAuth ? "bg-gray-400" : "bg-green-600"
-            }`}
+            className="py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg bg-green-600"
             onPress={handleCompleteBooking}
-            disabled={isCheckingAuth}
           >
-            {isCheckingAuth ? (
-              <Text className="text-white text-center font-bold text-lg">
-                Checking...
-              </Text>
-            ) : (
-              <>
-                <CheckCircle size={22} color="white" />
-                <Text className="text-white text-center font-bold text-lg ml-3">
-                  Checkout
-                </Text>
-              </>
-            )}
+            <CheckCircle size={22} color="white" />
+            <Text className="text-white text-center font-bold text-lg ml-3">
+              Checkout
+            </Text>
           </TouchableOpacity>
 
           <Text className="text-center text-sm text-gray-500 mt-3">
-            {isSignedIn
-              ? "Proceed to secure payment"
-              : "You'll be asked to sign in to complete your booking"}
+            Proceed to secure payment
           </Text>
         </View>
       </ScrollView>

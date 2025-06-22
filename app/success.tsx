@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -15,15 +15,22 @@ import {
   Mail,
   Phone,
   ArrowRight,
+  Hash,
 } from "lucide-react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function SuccessScreen() {
+  const { confirmation } = useLocalSearchParams();
+  const [confirmationNumber, setConfirmationNumber] = useState("");
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const fadeAnimation = useRef(new Animated.Value(0)).current;
   const slideAnimation = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
+    // Set confirmation number from params or generate a new one
+    const confNum = confirmation || "TRZ" + Date.now().toString().slice(-6);
+    setConfirmationNumber(confNum.toString());
+
     // Animate success icon
     Animated.sequence([
       Animated.timing(scaleAnimation, {
@@ -55,10 +62,11 @@ export default function SuccessScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [confirmation]);
 
   const handleGoToDashboard = () => {
-    router.replace("/customer-dashboard");
+    // Navigate to auth screen first, then to dashboard after authentication
+    router.replace("/auth");
   };
 
   return (
@@ -103,10 +111,26 @@ export default function SuccessScreen() {
               Booking Confirmed!
             </Text>
 
-            <Text className="text-lg text-gray-600 text-center mb-8 leading-relaxed">
+            <Text className="text-lg text-gray-600 text-center mb-6 leading-relaxed">
               Your move has been successfully booked. We've sent you a
               confirmation email with all the details.
             </Text>
+
+            {/* Booking Confirmation Number */}
+            <View className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 w-full">
+              <View className="flex-row items-center justify-center mb-3">
+                <Hash size={20} color="#059669" />
+                <Text className="text-green-800 font-semibold ml-2">
+                  Booking Confirmation
+                </Text>
+              </View>
+              <Text className="text-3xl font-bold text-green-900 text-center mb-2">
+                {confirmationNumber}
+              </Text>
+              <Text className="text-green-700 text-sm text-center">
+                Please save this confirmation number for your records
+              </Text>
+            </View>
 
             {/* Booking Details Card */}
             <View className="bg-blue-50 rounded-2xl p-6 mb-8 w-full border border-blue-200">

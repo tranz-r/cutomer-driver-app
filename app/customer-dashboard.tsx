@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -289,6 +289,18 @@ export default function CustomerDashboard() {
       },
     ]);
   };
+
+  // Check if user needs to authenticate when component loads
+  useEffect(() => {
+    // Simulate checking if user is authenticated
+    // In a real app, this would check stored auth tokens
+    const isAuthenticated = false; // This would be your actual auth check
+
+    if (!isAuthenticated) {
+      // Redirect to auth if not authenticated
+      navigation.replace("/auth");
+    }
+  }, []);
 
   const handleShowDriverLocation = (booking: Booking) => {
     setSelectedActiveBooking(booking);
