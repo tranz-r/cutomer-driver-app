@@ -8,6 +8,34 @@ import "react-native-reanimated";
 import "../global.css";
 import { Platform } from "react-native";
 
+// Mock document for Hermes engine compatibility
+if (typeof document === "undefined") {
+  const mockElement = {
+    appendChild: () => {},
+    removeChild: () => {},
+    setAttribute: () => {},
+    getAttribute: () => null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    style: {},
+    innerHTML: "",
+    textContent: "",
+  };
+
+  global.document = {
+    createElement: () => mockElement,
+    getElementById: () => mockElement,
+    getElementsByTagName: () => [mockElement],
+    querySelector: () => mockElement,
+    querySelectorAll: () => [mockElement],
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    body: mockElement,
+    head: mockElement,
+    documentElement: mockElement,
+  };
+}
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
