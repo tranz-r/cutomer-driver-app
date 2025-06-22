@@ -141,6 +141,15 @@ export default function ItemDetectionScreen() {
                 isProcessing={isProcessing}
               />
 
+              <View className="bg-orange-50 border border-orange-200 rounded-xl p-4 mt-4">
+                <Text className="text-orange-800 text-sm text-center font-medium">
+                  ⚠️ Important: Make sure all items are clearly visible in your
+                  photos/videos. Smart Detection cannot identify items hidden
+                  behind other objects. You can manually add any missed items
+                  after detection.
+                </Text>
+              </View>
+
               {!isProcessing && !showDetectedItems && (
                 <TouchableOpacity
                   className={`mt-6 py-4 px-6 rounded-xl ${
