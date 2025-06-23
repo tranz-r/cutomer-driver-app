@@ -619,13 +619,13 @@ export default function VanSelectionScreen() {
                   </View>
 
                   {/* What Can Fit */}
-                  <View className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-2">
-                    <Text className="text-emerald-900 font-bold text-xl mb-4">
+                  <View className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-6">
+                    <Text className="text-emerald-900 font-bold text-xl mb-6">
                       Perfect For Your Move
                     </Text>
-                    <View className="space-y-4">
-                      <View>
-                        <Text className="text-emerald-800 font-semibold text-lg mb-2">
+                    <View className="space-y-6">
+                      <View className="mb-4">
+                        <Text className="text-emerald-800 font-semibold text-lg mb-3">
                           Typical 3-4 Bedroom House:
                         </Text>
                         <Text className="text-emerald-700 text-base leading-relaxed">
@@ -640,8 +640,8 @@ export default function VanSelectionScreen() {
                         </Text>
                       </View>
 
-                      <View>
-                        <Text className="text-emerald-800 font-semibold text-lg mb-2">
+                      <View className="mb-4">
+                        <Text className="text-emerald-800 font-semibold text-lg mb-3">
                           Large Items That Fit Easily:
                         </Text>
                         <Text className="text-emerald-700 text-base leading-relaxed">
@@ -654,7 +654,7 @@ export default function VanSelectionScreen() {
                         </Text>
                       </View>
 
-                      <View className="bg-emerald-100 p-4 rounded-xl">
+                      <View className="bg-emerald-100 p-4 rounded-xl mb-4">
                         <Text className="text-emerald-800 font-semibold text-base">
                           💡 Pro Tip: Our experienced team will maximize space
                           efficiency and ensure everything fits securely!
