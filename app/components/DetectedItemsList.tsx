@@ -141,9 +141,12 @@ const DetectedItemsList = ({
                   <TextInput
                     className="border border-blue-300 rounded-lg p-2 mb-2 bg-white text-sm font-medium"
                     value={item.name}
-                    onChangeText={(text) =>
-                      handleUpdateItem({ ...item, name: text })
-                    }
+                    onChangeText={(text) => {
+                      const updatedItems = items.map((i) =>
+                        i.id === item.id ? { ...i, name: text } : i,
+                      );
+                      setItems(updatedItems);
+                    }}
                     placeholder="Item name"
                   />
                   <View className="flex-row justify-between mb-4">
@@ -156,12 +159,17 @@ const DetectedItemsList = ({
                         value={item.height.toString()}
                         onChangeText={(text) => {
                           const height = parseFloat(text) || 0;
-                          handleUpdateItem({
-                            ...item,
-                            height,
-                            volume:
-                              (height * item.width * item.length) / 1000000,
-                          });
+                          const updatedItems = items.map((i) =>
+                            i.id === item.id
+                              ? {
+                                  ...i,
+                                  height,
+                                  volume:
+                                    (height * i.width * i.length) / 1000000,
+                                }
+                              : i,
+                          );
+                          setItems(updatedItems);
                         }}
                         keyboardType="numeric"
                       />
@@ -175,12 +183,17 @@ const DetectedItemsList = ({
                         value={item.width.toString()}
                         onChangeText={(text) => {
                           const width = parseFloat(text) || 0;
-                          handleUpdateItem({
-                            ...item,
-                            width,
-                            volume:
-                              (item.height * width * item.length) / 1000000,
-                          });
+                          const updatedItems = items.map((i) =>
+                            i.id === item.id
+                              ? {
+                                  ...i,
+                                  width,
+                                  volume:
+                                    (i.height * width * i.length) / 1000000,
+                                }
+                              : i,
+                          );
+                          setItems(updatedItems);
                         }}
                         keyboardType="numeric"
                       />
@@ -194,12 +207,17 @@ const DetectedItemsList = ({
                         value={item.length.toString()}
                         onChangeText={(text) => {
                           const length = parseFloat(text) || 0;
-                          handleUpdateItem({
-                            ...item,
-                            length,
-                            volume:
-                              (item.height * item.width * length) / 1000000,
-                          });
+                          const updatedItems = items.map((i) =>
+                            i.id === item.id
+                              ? {
+                                  ...i,
+                                  length,
+                                  volume:
+                                    (i.height * i.width * length) / 1000000,
+                                }
+                              : i,
+                          );
+                          setItems(updatedItems);
                         }}
                         keyboardType="numeric"
                       />
@@ -216,7 +234,13 @@ const DetectedItemsList = ({
                     </TouchableOpacity>
                     <TouchableOpacity
                       className="bg-blue-600 px-8 py-3 rounded-lg flex-1"
-                      onPress={() => setIsEditing(null)}
+                      onPress={() => {
+                        const currentItem = items.find((i) => i.id === item.id);
+                        if (currentItem) {
+                          onUpdateItem(currentItem);
+                        }
+                        setIsEditing(null);
+                      }}
                     >
                       <Text className="text-white font-semibold text-sm text-center">
                         Save
