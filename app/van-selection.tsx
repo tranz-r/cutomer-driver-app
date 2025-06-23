@@ -57,11 +57,12 @@ export default function VanSelectionScreen() {
     },
     {
       id: "large",
-      name: "Luton Van",
+      name: "3.5 Luton Van with Tail Lift",
       capacity: "Up to 35m³",
       dimensions: "5.5m × 2.1m × 2.2m",
       price: "£85/hour",
-      description: "Great for 3-4 bedroom houses",
+      description:
+        "Professional 3.5 tonne Luton van with hydraulic tail lift - perfect for 3-4 bedroom houses",
     },
     {
       id: "xlarge",
@@ -101,7 +102,7 @@ export default function VanSelectionScreen() {
     const DOUBLE_TAP_DELAY = 300;
 
     if (lastTap && now - lastTap < DOUBLE_TAP_DELAY) {
-      // Double tap detected
+      // Double tap detected - set the van details and show modal
       setSelectedVanDetails(van);
       setShowVanModal(true);
     } else {
@@ -350,10 +351,10 @@ export default function VanSelectionScreen() {
         onRequestClose={() => setShowVanModal(false)}
       >
         <View className="flex-1 justify-end bg-black/70">
-          <View className="bg-white rounded-t-2xl p-6 max-h-5/6">
-            <View className="flex-row justify-between items-center mb-6">
+          <View className="bg-white rounded-t-2xl flex-1 mt-20">
+            <View className="flex-row justify-between items-center p-6 pb-4 border-b border-gray-200">
               <Text className="text-2xl font-bold text-gray-900">
-                {selectedVanDetails?.name}
+                {selectedVanDetails?.name || "3.5 Luton Van with Tail Lift"}
               </Text>
               <TouchableOpacity
                 onPress={() => setShowVanModal(false)}
@@ -363,7 +364,10 @@ export default function VanSelectionScreen() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              className="flex-1 px-6"
+            >
               {/* Van Image Gallery */}
               <View className="mb-6">
                 <ScrollView
@@ -393,6 +397,27 @@ export default function VanSelectionScreen() {
                       className="w-80 h-48 rounded-xl"
                       resizeMode="cover"
                     />
+                    <Image
+                      source={{
+                        uri: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=80",
+                      }}
+                      className="w-80 h-48 rounded-xl"
+                      resizeMode="cover"
+                    />
+                    <Image
+                      source={{
+                        uri: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80",
+                      }}
+                      className="w-80 h-48 rounded-xl"
+                      resizeMode="cover"
+                    />
+                    <Image
+                      source={{
+                        uri: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&q=80",
+                      }}
+                      className="w-80 h-48 rounded-xl"
+                      resizeMode="cover"
+                    />
                   </View>
                 </ScrollView>
                 <Text className="text-center text-gray-500 text-sm">
@@ -400,206 +425,428 @@ export default function VanSelectionScreen() {
                 </Text>
               </View>
 
-              <View className="space-y-6 mb-6">
-                {/* About This Van */}
-                <View className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-2xl border border-blue-100">
-                  <Text className="text-blue-900 font-bold text-xl mb-3">
-                    About This Van
-                  </Text>
-                  <Text className="text-blue-800 text-base leading-relaxed">
-                    {selectedVanDetails?.description}. This professional Luton
-                    van features a spacious cargo area with tail lift for
-                    effortless loading. Perfect for house moves with our
-                    experienced crew.
-                  </Text>
-                </View>
-
-                {/* Key Specifications Grid */}
-                <View className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                  <Text className="text-gray-900 font-bold text-xl mb-4">
-                    Key Specifications
-                  </Text>
-                  <View className="grid grid-cols-2 gap-4">
-                    <View className="bg-blue-50 p-4 rounded-xl">
-                      <Package size={28} color="#3b82f6" />
-                      <Text className="text-blue-900 font-bold text-lg mt-2">
-                        {selectedVanDetails?.capacity}
-                      </Text>
-                      <Text className="text-blue-700 text-sm">
-                        Load Capacity
-                      </Text>
-                    </View>
-                    <View className="bg-green-50 p-4 rounded-xl">
-                      <Truck size={28} color="#10b981" />
-                      <Text className="text-green-900 font-bold text-lg mt-2">
-                        {selectedVanDetails?.dimensions}
-                      </Text>
-                      <Text className="text-green-700 text-sm">
-                        Internal Dimensions
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Tail Lift Feature */}
-                <View className="bg-gradient-to-r from-orange-50 to-red-50 p-5 rounded-2xl border border-orange-200">
-                  <View className="flex-row items-center mb-3">
-                    <View className="bg-orange-100 p-3 rounded-full mr-4">
-                      <Text className="text-orange-600 font-bold text-lg">
-                        ⬆️
-                      </Text>
-                    </View>
-                    <Text className="text-orange-900 font-bold text-xl">
-                      Hydraulic Tail Lift
+              <View className="py-4">
+                <View className="space-y-8">
+                  {/* About This Van */}
+                  <View className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-100 mb-2">
+                    <Text className="text-blue-900 font-bold text-xl mb-3">
+                      About This Van
+                    </Text>
+                    <Text className="text-blue-800 text-base leading-relaxed">
+                      {selectedVanDetails?.description ||
+                        "Professional 3.5 tonne Luton van with hydraulic tail lift - perfect for 3-4 bedroom houses"}
+                      . This professional Luton van features a spacious cargo
+                      area with hydraulic tail lift for effortless loading.
+                      Perfect for house moves with our experienced crew.
                     </Text>
                   </View>
-                  <Text className="text-orange-800 text-base leading-relaxed mb-3">
-                    Our Luton van comes equipped with a powerful hydraulic tail
-                    lift that can handle up to 500kg, making loading and
-                    unloading heavy furniture effortless.
-                  </Text>
-                  <View className="bg-orange-100 p-3 rounded-xl">
-                    <Text className="text-orange-700 text-sm font-medium">
-                      ✓ No manual lifting of heavy items
-                      {"\n"}✓ Reduces risk of damage
-                      {"\n"}✓ Faster loading/unloading
-                      {"\n"}✓ Professional equipment included
+
+                  {/* Key Specifications Grid */}
+                  <View className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm mb-6">
+                    <Text className="text-gray-900 font-bold text-xl mb-6">
+                      Key Specifications
                     </Text>
-                  </View>
-                </View>
+                    <View className="flex-row flex-wrap gap-3">
+                      <View className="bg-blue-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Package size={24} color="#3b82f6" />
+                          <Text className="text-blue-700 text-xs font-medium mt-1 text-center">
+                            Load Capacity
+                          </Text>
+                        </View>
+                        <Text className="text-blue-900 font-bold text-base text-center">
+                          {selectedVanDetails?.capacity || "Up to 35m³"}
+                        </Text>
+                      </View>
 
-                {/* Premium Features */}
-                <View className="bg-gradient-to-r from-purple-50 to-pink-50 p-5 rounded-2xl border border-purple-200">
-                  <Text className="text-purple-900 font-bold text-xl mb-4">
-                    Premium Features Included
-                  </Text>
-                  <View className="space-y-3">
-                    <View className="flex-row items-center">
-                      <View className="bg-purple-100 p-2 rounded-full mr-3">
-                        <Text className="text-purple-600">🛡️</Text>
-                      </View>
-                      <View className="flex-1">
-                        <Text className="text-purple-900 font-semibold">
-                          Professional Moving Blankets
-                        </Text>
-                        <Text className="text-purple-700 text-sm">
-                          Protect your furniture during transport
+                      <View className="bg-green-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Truck size={24} color="#10b981" />
+                          <Text className="text-green-700 text-xs font-medium mt-1 text-center">
+                            Internal Dimensions
+                          </Text>
+                        </View>
+                        <Text className="text-green-900 font-bold text-base text-center">
+                          {selectedVanDetails?.dimensions ||
+                            "5.5m × 2.1m × 2.2m"}
                         </Text>
                       </View>
-                    </View>
-                    <View className="flex-row items-center">
-                      <View className="bg-purple-100 p-2 rounded-full mr-3">
-                        <Text className="text-purple-600">🔒</Text>
-                      </View>
-                      <View className="flex-1">
-                        <Text className="text-purple-900 font-semibold">
-                          Secure Tie-Down System
-                        </Text>
-                        <Text className="text-purple-700 text-sm">
-                          Multiple anchor points for safe transport
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="flex-row items-center">
-                      <View className="bg-purple-100 p-2 rounded-full mr-3">
-                        <Text className="text-purple-600">📍</Text>
-                      </View>
-                      <View className="flex-1">
-                        <Text className="text-purple-900 font-semibold">
-                          Real-Time GPS Tracking
-                        </Text>
-                        <Text className="text-purple-700 text-sm">
-                          Track your belongings throughout the move
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="flex-row items-center">
-                      <View className="bg-purple-100 p-2 rounded-full mr-3">
-                        <Text className="text-purple-600">🛡️</Text>
-                      </View>
-                      <View className="flex-1">
-                        <Text className="text-purple-900 font-semibold">
-                          Fully Insured & Licensed
-                        </Text>
-                        <Text className="text-purple-700 text-sm">
-                          Complete peace of mind coverage
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
 
-                {/* What Can Fit */}
-                <View className="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-200">
-                  <Text className="text-emerald-900 font-bold text-xl mb-4">
-                    Perfect For Your Move
-                  </Text>
-                  <View className="space-y-4">
-                    <View>
-                      <Text className="text-emerald-800 font-semibold text-lg mb-2">
-                        Typical 3-4 Bedroom House:
-                      </Text>
-                      <Text className="text-emerald-700 text-base leading-relaxed">
-                        • Living room: 3-seater sofa, armchairs, coffee table,
-                        TV unit
-                        {"\n"}• Dining room: 6-seater table, chairs, sideboard
-                        {"\n"}• Bedrooms: Double beds, wardrobes, chest of
-                        drawers
-                        {"\n"}• Kitchen: Appliances, dining sets, cookware
-                        {"\n"}• Storage: 40-60 moving boxes, miscellaneous items
-                      </Text>
-                    </View>
-                    <View className="bg-emerald-100 p-4 rounded-xl">
-                      <Text className="text-emerald-800 font-semibold text-base">
-                        💡 Pro Tip: Our experienced team will maximize space
-                        efficiency and ensure everything fits securely!
-                      </Text>
+                      <View className="bg-yellow-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Text className="text-yellow-600 font-bold text-xl">
+                            ⚖️
+                          </Text>
+                          <Text className="text-yellow-700 text-xs font-medium mt-1 text-center">
+                            Max Gross Weight
+                          </Text>
+                        </View>
+                        <Text className="text-yellow-900 font-bold text-base text-center">
+                          3.5 Tonnes
+                        </Text>
+                      </View>
+
+                      <View className="bg-purple-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Text className="text-purple-600 font-bold text-xl">
+                            🔧
+                          </Text>
+                          <Text className="text-purple-700 text-xs font-medium mt-1 text-center">
+                            Tail Lift Capacity
+                          </Text>
+                        </View>
+                        <Text className="text-purple-900 font-bold text-base text-center">
+                          500kg
+                        </Text>
+                      </View>
+
+                      <View className="bg-red-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Text className="text-red-600 font-bold text-xl">
+                            ⛽
+                          </Text>
+                          <Text className="text-red-700 text-xs font-medium mt-1 text-center">
+                            Emission Standard
+                          </Text>
+                        </View>
+                        <Text className="text-red-900 font-bold text-base text-center">
+                          Euro 6
+                        </Text>
+                      </View>
+
+                      <View className="bg-indigo-50 p-4 rounded-xl flex-1 min-w-[140px] mb-3">
+                        <View className="items-center mb-2">
+                          <Text className="text-indigo-600 font-bold text-xl">
+                            🚪
+                          </Text>
+                          <Text className="text-indigo-700 text-xs font-medium mt-1 text-center">
+                            Loading Height
+                          </Text>
+                        </View>
+                        <Text className="text-indigo-900 font-bold text-base text-center">
+                          2.1m
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
 
-                {/* Pricing Breakdown */}
-                <View className="bg-gradient-to-r from-gray-50 to-slate-50 p-5 rounded-2xl border border-gray-200">
-                  <Text className="text-gray-900 font-bold text-xl mb-4">
-                    Transparent Pricing
-                  </Text>
-                  <View className="space-y-3">
-                    <View className="flex-row justify-between items-center">
-                      <Text className="text-gray-700 text-base">
-                        Van hire (per hour)
-                      </Text>
-                      <Text className="text-gray-900 font-bold text-lg">
-                        {selectedVanDetails?.price}
+                  {/* Tail Lift Feature */}
+                  <View className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-2xl border border-orange-200 mb-2">
+                    <View className="flex-row items-center mb-3">
+                      <View className="bg-orange-100 p-3 rounded-full mr-4">
+                        <Text className="text-orange-600 font-bold text-lg">
+                          ⬆️
+                        </Text>
+                      </View>
+                      <Text className="text-orange-900 font-bold text-xl">
+                        Hydraulic Tail Lift
                       </Text>
                     </View>
-                    <View className="flex-row justify-between items-center">
-                      <Text className="text-gray-700 text-base">
-                        Fuel & insurance
-                      </Text>
-                      <Text className="text-green-600 font-semibold">
-                        Included
-                      </Text>
-                    </View>
-                    <View className="flex-row justify-between items-center">
-                      <Text className="text-gray-700 text-base">
-                        Professional equipment
-                      </Text>
-                      <Text className="text-green-600 font-semibold">
-                        Included
+                    <Text className="text-orange-800 text-base leading-relaxed mb-3">
+                      Our Luton van comes equipped with a powerful hydraulic
+                      tail lift that can handle up to 500kg, making loading and
+                      unloading heavy furniture effortless.
+                    </Text>
+                    <View className="bg-orange-100 p-3 rounded-xl">
+                      <Text className="text-orange-700 text-sm font-medium">
+                        ✓ No manual lifting of heavy items
+                        {"\n"}✓ Reduces risk of damage
+                        {"\n"}✓ Faster loading/unloading
+                        {"\n"}✓ Professional equipment included
                       </Text>
                     </View>
-                    <View className="border-t border-gray-300 pt-3">
-                      <Text className="text-gray-600 text-sm text-center">
-                        No hidden fees • Pay only for time used • Minimum 2
-                        hours
-                      </Text>
+                  </View>
+
+                  {/* Premium Features */}
+                  <View className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-200 mb-2">
+                    <Text className="text-purple-900 font-bold text-xl mb-4">
+                      Premium Features Included
+                    </Text>
+                    <View className="space-y-3">
+                      <View className="flex-row items-center">
+                        <View className="bg-purple-100 p-2 rounded-full mr-3">
+                          <Text className="text-purple-600">🛡️</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-purple-900 font-semibold">
+                            Professional Moving Blankets
+                          </Text>
+                          <Text className="text-purple-700 text-sm">
+                            Protect your furniture during transport
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-purple-100 p-2 rounded-full mr-3">
+                          <Text className="text-purple-600">🔒</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-purple-900 font-semibold">
+                            Secure Tie-Down System
+                          </Text>
+                          <Text className="text-purple-700 text-sm">
+                            Multiple anchor points for safe transport
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-purple-100 p-2 rounded-full mr-3">
+                          <Text className="text-purple-600">📍</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-purple-900 font-semibold">
+                            Real-Time GPS Tracking
+                          </Text>
+                          <Text className="text-purple-700 text-sm">
+                            Track your belongings throughout the move
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-purple-100 p-2 rounded-full mr-3">
+                          <Text className="text-purple-600">🛡️</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-purple-900 font-semibold">
+                            Fully Insured & Licensed
+                          </Text>
+                          <Text className="text-purple-700 text-sm">
+                            Complete peace of mind coverage
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* What Can Fit */}
+                  <View className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-2">
+                    <Text className="text-emerald-900 font-bold text-xl mb-4">
+                      Perfect For Your Move
+                    </Text>
+                    <View className="space-y-4">
+                      <View>
+                        <Text className="text-emerald-800 font-semibold text-lg mb-2">
+                          Typical 3-4 Bedroom House:
+                        </Text>
+                        <Text className="text-emerald-700 text-base leading-relaxed">
+                          • Living room: 3-seater sofa, armchairs, coffee table,
+                          TV unit
+                          {"\n"}• Dining room: 6-seater table, chairs, sideboard
+                          {"\n"}• Bedrooms: Double beds, wardrobes, chest of
+                          drawers
+                          {"\n"}• Kitchen: Appliances, dining sets, cookware
+                          {"\n"}• Storage: 40-60 moving boxes, miscellaneous
+                          items
+                        </Text>
+                      </View>
+
+                      <View>
+                        <Text className="text-emerald-800 font-semibold text-lg mb-2">
+                          Large Items That Fit Easily:
+                        </Text>
+                        <Text className="text-emerald-700 text-base leading-relaxed">
+                          • King size beds and mattresses
+                          {"\n"}• Large wardrobes (up to 2m wide)
+                          {"\n"}• Washing machines & refrigerators
+                          {"\n"}• Dining tables (8+ seaters)
+                          {"\n"}• Piano or large musical instruments
+                          {"\n"}• Exercise equipment & gym sets
+                        </Text>
+                      </View>
+
+                      <View className="bg-emerald-100 p-4 rounded-xl">
+                        <Text className="text-emerald-800 font-semibold text-base">
+                          💡 Pro Tip: Our experienced team will maximize space
+                          efficiency and ensure everything fits securely!
+                        </Text>
+                      </View>
+
+                      <View className="bg-teal-100 p-4 rounded-xl">
+                        <Text className="text-teal-800 font-semibold text-base mb-2">
+                          📦 Volume Calculator:
+                        </Text>
+                        <Text className="text-teal-700 text-sm">
+                          • 1-2 bedroom flat: 15-25m³
+                          {"\n"}• 3 bedroom house: 25-35m³
+                          {"\n"}• 4+ bedroom house: 35m³+
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Safety & Compliance */}
+                  <View className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-2xl border border-red-200 mb-2">
+                    <Text className="text-red-900 font-bold text-xl mb-4">
+                      Safety & Compliance
+                    </Text>
+                    <View className="space-y-3">
+                      <View className="flex-row items-center">
+                        <View className="bg-red-100 p-2 rounded-full mr-3">
+                          <Text className="text-red-600">🛡️</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-red-900 font-semibold">
+                            Fully Licensed & Insured
+                          </Text>
+                          <Text className="text-red-700 text-sm">
+                            £2M public liability insurance included
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-red-100 p-2 rounded-full mr-3">
+                          <Text className="text-red-600">✅</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-red-900 font-semibold">
+                            Regular Safety Inspections
+                          </Text>
+                          <Text className="text-red-700 text-sm">
+                            MOT tested & serviced every 6 weeks
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-red-100 p-2 rounded-full mr-3">
+                          <Text className="text-red-600">👨‍💼</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-red-900 font-semibold">
+                            Professional Drivers
+                          </Text>
+                          <Text className="text-red-700 text-sm">
+                            CPC qualified with clean driving records
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-red-100 p-2 rounded-full mr-3">
+                          <Text className="text-red-600">🔒</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-red-900 font-semibold">
+                            Secure Loading System
+                          </Text>
+                          <Text className="text-red-700 text-sm">
+                            Professional tie-down points & load bars
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Environmental Impact */}
+                  <View className="bg-gradient-to-r from-green-50 to-lime-50 p-6 rounded-2xl border border-green-200 mb-2">
+                    <Text className="text-green-900 font-bold text-xl mb-4">
+                      Environmental Commitment
+                    </Text>
+                    <View className="space-y-3">
+                      <View className="flex-row items-center">
+                        <View className="bg-green-100 p-2 rounded-full mr-3">
+                          <Text className="text-green-600">🌱</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-green-900 font-semibold">
+                            Euro 6 Low Emission Engine
+                          </Text>
+                          <Text className="text-green-700 text-sm">
+                            Meets latest environmental standards
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-green-100 p-2 rounded-full mr-3">
+                          <Text className="text-green-600">♻️</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-green-900 font-semibold">
+                            Eco-Friendly Operations
+                          </Text>
+                          <Text className="text-green-700 text-sm">
+                            Optimized routes to reduce carbon footprint
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex-row items-center">
+                        <View className="bg-green-100 p-2 rounded-full mr-3">
+                          <Text className="text-green-600">🌍</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-green-900 font-semibold">
+                            Carbon Offset Program
+                          </Text>
+                          <Text className="text-green-700 text-sm">
+                            We offset 100% of emissions from your move
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Pricing Breakdown */}
+                  <View className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-2xl border border-gray-200 mb-2">
+                    <Text className="text-gray-900 font-bold text-xl mb-4">
+                      Transparent Pricing
+                    </Text>
+                    <View className="space-y-3">
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-gray-700 text-base">
+                          Van hire (per hour)
+                        </Text>
+                        <Text className="text-gray-900 font-bold text-lg">
+                          {selectedVanDetails?.price || "£85/hour"}
+                        </Text>
+                      </View>
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-gray-700 text-base">
+                          Fuel & insurance
+                        </Text>
+                        <Text className="text-green-600 font-semibold">
+                          Included
+                        </Text>
+                      </View>
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-gray-700 text-base">
+                          Professional equipment
+                        </Text>
+                        <Text className="text-green-600 font-semibold">
+                          Included
+                        </Text>
+                      </View>
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-gray-700 text-base">
+                          Tail lift operation
+                        </Text>
+                        <Text className="text-green-600 font-semibold">
+                          Included
+                        </Text>
+                      </View>
+                      <View className="flex-row justify-between items-center">
+                        <Text className="text-gray-700 text-base">
+                          Moving blankets & straps
+                        </Text>
+                        <Text className="text-green-600 font-semibold">
+                          Included
+                        </Text>
+                      </View>
+                      <View className="border-t border-gray-300 pt-3">
+                        <Text className="text-gray-600 text-sm text-center">
+                          No hidden fees • Pay only for time used • Minimum 2
+                          hours
+                        </Text>
+                      </View>
+                      <View className="bg-blue-100 p-3 rounded-xl">
+                        <Text className="text-blue-800 font-semibold text-sm text-center">
+                          💰 Average move cost: £170-£340 (2-4 hours)
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
             </ScrollView>
 
-            <View className="pt-4 border-t border-gray-200">
+            <View className="p-6 pt-4 border-t border-gray-200 bg-white">
               <TouchableOpacity
                 className="bg-blue-600 py-4 px-6 rounded-xl"
                 onPress={() => {
