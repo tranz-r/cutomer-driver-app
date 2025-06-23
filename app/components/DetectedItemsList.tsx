@@ -134,12 +134,12 @@ const DetectedItemsList = ({
 
       {isExpanded && (
         <ScrollView
-          className="max-h-80"
+          className="min-h-[400px] max-h-96"
           showsVerticalScrollIndicator={true}
           nestedScrollEnabled={true}
         >
           {items.map((item, index) => (
-            <View key={item.id} className="mb-3">
+            <View key={item.id} className="mb-4">
               {isEditing === item.id ? (
                 <View className="bg-blue-50 p-3 rounded-lg border border-blue-200">
                   <TextInput
@@ -229,7 +229,7 @@ const DetectedItemsList = ({
                   </View>
                 </View>
               ) : (
-                <View className="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                <View className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                   <View className="flex-row justify-between items-center">
                     <View className="flex-row items-center flex-1">
                       <View className="bg-blue-100 p-1.5 rounded-full mr-2">
@@ -249,18 +249,18 @@ const DetectedItemsList = ({
                         </Text>
                       </View>
                     </View>
-                    <View className="flex-row items-center space-x-1">
+                    <View className="flex-row items-center">
                       <TouchableOpacity
-                        className="bg-blue-50 p-1.5 rounded-full"
+                        className="bg-blue-50 p-4 rounded-full min-w-[48px] min-h-[48px] items-center justify-center mr-3"
                         onPress={() => setIsEditing(item.id)}
                       >
-                        <Edit size={16} color="#3b82f6" />
+                        <Edit size={22} color="#3b82f6" />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        className="bg-red-50 p-1.5 rounded-full"
+                        className="bg-red-50 p-4 rounded-full min-w-[48px] min-h-[48px] items-center justify-center"
                         onPress={() => handleRemoveItem(item.id)}
                       >
-                        <Trash2 size={16} color="#ef4444" />
+                        <Trash2 size={22} color="#ef4444" />
                       </TouchableOpacity>
                     </View>
                   </View>
