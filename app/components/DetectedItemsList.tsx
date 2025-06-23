@@ -133,11 +133,7 @@ const DetectedItemsList = ({
       </View>
 
       {isExpanded && (
-        <ScrollView
-          className="min-h-[400px] max-h-96"
-          showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}
-        >
+        <View className="space-y-4 mb-4">
           {items.map((item, index) => (
             <View key={item.id} className="mb-4">
               {isEditing === item.id ? (
@@ -268,7 +264,7 @@ const DetectedItemsList = ({
               )}
             </View>
           ))}
-        </ScrollView>
+        </View>
       )}
 
       <View className="mt-4 pt-4 border-t border-gray-200">
