@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,22 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
+  FlatList,
+  Keyboard,
 } from "react-native";
-import { Trash2, Edit, Plus, RefreshCw, X, Package } from "lucide-react-native";
+import {
+  Trash2,
+  Edit,
+  Plus,
+  RefreshCw,
+  X,
+  Package,
+  Search,
+  Minus,
+  ChevronDown,
+  Star,
+} from "lucide-react-native";
+import itemsData from "../../Tranzr-Item-data-with-enrichment.json";
 
 type Item = {
   id: string;
@@ -63,6 +77,11 @@ const DetectedItemsList = ({
   }>({ name: "", height: "", width: "", length: "" });
   const [showAddModal, setShowAddModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedItemQuantities, setSelectedItemQuantities] = useState<{
+    [key: string]: number;
+  }>({});
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   if (!isVisible) return null;
 
@@ -91,6 +110,69 @@ const DetectedItemsList = ({
       setNewItem({ name: "", height: "", width: "", length: "" });
       setShowAddModal(false);
     }
+  };
+
+  // Memoized filtered items for better performance
+  const filteredItems = useMemo(() => {
+    if (searchQuery.trim() === "") {
+      return itemsData.goods
+        .sort((a, b) => (b.popularity_index || 0) - (a.popularity_index || 0))
+        .slice(0, 20); // Show top 20 popular items when no search
+    }
+
+    const query = searchQuery.toLowerCase();
+    return itemsData.goods
+      .filter((item) => {
+        const nameMatch = item.name.toLowerCase().includes(query);
+        const categoryMatch =
+          item.category_id && item.category_id.toString().includes(query);
+        return nameMatch || categoryMatch;
+      })
+      .sort((a, b) => {
+        // Prioritize exact matches and popular items
+        const aExact = a.name.toLowerCase().startsWith(query) ? 1 : 0;
+        const bExact = b.name.toLowerCase().startsWith(query) ? 1 : 0;
+        if (aExact !== bExact) return bExact - aExact;
+        return (b.popularity_index || 0) - (a.popularity_index || 0);
+      })
+      .slice(0, 50); // Limit results for performance
+  }, [searchQuery]);
+
+  const handleSearchChange = (text: string) => {
+    setSearchQuery(text);
+    setShowSuggestions(text.length > 0);
+  };
+
+  const handleQuantityChange = (itemName: string, change: number) => {
+    setSelectedItemQuantities((prev) => ({
+      ...prev,
+      [itemName]: Math.max(1, (prev[itemName] || 1) + change),
+    }));
+  };
+
+  const handleSelectItem = (selectedItem: any) => {
+    const quantity = selectedItemQuantities[selectedItem.name] || 1;
+
+    for (let i = 0; i < quantity; i++) {
+      const newItemData: Item = {
+        id: `${Date.now()}-${i}`,
+        name: selectedItem.name,
+        height: selectedItem.dimensions_cm.height,
+        width: selectedItem.dimensions_cm.width,
+        length: selectedItem.dimensions_cm.length,
+        volume: selectedItem.volume_m3,
+      };
+      const updatedItems = [...items, newItemData];
+      setItems(updatedItems);
+      onAddItem(newItemData);
+    }
+
+    // Reset state
+    setSearchQuery("");
+    setSelectedItemQuantities({});
+    setShowSuggestions(false);
+    setShowAddModal(false);
+    Keyboard.dismiss();
   };
 
   const handleUpdateItem = (item: Item) => {
@@ -339,94 +421,289 @@ const DetectedItemsList = ({
                 Add Custom Item
               </Text>
               <Text className="text-gray-500 text-center text-sm">
-                Manually add items that weren't detected
+                Search from our database or add manually
               </Text>
             </View>
 
-            {/* Item Name Input */}
+            {/* Modern Search Input */}
             <View className="mb-4">
               <Text className="text-sm font-bold text-gray-800 mb-2">
-                Item Name
+                Search Items Database
               </Text>
-              <TextInput
-                className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50"
-                value={newItem.name}
-                onChangeText={(text) => setNewItem({ ...newItem, name: text })}
-                placeholder="e.g., Coffee Table, Wardrobe"
-                placeholderTextColor="#9CA3AF"
-              />
+              <View className="relative">
+                <View className="flex-row items-center border-2 border-purple-200 rounded-xl bg-white shadow-sm">
+                  <View className="pl-4">
+                    <Search size={20} color="#8B5CF6" />
+                  </View>
+                  <TextInput
+                    className="flex-1 p-4 text-base font-medium"
+                    value={searchQuery}
+                    onChangeText={handleSearchChange}
+                    onFocus={() => setShowSuggestions(searchQuery.length > 0)}
+                    placeholder="Type to search thousands of items..."
+                    placeholderTextColor="#9CA3AF"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  {searchQuery.length > 0 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSearchQuery("");
+                        setShowSuggestions(false);
+                      }}
+                      className="pr-4"
+                    >
+                      <X size={20} color="#9CA3AF" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {/* Search Stats */}
+                {searchQuery.length > 0 && (
+                  <View className="mt-2 px-2">
+                    <Text className="text-xs text-gray-500">
+                      Found {filteredItems.length} items matching "{searchQuery}
+                      "
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
 
-            {/* Dimensions Input */}
-            <View className="mb-8">
-              <Text className="text-sm font-bold text-gray-800 mb-4">
-                Dimensions (centimeters)
-              </Text>
-              <View className="flex-row justify-between">
-                <View className="flex-1 mx-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
-                    Height
-                  </Text>
-                  <TextInput
-                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
-                    value={newItem.height}
-                    onChangeText={(text) =>
-                      setNewItem({ ...newItem, height: text })
+            {/* Modern Search Results */}
+            {showSuggestions && filteredItems.length > 0 && (
+              <View className="mb-4 max-h-80">
+                <View className="bg-gray-50 rounded-xl p-2">
+                  <FlatList
+                    data={filteredItems}
+                    keyExtractor={(item, index) =>
+                      `${item.id || item.name}-${index}`
                     }
-                    keyboardType="numeric"
-                    placeholder="0"
-                    placeholderTextColor="#9CA3AF"
+                    renderItem={({ item }) => {
+                      const quantity = selectedItemQuantities[item.name] || 1;
+                      const isPopular = (item.popularity_index || 0) > 50;
+
+                      return (
+                        <View className="bg-white border border-gray-100 rounded-xl p-4 mb-2 shadow-sm">
+                          <View className="flex-row justify-between items-start">
+                            <View className="flex-1 mr-3">
+                              <View className="flex-row items-center mb-1">
+                                <Text className="font-bold text-gray-900 text-base flex-1">
+                                  {item.name}
+                                </Text>
+                                {isPopular && (
+                                  <View className="bg-yellow-100 px-2 py-1 rounded-full ml-2">
+                                    <View className="flex-row items-center">
+                                      <Star
+                                        size={12}
+                                        color="#F59E0B"
+                                        fill="#F59E0B"
+                                      />
+                                      <Text className="text-yellow-700 text-xs font-semibold ml-1">
+                                        Popular
+                                      </Text>
+                                    </View>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View className="flex-row items-center mb-2">
+                                <Text className="text-purple-600 text-sm font-medium">
+                                  {item.dimensions_cm.height} ×{" "}
+                                  {item.dimensions_cm.width} ×{" "}
+                                  {item.dimensions_cm.length} cm
+                                </Text>
+                              </View>
+
+                              <View className="flex-row items-center justify-between">
+                                <Text className="text-gray-500 text-sm">
+                                  Vol: {item.volume_m3} m³
+                                </Text>
+                                <Text className="text-green-600 text-sm font-semibold">
+                                  £{item.price?.toFixed(2) || "0.00"}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View className="items-center">
+                              <View className="flex-row items-center bg-gray-100 rounded-lg mb-2">
+                                <TouchableOpacity
+                                  className="p-2"
+                                  onPress={() =>
+                                    handleQuantityChange(item.name, -1)
+                                  }
+                                >
+                                  <Minus size={16} color="#6B7280" />
+                                </TouchableOpacity>
+                                <Text className="mx-3 font-bold text-lg min-w-[24px] text-center">
+                                  {quantity}
+                                </Text>
+                                <TouchableOpacity
+                                  className="p-2"
+                                  onPress={() =>
+                                    handleQuantityChange(item.name, 1)
+                                  }
+                                >
+                                  <Plus size={16} color="#6B7280" />
+                                </TouchableOpacity>
+                              </View>
+
+                              <TouchableOpacity
+                                className="bg-purple-500 px-4 py-2 rounded-lg shadow-sm"
+                                onPress={() => handleSelectItem(item)}
+                              >
+                                <Text className="text-white font-bold text-sm">
+                                  Add {quantity > 1 ? `(${quantity})` : ""}
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                   />
                 </View>
-                <View className="flex-1 mx-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
-                    Width
-                  </Text>
-                  <TextInput
-                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
-                    value={newItem.width}
-                    onChangeText={(text) =>
-                      setNewItem({ ...newItem, width: text })
-                    }
-                    keyboardType="numeric"
-                    placeholder="0"
-                    placeholderTextColor="#9CA3AF"
-                  />
+              </View>
+            )}
+
+            {/* No Results Message */}
+            {showSuggestions &&
+              searchQuery.length > 0 &&
+              filteredItems.length === 0 && (
+                <View className="mb-4 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                  <View className="items-center">
+                    <Search size={32} color="#9CA3AF" />
+                    <Text className="text-gray-500 font-medium mt-2 text-center">
+                      No items found for "{searchQuery}"
+                    </Text>
+                    <Text className="text-gray-400 text-sm mt-1 text-center">
+                      Try a different search term or add manually below
+                    </Text>
+                  </View>
                 </View>
-                <View className="flex-1 mx-1">
-                  <Text className="text-xs font-semibold text-purple-700 mb-2 text-center">
-                    Length
-                  </Text>
-                  <TextInput
-                    className="border border-purple-200 rounded-lg p-3 text-center text-sm bg-purple-50 font-medium"
-                    value={newItem.length}
-                    onChangeText={(text) =>
-                      setNewItem({ ...newItem, length: text })
-                    }
-                    keyboardType="numeric"
-                    placeholder="0"
-                    placeholderTextColor="#9CA3AF"
-                  />
+              )}
+
+            {/* Manual Entry Section */}
+            <View className="border-t border-gray-200 pt-6">
+              <View className="flex-row items-center mb-3">
+                <View className="flex-1 h-px bg-gray-200" />
+                <Text className="text-sm font-bold text-gray-600 mx-4">
+                  Or Add Custom Item
+                </Text>
+                <View className="flex-1 h-px bg-gray-200" />
+              </View>
+
+              {/* Item Name Input */}
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Item Name
+                </Text>
+                <TextInput
+                  className="border-2 border-gray-200 rounded-xl p-4 text-base bg-white font-medium"
+                  value={newItem.name}
+                  onChangeText={(text) =>
+                    setNewItem({ ...newItem, name: text })
+                  }
+                  placeholder="Enter custom item name..."
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
+
+              {/* Dimensions Input */}
+              <View className="mb-8">
+                <Text className="text-sm font-semibold text-gray-700 mb-4">
+                  Dimensions (centimeters)
+                </Text>
+                <View className="flex-row justify-between">
+                  <View className="flex-1 mx-1">
+                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
+                      Height
+                    </Text>
+                    <TextInput
+                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
+                      value={newItem.height}
+                      onChangeText={(text) =>
+                        setNewItem({ ...newItem, height: text })
+                      }
+                      keyboardType="numeric"
+                      placeholder="0"
+                      placeholderTextColor="#A855F7"
+                    />
+                  </View>
+                  <View className="flex-1 mx-1">
+                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
+                      Width
+                    </Text>
+                    <TextInput
+                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
+                      value={newItem.width}
+                      onChangeText={(text) =>
+                        setNewItem({ ...newItem, width: text })
+                      }
+                      keyboardType="numeric"
+                      placeholder="0"
+                      placeholderTextColor="#A855F7"
+                    />
+                  </View>
+                  <View className="flex-1 mx-1">
+                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
+                      Length
+                    </Text>
+                    <TextInput
+                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
+                      value={newItem.length}
+                      onChangeText={(text) =>
+                        setNewItem({ ...newItem, length: text })
+                      }
+                      keyboardType="numeric"
+                      placeholder="0"
+                      placeholderTextColor="#A855F7"
+                    />
+                  </View>
                 </View>
               </View>
             </View>
 
             {/* Action Buttons */}
-            <View className="flex-row justify-between mt-4">
+            <View className="flex-row justify-between mt-6">
               <TouchableOpacity
-                className="bg-gray-100 px-8 py-4 rounded-lg flex-1 mr-4"
-                onPress={() => setShowAddModal(false)}
+                className="bg-gray-100 px-8 py-4 rounded-xl flex-1 mr-4 shadow-sm"
+                onPress={() => {
+                  setShowAddModal(false);
+                  setSearchQuery("");
+                  setSelectedItemQuantities({});
+                  setShowSuggestions(false);
+                  setNewItem({ name: "", height: "", width: "", length: "" });
+                  Keyboard.dismiss();
+                }}
               >
                 <Text className="text-gray-700 font-bold text-base text-center">
                   Cancel
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="bg-purple-500 px-8 py-4 rounded-lg flex-1 shadow-sm"
+                className="bg-purple-500 px-8 py-4 rounded-xl flex-1 shadow-lg"
                 onPress={handleAddItem}
+                disabled={
+                  !newItem.name.trim() ||
+                  !newItem.height ||
+                  !newItem.width ||
+                  !newItem.length
+                }
+                style={{
+                  opacity:
+                    !newItem.name.trim() ||
+                    !newItem.height ||
+                    !newItem.width ||
+                    !newItem.length
+                      ? 0.5
+                      : 1,
+                }}
               >
                 <Text className="text-white font-bold text-base text-center">
-                  Add Item
+                  Add Custom Item
                 </Text>
               </TouchableOpacity>
             </View>
