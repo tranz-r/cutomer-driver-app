@@ -418,10 +418,10 @@ const DetectedItemsList = ({
             <View className="items-center mb-4">
               <View className="w-10 h-1 bg-gray-300 rounded-full mb-3" />
               <Text className="text-xl font-bold text-gray-900 mb-1">
-                Add Custom Item
+                Add Item from Database
               </Text>
               <Text className="text-gray-500 text-center text-sm">
-                Search from our database or add manually
+                Search from our extensive items database
               </Text>
             </View>
 
@@ -472,7 +472,7 @@ const DetectedItemsList = ({
 
             {/* Modern Search Results */}
             {showSuggestions && filteredItems.length > 0 && (
-              <View className="mb-4 max-h-80">
+              <View className="mb-4 max-h-96">
                 <View className="bg-gray-50 rounded-xl p-2">
                   <FlatList
                     data={filteredItems}
@@ -515,14 +515,9 @@ const DetectedItemsList = ({
                                 </Text>
                               </View>
 
-                              <View className="flex-row items-center justify-between">
-                                <Text className="text-gray-500 text-sm">
-                                  Vol: {item.volume_m3} m³
-                                </Text>
-                                <Text className="text-green-600 text-sm font-semibold">
-                                  £{item.price?.toFixed(2) || "0.00"}
-                                </Text>
-                              </View>
+                              <Text className="text-gray-500 text-sm">
+                                Vol: {item.volume_m3} m³
+                              </Text>
                             </View>
 
                             <View className="items-center">
@@ -579,97 +574,16 @@ const DetectedItemsList = ({
                       No items found for "{searchQuery}"
                     </Text>
                     <Text className="text-gray-400 text-sm mt-1 text-center">
-                      Try a different search term or add manually below
+                      Try a different search term
                     </Text>
                   </View>
                 </View>
               )}
 
-            {/* Manual Entry Section */}
-            <View className="border-t border-gray-200 pt-6">
-              <View className="flex-row items-center mb-3">
-                <View className="flex-1 h-px bg-gray-200" />
-                <Text className="text-sm font-bold text-gray-600 mx-4">
-                  Or Add Custom Item
-                </Text>
-                <View className="flex-1 h-px bg-gray-200" />
-              </View>
-
-              {/* Item Name Input */}
-              <View className="mb-4">
-                <Text className="text-sm font-semibold text-gray-700 mb-2">
-                  Item Name
-                </Text>
-                <TextInput
-                  className="border-2 border-gray-200 rounded-xl p-4 text-base bg-white font-medium"
-                  value={newItem.name}
-                  onChangeText={(text) =>
-                    setNewItem({ ...newItem, name: text })
-                  }
-                  placeholder="Enter custom item name..."
-                  placeholderTextColor="#9CA3AF"
-                />
-              </View>
-
-              {/* Dimensions Input */}
-              <View className="mb-8">
-                <Text className="text-sm font-semibold text-gray-700 mb-4">
-                  Dimensions (centimeters)
-                </Text>
-                <View className="flex-row justify-between">
-                  <View className="flex-1 mx-1">
-                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
-                      Height
-                    </Text>
-                    <TextInput
-                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
-                      value={newItem.height}
-                      onChangeText={(text) =>
-                        setNewItem({ ...newItem, height: text })
-                      }
-                      keyboardType="numeric"
-                      placeholder="0"
-                      placeholderTextColor="#A855F7"
-                    />
-                  </View>
-                  <View className="flex-1 mx-1">
-                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
-                      Width
-                    </Text>
-                    <TextInput
-                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
-                      value={newItem.width}
-                      onChangeText={(text) =>
-                        setNewItem({ ...newItem, width: text })
-                      }
-                      keyboardType="numeric"
-                      placeholder="0"
-                      placeholderTextColor="#A855F7"
-                    />
-                  </View>
-                  <View className="flex-1 mx-1">
-                    <Text className="text-xs font-bold text-purple-700 mb-2 text-center">
-                      Length
-                    </Text>
-                    <TextInput
-                      className="border-2 border-purple-200 rounded-xl p-4 text-center text-base bg-purple-50 font-bold"
-                      value={newItem.length}
-                      onChangeText={(text) =>
-                        setNewItem({ ...newItem, length: text })
-                      }
-                      keyboardType="numeric"
-                      placeholder="0"
-                      placeholderTextColor="#A855F7"
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            {/* Action Buttons */}
-            <View className="flex-row justify-between mt-6">
+            {/* Action Button */}
+            <View className="mt-6">
               <TouchableOpacity
-                className="bg-gray-100 px-8 py-4 rounded-xl flex-1 mr-4 shadow-sm"
+                className="bg-gray-100 px-8 py-4 rounded-xl shadow-sm"
                 onPress={() => {
                   setShowAddModal(false);
                   setSearchQuery("");
@@ -680,30 +594,7 @@ const DetectedItemsList = ({
                 }}
               >
                 <Text className="text-gray-700 font-bold text-base text-center">
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="bg-purple-500 px-8 py-4 rounded-xl flex-1 shadow-lg"
-                onPress={handleAddItem}
-                disabled={
-                  !newItem.name.trim() ||
-                  !newItem.height ||
-                  !newItem.width ||
-                  !newItem.length
-                }
-                style={{
-                  opacity:
-                    !newItem.name.trim() ||
-                    !newItem.height ||
-                    !newItem.width ||
-                    !newItem.length
-                      ? 0.5
-                      : 1,
-                }}
-              >
-                <Text className="text-white font-bold text-base text-center">
-                  Add Custom Item
+                  Close
                 </Text>
               </TouchableOpacity>
             </View>
