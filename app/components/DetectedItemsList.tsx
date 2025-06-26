@@ -8,6 +8,8 @@ import {
   Modal,
   FlatList,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import {
   Trash2,
@@ -112,6 +114,30 @@ const DetectedItemsList = ({
     }
   };
 
+  // Helper function to get dimensions from item data
+  const getItemDimensions = (item: any) => {
+    // Handle different dimension property formats
+    if (item.dimensions_cm) {
+      return {
+        height: item.dimensions_cm.height,
+        width: item.dimensions_cm.width,
+        length: item.dimensions_cm.length,
+      };
+    } else if (item.length_cm || item.width_cm || item.height_cm) {
+      return {
+        height: item.height_cm || item.height || 0,
+        width: item.width_cm || item.width || 0,
+        length: item.length_cm || item.length || 0,
+      };
+    } else {
+      return {
+        height: item.height || 0,
+        width: item.width || 0,
+        length: item.length || 0,
+      };
+    }
+  };
+
   // Memoized filtered items for better performance
   const filteredItems = useMemo(() => {
     if (searchQuery.trim() === "") {
@@ -152,15 +178,16 @@ const DetectedItemsList = ({
 
   const handleSelectItem = (selectedItem: any) => {
     const quantity = selectedItemQuantities[selectedItem.name] || 1;
+    const dimensions = getItemDimensions(selectedItem);
 
     for (let i = 0; i < quantity; i++) {
       const newItemData: Item = {
         id: `${Date.now()}-${i}`,
         name: selectedItem.name,
-        height: selectedItem.dimensions_cm.height,
-        width: selectedItem.dimensions_cm.width,
-        length: selectedItem.dimensions_cm.length,
-        volume: selectedItem.volume_m3,
+        height: dimensions.height,
+        width: dimensions.width,
+        length: dimensions.length,
+        volume: selectedItem.volume_m3 || 0,
       };
       const updatedItems = [...items, newItemData];
       setItems(updatedItems);
@@ -412,79 +439,91 @@ const DetectedItemsList = ({
         animationType="slide"
         onRequestClose={() => setShowAddModal(false)}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-2xl p-4 shadow-lg">
-            {/* Header */}
-            <View className="items-center mb-4">
-              <View className="w-10 h-1 bg-gray-300 rounded-full mb-3" />
-              <Text className="text-xl font-bold text-gray-900 mb-1">
-                Add Item from Database
-              </Text>
-              <Text className="text-gray-500 text-center text-sm">
-                Search from our extensive items database
-              </Text>
-            </View>
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View className="flex-1 justify-end bg-black/50">
+            <View className="bg-white rounded-t-2xl p-4 shadow-lg max-h-[90%]">
+              {/* Header */}
+              <View className="items-center mb-4">
+                <View className="w-10 h-1 bg-gray-300 rounded-full mb-3" />
+                <Text className="text-xl font-bold text-gray-900 mb-1">
+                  Add Item from Database
+                </Text>
+                <Text className="text-gray-500 text-center text-sm">
+                  Search from our extensive items database
+                </Text>
+              </View>
 
-            {/* Modern Search Input */}
-            <View className="mb-4">
-              <Text className="text-sm font-bold text-gray-800 mb-2">
-                Search Items Database
-              </Text>
-              <View className="relative">
-                <View className="flex-row items-center border-2 border-purple-200 rounded-xl bg-white shadow-sm">
-                  <View className="pl-4">
-                    <Search size={20} color="#8B5CF6" />
+              {/* Modern Search Input */}
+              <View className="mb-4">
+                <Text className="text-sm font-bold text-gray-800 mb-2">
+                  Search Items Database
+                </Text>
+                <View className="relative">
+                  <View className="flex-row items-center border-2 border-purple-200 rounded-xl bg-white shadow-sm">
+                    <View className="pl-4">
+                      <Search size={20} color="#8B5CF6" />
+                    </View>
+                    <TextInput
+                      className="flex-1 p-4 text-base font-medium"
+                      value={searchQuery}
+                      onChangeText={handleSearchChange}
+                      onFocus={() => setShowSuggestions(true)}
+                      placeholder="Type to search thousands of items..."
+                      placeholderTextColor="#9CA3AF"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                    />
+                    {searchQuery.length > 0 && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setSearchQuery("");
+                          setShowSuggestions(false);
+                        }}
+                        className="pr-4"
+                      >
+                        <X size={20} color="#9CA3AF" />
+                      </TouchableOpacity>
+                    )}
                   </View>
-                  <TextInput
-                    className="flex-1 p-4 text-base font-medium"
-                    value={searchQuery}
-                    onChangeText={handleSearchChange}
-                    onFocus={() => setShowSuggestions(searchQuery.length > 0)}
-                    placeholder="Type to search thousands of items..."
-                    placeholderTextColor="#9CA3AF"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                  />
+
+                  {/* Search Stats */}
                   {searchQuery.length > 0 && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSearchQuery("");
-                        setShowSuggestions(false);
-                      }}
-                      className="pr-4"
-                    >
-                      <X size={20} color="#9CA3AF" />
-                    </TouchableOpacity>
+                    <View className="mt-2 px-2">
+                      <View className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                        <Text className="text-sm font-bold text-purple-800">
+                          Found {filteredItems.length} items matching "
+                          {searchQuery}"
+                        </Text>
+                        <Text className="text-xs text-purple-600 mt-1">
+                          💡 Scroll down to see all available options
+                        </Text>
+                      </View>
+                    </View>
                   )}
                 </View>
-
-                {/* Search Stats */}
-                {searchQuery.length > 0 && (
-                  <View className="mt-2 px-2">
-                    <Text className="text-xs text-gray-500">
-                      Found {filteredItems.length} items matching "{searchQuery}
-                      "
-                    </Text>
-                  </View>
-                )}
               </View>
-            </View>
 
-            {/* Modern Search Results */}
-            {showSuggestions && filteredItems.length > 0 && (
-              <View className="mb-4 max-h-96">
-                <View className="bg-gray-50 rounded-xl p-2">
-                  <FlatList
-                    data={filteredItems}
-                    keyExtractor={(item, index) =>
-                      `${item.id || item.name}-${index}`
-                    }
-                    renderItem={({ item }) => {
+              {/* Modern Search Results */}
+              {filteredItems.length > 0 && (
+                <View className="mb-4" style={{ maxHeight: 400 }}>
+                  <ScrollView
+                    className="bg-gray-50 rounded-xl p-2"
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                  >
+                    {filteredItems.map((item, index) => {
                       const quantity = selectedItemQuantities[item.name] || 1;
                       const isPopular = (item.popularity_index || 0) > 50;
+                      const dimensions = getItemDimensions(item);
 
                       return (
-                        <View className="bg-white border border-gray-100 rounded-xl p-4 mb-2 shadow-sm">
+                        <View
+                          key={`${item.id || item.name}-${index}`}
+                          className="bg-white border border-gray-100 rounded-xl p-4 mb-2 shadow-sm"
+                        >
                           <View className="flex-row justify-between items-start">
                             <View className="flex-1 mr-3">
                               <View className="flex-row items-center mb-1">
@@ -509,45 +548,44 @@ const DetectedItemsList = ({
 
                               <View className="flex-row items-center mb-2">
                                 <Text className="text-purple-600 text-sm font-medium">
-                                  {item.dimensions_cm.height} ×{" "}
-                                  {item.dimensions_cm.width} ×{" "}
-                                  {item.dimensions_cm.length} cm
+                                  {dimensions.height} × {dimensions.width} ×{" "}
+                                  {dimensions.length} cm
                                 </Text>
                               </View>
 
                               <Text className="text-gray-500 text-sm">
-                                Vol: {item.volume_m3} m³
+                                Vol: {item.volume_m3 || 0} m³
                               </Text>
                             </View>
 
                             <View className="items-center">
-                              <View className="flex-row items-center bg-gray-100 rounded-lg mb-2">
+                              <View className="flex-row items-center bg-gray-100 rounded-lg mb-3">
                                 <TouchableOpacity
-                                  className="p-2"
+                                  className="p-4 min-w-[48px] min-h-[48px] items-center justify-center"
                                   onPress={() =>
                                     handleQuantityChange(item.name, -1)
                                   }
                                 >
-                                  <Minus size={16} color="#6B7280" />
+                                  <Minus size={20} color="#6B7280" />
                                 </TouchableOpacity>
-                                <Text className="mx-3 font-bold text-lg min-w-[24px] text-center">
+                                <Text className="mx-4 font-bold text-xl min-w-[32px] text-center">
                                   {quantity}
                                 </Text>
                                 <TouchableOpacity
-                                  className="p-2"
+                                  className="p-4 min-w-[48px] min-h-[48px] items-center justify-center"
                                   onPress={() =>
                                     handleQuantityChange(item.name, 1)
                                   }
                                 >
-                                  <Plus size={16} color="#6B7280" />
+                                  <Plus size={20} color="#6B7280" />
                                 </TouchableOpacity>
                               </View>
 
                               <TouchableOpacity
-                                className="bg-purple-500 px-4 py-2 rounded-lg shadow-sm"
+                                className="bg-purple-500 px-6 py-4 rounded-lg shadow-sm min-w-[100px] min-h-[48px] items-center justify-center"
                                 onPress={() => handleSelectItem(item)}
                               >
-                                <Text className="text-white font-bold text-sm">
+                                <Text className="text-white font-bold text-base">
                                   Add {quantity > 1 ? `(${quantity})` : ""}
                                 </Text>
                               </TouchableOpacity>
@@ -555,18 +593,13 @@ const DetectedItemsList = ({
                           </View>
                         </View>
                       );
-                    }}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="handled"
-                  />
+                    })}
+                  </ScrollView>
                 </View>
-              </View>
-            )}
+              )}
 
-            {/* No Results Message */}
-            {showSuggestions &&
-              searchQuery.length > 0 &&
-              filteredItems.length === 0 && (
+              {/* No Results Message */}
+              {searchQuery.length > 0 && filteredItems.length === 0 && (
                 <View className="mb-4 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
                   <View className="items-center">
                     <Search size={32} color="#9CA3AF" />
@@ -580,26 +613,27 @@ const DetectedItemsList = ({
                 </View>
               )}
 
-            {/* Action Button */}
-            <View className="mt-6">
-              <TouchableOpacity
-                className="bg-gray-100 px-8 py-4 rounded-xl shadow-sm"
-                onPress={() => {
-                  setShowAddModal(false);
-                  setSearchQuery("");
-                  setSelectedItemQuantities({});
-                  setShowSuggestions(false);
-                  setNewItem({ name: "", height: "", width: "", length: "" });
-                  Keyboard.dismiss();
-                }}
-              >
-                <Text className="text-gray-700 font-bold text-base text-center">
-                  Close
-                </Text>
-              </TouchableOpacity>
+              {/* Action Button */}
+              <View className="mt-6">
+                <TouchableOpacity
+                  className="bg-gray-100 px-8 py-4 rounded-xl shadow-sm"
+                  onPress={() => {
+                    setShowAddModal(false);
+                    setSearchQuery("");
+                    setSelectedItemQuantities({});
+                    setShowSuggestions(false);
+                    setNewItem({ name: "", height: "", width: "", length: "" });
+                    Keyboard.dismiss();
+                  }}
+                >
+                  <Text className="text-gray-700 font-bold text-base text-center">
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
