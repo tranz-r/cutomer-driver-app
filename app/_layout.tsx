@@ -71,6 +71,7 @@ export default function RootLayout() {
         <Stack.Screen name="splash" options={{ headerShown: false }} />
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="item-detection" options={{ headerShown: false }} />
+        <Stack.Screen name="build-inventory" options={{ headerShown: false }} />
         <Stack.Screen name="van-selection" options={{ headerShown: false }} />
         <Stack.Screen
           name="origin-destination"

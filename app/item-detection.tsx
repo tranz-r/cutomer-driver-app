@@ -111,11 +111,23 @@ export default function ItemDetectionScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  className="bg-purple-600 py-4 px-6 rounded-xl shadow-lg mb-4"
+                  onPress={() => router.push("/build-inventory")}
+                >
+                  <Text className="text-white text-center font-semibold text-lg">
+                    Build Item Inventory
+                  </Text>
+                  <Text className="text-purple-100 text-center text-sm mt-1">
+                    Search and add items from our database
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                   className="bg-emerald-600 py-4 px-6 rounded-xl shadow-lg"
                   onPress={() => setShowMediaUpload(true)}
                 >
                   <Text className="text-white text-center font-semibold text-lg">
-                    No, Use Tranzr Smart Detection
+                    Use Tranzr Smart Detection
                   </Text>
                   <Text className="text-emerald-100 text-center text-sm mt-1">
                     Upload photos/videos to get accurate sizing
