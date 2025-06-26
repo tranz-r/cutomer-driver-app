@@ -325,11 +325,11 @@ export default function BuildInventoryScreen() {
                 <Text className="text-lg font-bold text-gray-900 mb-4">
                   Your Inventory ({items.length} items)
                 </Text>
-                <View className="space-y-3">
+                <View className="space-y-4">
                   {items.map((item) => (
                     <View
                       key={item.id}
-                      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+                      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-3"
                     >
                       <View className="flex-row justify-between items-center">
                         <View className="flex-1">
