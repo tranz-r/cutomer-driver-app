@@ -471,7 +471,7 @@ const DetectedItemsList = ({
                       value={searchQuery}
                       onChangeText={handleSearchChange}
                       onFocus={() => setShowSuggestions(true)}
-                      placeholder="Type to search thousands of items..."
+                      placeholder="Type to search hundreds of items..."
                       placeholderTextColor="#9CA3AF"
                       autoCapitalize="none"
                       autoCorrect={false}
