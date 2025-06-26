@@ -231,7 +231,8 @@ export default function BuildInventoryScreen() {
                 <ScrollView
                   className="bg-gray-50 rounded-xl p-2"
                   keyboardShouldPersistTaps="handled"
-                  showsVerticalScrollIndicator={false}
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
                   style={{ maxHeight: 400 }}
                 >
                   {filteredItems.map((item, index) => {
