@@ -52,7 +52,7 @@ export default function PricingTierScreen() {
   const pricingTiers: PricingTier[] = [
     {
       id: "eco",
-      name: "Proovia Eco",
+      name: "Tranzr Eco",
       price: 210.72,
       collectionDate: "5 Jul",
       deliveryDate: "8 Jul",
@@ -74,7 +74,7 @@ export default function PricingTierScreen() {
     },
     {
       id: "eco-plus",
-      name: "Proovia Eco Plus",
+      name: "Tranzr Eco Plus",
       price: 228.96,
       collectionDate: "5 Jul",
       deliveryDate: "7 Jul",
@@ -97,7 +97,7 @@ export default function PricingTierScreen() {
     },
     {
       id: "standard",
-      name: "Proovia Standard",
+      name: "Tranzr Standard",
       price: 249.22,
       collectionDate: "2 Jul",
       deliveryDate: "4 Jul",
@@ -119,7 +119,7 @@ export default function PricingTierScreen() {
     },
     {
       id: "premium",
-      name: "Proovia Premium",
+      name: "Tranzr Premium",
       price: 265.43,
       collectionDate: "2 Jul",
       deliveryDate: "3 Jul",
@@ -160,7 +160,7 @@ export default function PricingTierScreen() {
     return (
       <View
         key={feature.name}
-        className="flex-row items-center justify-between py-2"
+        className="flex-row items-center justify-between py-3 border-b border-gray-100 last:border-b-0"
       >
         <View className="flex-row items-center flex-1">
           <Text className="text-sm text-gray-700 flex-1">{feature.name}</Text>
@@ -200,72 +200,87 @@ export default function PricingTierScreen() {
     return (
       <View
         key={tier.id}
-        className={`bg-white rounded-xl mb-4 shadow-sm border-2 ${
-          isSelected ? "border-red-500" : "border-gray-200"
+        className={`bg-white rounded-2xl mb-6 shadow-lg border-2 overflow-hidden ${
+          isSelected ? "border-red-500 shadow-red-100" : "border-gray-100"
         }`}
       >
         {tier.popular && (
-          <View className="bg-red-500 rounded-t-xl px-4 py-2">
-            <Text className="text-white font-semibold text-center text-sm">
-              Most Popular
+          <View className="bg-gradient-to-r from-red-500 to-red-600 px-4 py-3">
+            <Text className="text-white font-bold text-center text-sm tracking-wide">
+              ⭐ MOST POPULAR ⭐
             </Text>
           </View>
         )}
 
-        <View className="p-4">
+        <View className="p-6">
           {/* Header */}
-          <View className="flex-row justify-between items-start mb-4">
+          <View className="flex-row justify-between items-start mb-6">
             <View className="flex-1">
-              <Text className="text-lg font-bold text-gray-900 mb-1">
+              <Text className="text-xl font-bold text-gray-900 mb-3">
                 {tier.name}
               </Text>
-              <View className="flex-row items-center mb-2">
-                <Text className="text-sm text-gray-600">Collection</Text>
-                <View className="mx-2 w-8 h-px bg-gray-300" />
-                <Text className="text-sm text-gray-600">Delivery</Text>
-              </View>
-              <View className="flex-row items-center mb-2">
-                <Text className="text-sm font-semibold text-orange-600">
-                  {tier.collectionDate}
-                </Text>
-                <View className="mx-2 w-8 h-px bg-orange-300" />
-                <Text className="text-sm font-semibold text-green-600">
-                  {tier.deliveryDate}
-                </Text>
+              <View className="bg-gray-50 rounded-xl p-4 mb-3">
+                <View className="flex-row items-center justify-between mb-2">
+                  <Text className="text-sm font-medium text-gray-600">
+                    Collection
+                  </Text>
+                  <Text className="text-sm font-medium text-gray-600">
+                    Delivery
+                  </Text>
+                </View>
+                <View className="flex-row items-center justify-between">
+                  <View className="bg-orange-100 px-3 py-2 rounded-lg">
+                    <Text className="text-sm font-bold text-orange-700">
+                      {tier.collectionDate}
+                    </Text>
+                  </View>
+                  <View className="flex-1 mx-3 h-px bg-gray-300" />
+                  <View className="bg-green-100 px-3 py-2 rounded-lg">
+                    <Text className="text-sm font-bold text-green-700">
+                      {tier.deliveryDate}
+                    </Text>
+                  </View>
+                </View>
               </View>
               <View className="flex-row items-center">
-                <Clock size={14} color="#6b7280" />
-                <Text className="text-xs text-gray-500 ml-1">
-                  Delivery timescale: {tier.deliveryTimescale}
+                <Clock size={16} color="#6b7280" />
+                <Text className="text-sm text-gray-600 ml-2">
+                  {tier.deliveryTimescale}
                 </Text>
               </View>
             </View>
-            <View className="items-end">
-              <Text className="text-2xl font-bold text-red-600 mb-2">
-                £{tier.price.toFixed(2)}
-              </Text>
+            <View className="items-end ml-4">
+              <View className="bg-red-50 rounded-2xl p-4 mb-3 items-center">
+                <Text className="text-3xl font-bold text-red-600">
+                  £{tier.price.toFixed(2)}
+                </Text>
+              </View>
               <TouchableOpacity
-                className={`px-6 py-2 rounded-full ${
-                  isSelected ? "bg-red-500" : "bg-red-500"
+                className={`px-8 py-3 rounded-full shadow-md ${
+                  isSelected
+                    ? "bg-red-600 shadow-red-200"
+                    : "bg-red-500 shadow-red-100"
                 }`}
                 onPress={() => setSelectedTier(tier.id)}
               >
-                <Text className="text-white font-semibold text-sm">Select</Text>
+                <Text className="text-white font-bold text-sm">
+                  {isSelected ? "Selected" : "Select"}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* More Details Button */}
           <TouchableOpacity
-            className="flex-row items-center justify-center py-2 mb-4"
+            className="flex-row items-center justify-center py-3 mb-4 bg-blue-50 rounded-xl"
             onPress={() => setExpandedTier(isExpanded ? null : tier.id)}
           >
-            <Text className="text-blue-600 font-medium text-sm mr-1">
-              More details
+            <Text className="text-blue-700 font-semibold text-sm mr-2">
+              {isExpanded ? "Hide details" : "View details"}
             </Text>
             <ChevronDown
-              size={16}
-              color="#2563eb"
+              size={18}
+              color="#1d4ed8"
               style={{
                 transform: [{ rotate: isExpanded ? "180deg" : "0deg" }],
               }}
@@ -274,11 +289,11 @@ export default function PricingTierScreen() {
 
           {/* Expanded Features */}
           {isExpanded && (
-            <View className="border-t border-gray-200 pt-4">
-              <Text className="text-base font-semibold text-gray-900 mb-3">
-                Service Features
+            <View className="border-t border-gray-200 pt-6">
+              <Text className="text-lg font-bold text-gray-900 mb-4">
+                🔧 Service Features
               </Text>
-              <View className="space-y-1">
+              <View className="bg-gray-50 rounded-xl p-4">
                 {tier.features.map((feature) =>
                   renderFeature(feature, tierColor),
                 )}
