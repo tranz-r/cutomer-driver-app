@@ -20,6 +20,7 @@ import {
   Minus,
   Star,
   Trash2,
+  Edit,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
@@ -40,6 +41,7 @@ export default function BuildInventoryScreen() {
   const [selectedItemQuantities, setSelectedItemQuantities] = useState<{
     [key: string]: number;
   }>({});
+  const [isEditing, setIsEditing] = useState<string | null>(null);
 
   // Helper function to get dimensions from item data
   const getItemDimensions = (item: any) => {
@@ -67,9 +69,7 @@ export default function BuildInventoryScreen() {
   // Memoized filtered items for better performance
   const filteredItems = useMemo(() => {
     if (searchQuery.trim() === "") {
-      return itemsData.goods
-        .sort((a, b) => (b.popularity_index || 0) - (a.popularity_index || 0))
-        .slice(0, 20); // Show top 20 popular items when no search
+      return [];
     }
 
     const query = searchQuery.toLowerCase();
@@ -144,6 +144,27 @@ export default function BuildInventoryScreen() {
       items.map((item) =>
         item.id === id ? { ...item, quantity: newQuantity } : item,
       ),
+    );
+  };
+
+  const handleUpdateDimensions = (
+    id: string,
+    field: "height" | "width" | "length",
+    value: string,
+  ) => {
+    const numValue = parseFloat(value) || 0;
+    setItems(
+      items.map((item) => {
+        if (item.id === id) {
+          const updatedItem = { ...item, [field]: numValue };
+          // Recalculate volume based on new dimensions
+          const volume =
+            (updatedItem.height * updatedItem.width * updatedItem.length) /
+            1000000; // Convert cm³ to m³
+          return { ...updatedItem, volume };
+        }
+        return item;
+      }),
     );
   };
 
@@ -226,7 +247,7 @@ export default function BuildInventoryScreen() {
             {filteredItems.length > 0 && (
               <View className="mb-6">
                 <Text className="text-lg font-bold text-gray-900 mb-4">
-                  {searchQuery.length > 0 ? "Search Results" : "Popular Items"}
+                  Search Results
                 </Text>
                 <ScrollView
                   className="bg-gray-50 rounded-xl p-2"
@@ -326,53 +347,172 @@ export default function BuildInventoryScreen() {
                   Your Inventory ({items.length} items)
                 </Text>
                 <View className="space-y-4">
-                  {items.map((item) => (
-                    <View
-                      key={item.id}
-                      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-3"
-                    >
-                      <View className="flex-row justify-between items-center">
-                        <View className="flex-1">
-                          <Text className="font-bold text-lg text-gray-900">
-                            {item.name}
-                          </Text>
-                          <Text className="text-gray-600 text-sm">
-                            {item.height} × {item.width} × {item.length} cm
-                          </Text>
-                          <Text className="text-gray-500 text-xs mt-1">
-                            Volume: {item.volume.toFixed(2)} m³ each
-                          </Text>
-                        </View>
-                        <View className="flex-row items-center">
-                          <View className="flex-row items-center bg-gray-100 rounded-lg mr-3">
-                            <TouchableOpacity
-                              className="p-2"
-                              onPress={() =>
-                                handleUpdateQuantity(item.id, item.quantity - 1)
-                              }
-                            >
-                              <Minus size={16} color="#6B7280" />
-                            </TouchableOpacity>
-                            <Text className="mx-3 font-bold text-lg">
-                              {item.quantity}
+                  {items.map((item, index) => (
+                    <View key={item.id} className="mb-3">
+                      {isEditing === item.id ? (
+                        <View className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                          <TextInput
+                            className="border border-purple-300 rounded-lg p-3 mb-3 bg-white text-base font-medium"
+                            value={item.name}
+                            onChangeText={(text) => {
+                              setItems(
+                                items.map((i) =>
+                                  i.id === item.id ? { ...i, name: text } : i,
+                                ),
+                              );
+                            }}
+                            placeholder="Item name"
+                          />
+                          <View className="mb-3">
+                            <Text className="text-sm font-bold text-purple-700 mb-2">
+                              Dimensions (cm):
                             </Text>
+                            <View className="flex-row space-x-2">
+                              <View className="flex-1">
+                                <Text className="text-xs text-purple-600 mb-1">
+                                  Height
+                                </Text>
+                                <TextInput
+                                  className="border border-purple-300 rounded-lg px-3 py-2 text-center font-medium bg-white"
+                                  value={item.height.toString()}
+                                  onChangeText={(value) =>
+                                    handleUpdateDimensions(
+                                      item.id,
+                                      "height",
+                                      value,
+                                    )
+                                  }
+                                  keyboardType="numeric"
+                                  placeholder="0"
+                                />
+                              </View>
+                              <View className="flex-1">
+                                <Text className="text-xs text-purple-600 mb-1">
+                                  Width
+                                </Text>
+                                <TextInput
+                                  className="border border-purple-300 rounded-lg px-3 py-2 text-center font-medium bg-white"
+                                  value={item.width.toString()}
+                                  onChangeText={(value) =>
+                                    handleUpdateDimensions(
+                                      item.id,
+                                      "width",
+                                      value,
+                                    )
+                                  }
+                                  keyboardType="numeric"
+                                  placeholder="0"
+                                />
+                              </View>
+                              <View className="flex-1">
+                                <Text className="text-xs text-purple-600 mb-1">
+                                  Length
+                                </Text>
+                                <TextInput
+                                  className="border border-purple-300 rounded-lg px-3 py-2 text-center font-medium bg-white"
+                                  value={item.length.toString()}
+                                  onChangeText={(value) =>
+                                    handleUpdateDimensions(
+                                      item.id,
+                                      "length",
+                                      value,
+                                    )
+                                  }
+                                  keyboardType="numeric"
+                                  placeholder="0"
+                                />
+                              </View>
+                            </View>
+                          </View>
+                          <Text className="text-purple-600 text-xs mb-4">
+                            Volume: {item.volume.toFixed(3)} m³ each
+                          </Text>
+                          <View className="flex-row justify-between">
                             <TouchableOpacity
-                              className="p-2"
-                              onPress={() =>
-                                handleUpdateQuantity(item.id, item.quantity + 1)
-                              }
+                              className="bg-gray-200 px-6 py-3 rounded-lg flex-1 mr-2"
+                              onPress={() => setIsEditing(null)}
                             >
-                              <Plus size={16} color="#6B7280" />
+                              <Text className="font-semibold text-gray-700 text-sm text-center">
+                                Cancel
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              className="bg-purple-600 px-6 py-3 rounded-lg flex-1 ml-2"
+                              onPress={() => setIsEditing(null)}
+                            >
+                              <Text className="text-white font-semibold text-sm text-center">
+                                Save
+                              </Text>
                             </TouchableOpacity>
                           </View>
-                          <TouchableOpacity
-                            className="bg-red-50 p-2 rounded-full"
-                            onPress={() => handleRemoveItem(item.id)}
-                          >
-                            <Trash2 size={18} color="#ef4444" />
-                          </TouchableOpacity>
                         </View>
-                      </View>
+                      ) : (
+                        <View className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                          <View className="flex-row justify-between items-start">
+                            <View className="flex-row items-center flex-1">
+                              <View className="bg-purple-100 p-1.5 rounded-full mr-3">
+                                <Text className="text-purple-600 font-bold text-sm">
+                                  {index + 1}
+                                </Text>
+                              </View>
+                              <View className="flex-1 mr-4">
+                                <Text className="font-bold text-lg text-gray-900 mb-1">
+                                  {item.name}
+                                </Text>
+                                <Text className="text-gray-600 text-sm">
+                                  {item.height} × {item.width} × {item.length}{" "}
+                                  cm
+                                </Text>
+                                <Text className="text-gray-500 text-xs mt-1">
+                                  Volume: {item.volume.toFixed(3)} m³ each •
+                                  Qty: {item.quantity}
+                                </Text>
+                              </View>
+                            </View>
+                            <View className="flex-row items-center">
+                              <View className="flex-row items-center bg-gray-100 rounded-lg mr-3">
+                                <TouchableOpacity
+                                  className="p-2"
+                                  onPress={() =>
+                                    handleUpdateQuantity(
+                                      item.id,
+                                      item.quantity - 1,
+                                    )
+                                  }
+                                >
+                                  <Minus size={16} color="#6B7280" />
+                                </TouchableOpacity>
+                                <Text className="mx-3 font-bold text-lg">
+                                  {item.quantity}
+                                </Text>
+                                <TouchableOpacity
+                                  className="p-2"
+                                  onPress={() =>
+                                    handleUpdateQuantity(
+                                      item.id,
+                                      item.quantity + 1,
+                                    )
+                                  }
+                                >
+                                  <Plus size={16} color="#6B7280" />
+                                </TouchableOpacity>
+                              </View>
+                              <TouchableOpacity
+                                className="bg-purple-50 p-3 rounded-full mr-2"
+                                onPress={() => setIsEditing(item.id)}
+                              >
+                                <Edit size={18} color="#8B5CF6" />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                className="bg-red-50 p-3 rounded-full"
+                                onPress={() => handleRemoveItem(item.id)}
+                              >
+                                <Trash2 size={18} color="#ef4444" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      )}
                     </View>
                   ))}
                 </View>
@@ -417,7 +557,7 @@ export default function BuildInventoryScreen() {
             )}
 
             {/* Empty State */}
-            {items.length === 0 && searchQuery.length === 0 && (
+            {items.length === 0 && (
               <View className="bg-gray-50 p-8 rounded-xl border-2 border-dashed border-gray-200">
                 <View className="items-center">
                   <Package size={48} color="#9CA3AF" />
