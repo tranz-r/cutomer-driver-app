@@ -255,7 +255,7 @@ export default function SummaryScreen() {
           >
             <CheckCircle size={22} color="white" />
             <Text className="text-white text-center font-bold text-lg ml-3">
-              Checkout
+              Continue
             </Text>
           </TouchableOpacity>
 

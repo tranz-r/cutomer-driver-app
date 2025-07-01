@@ -135,7 +135,7 @@ export default function DateTimeScreen() {
     console.log("Selected Time Slot:", selectedTimeSlot);
     console.log("Flexible Time:", isFlexibleTime);
     console.log("Quote:", quote);
-    router.push("/summary");
+    router.push("/pricing-tier");
   };
 
   return (
@@ -332,7 +332,7 @@ export default function DateTimeScreen() {
             onPress={handleContinue}
           >
             <Text className="text-white text-center font-bold text-lg mr-3">
-              Continue to Summary
+              Continue
             </Text>
             <ChevronRight size={22} color="white" />
           </TouchableOpacity>

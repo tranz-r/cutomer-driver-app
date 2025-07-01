@@ -188,7 +188,7 @@ export default function SuccessScreen() {
                 onPress={handleGoToDashboard}
               >
                 <Text className="text-white font-semibold text-lg mr-2">
-                  Go to Dashboard
+                  Continue
                 </Text>
                 <ArrowRight size={20} color="white" />
               </TouchableOpacity>

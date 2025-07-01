@@ -335,7 +335,7 @@ export default function VanSelectionScreen() {
             disabled={!selectedVan}
           >
             <Text className="text-white text-center font-bold text-lg mr-3">
-              Continue to Origin & Destination
+              Continue
             </Text>
             <ChevronRight size={22} color="white" />
           </TouchableOpacity>

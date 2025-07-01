@@ -195,7 +195,7 @@ export default function ItemDetectionScreen() {
                     onPress={handleContinueToVanSelection}
                   >
                     <Text className="text-white text-center font-semibold text-lg mr-2">
-                      Continue to Van and Driver Selection
+                      Continue
                     </Text>
                     <ChevronRight size={20} color="white" />
                   </TouchableOpacity>
