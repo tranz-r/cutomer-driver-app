@@ -237,19 +237,31 @@ export default function OriginDestinationScreen() {
                           // Fetch address suggestions for this postcode
                           setOriginAddressLoading(true);
                           setShowOriginAddressDropdown(true);
-                          fetch(
-                            `https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`,
-                          )
-                            .then((res) => res.json())
-                            .then((data) => {
-                              setOriginAddressSuggestions(
-                                Array.isArray(data.suggestions)
-                                  ? data.suggestions
-                                  : [],
-                              );
-                            })
-                            .catch(() => setOriginAddressSuggestions([]))
-                            .finally(() => setOriginAddressLoading(false));
+                          setTimeout(() => {
+                            setOriginAddressSuggestions([
+                              { id: 'mock-1', address: '12 Acacia Avenue, London, NW1 4RT', url: '/get/mock-1' },
+                              { id: 'mock-2', address: '34 Maple Road, Manchester, M14 5GH', url: '/get/mock-2' },
+                              { id: 'mock-3', address: '56 Oak Street, Birmingham, B15 2TT', url: '/get/mock-3' },
+                              { id: 'mock-4', address: '78 Elm Drive, Liverpool, L18 9SD', url: '/get/mock-4' },
+                              { id: 'mock-5', address: '90 Willow Close, Leeds, LS6 2AB', url: '/get/mock-5' },
+                              { id: 'mock-6', address: '101 Sycamore Lane, Bristol, BS7 8PL', url: '/get/mock-6' },
+                              { id: 'mock-7', address: '23 Chestnut Grove, Sheffield, S10 3QW', url: '/get/mock-7' },
+                              { id: 'mock-8', address: '45 Poplar Avenue, Newcastle, NE3 4JP', url: '/get/mock-8' },
+                              { id: 'mock-9', address: '67 Beech Road, Nottingham, NG7 2LT', url: '/get/mock-9' },
+                              { id: 'mock-10', address: '89 Cedar Crescent, Southampton, SO15 5QF', url: '/get/mock-10' },
+                              { id: 'mock-11', address: '11 Ashfield Way, Leicester, LE2 1TR', url: '/get/mock-11' },
+                              { id: 'mock-12', address: '22 Rowan Street, Coventry, CV3 6GH', url: '/get/mock-12' },
+                              { id: 'mock-13', address: '33 Hawthorn Court, Reading, RG1 8PL', url: '/get/mock-13' },
+                              { id: 'mock-14', address: '44 Pine Gardens, Derby, DE1 2AB', url: '/get/mock-14' },
+                              { id: 'mock-15', address: '55 Birch Avenue, Brighton, BN1 6GH', url: '/get/mock-15' },
+                              { id: 'mock-16', address: '66 Larch Lane, Plymouth, PL4 7TR', url: '/get/mock-16' },
+                              { id: 'mock-17', address: '77 Spruce Road, Oxford, OX4 2JP', url: '/get/mock-17' },
+                              { id: 'mock-18', address: '88 Magnolia Close, Cambridge, CB1 3LT', url: '/get/mock-18' },
+                              { id: 'mock-19', address: '99 Hazel Drive, York, YO10 5QF', url: '/get/mock-19' },
+                              { id: 'mock-20', address: '100 Holly Avenue, Glasgow, G12 8PL', url: '/get/mock-20' },
+                            ]);
+                            setOriginAddressLoading(false);
+                          }, 600);
                         }}
                       >
                         <Text className="text-base text-gray-800">
@@ -288,16 +300,15 @@ export default function OriginDestinationScreen() {
                     onPress={() => {
                       // Fetch full address
                       setOriginAddressLoading(true);
-                      fetch(
-                        `https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`,
-                      )
-                        .then((res) => res.json())
-                        .then((data) => {
-                          setOriginSelectedAddress(data);
-                          setShowOriginAddressDropdown(false);
-                        })
-                        .catch(() => setOriginSelectedAddress(null))
-                        .finally(() => setOriginAddressLoading(false));
+                      setTimeout(() => {
+                        const selected = originAddressSuggestions.find(a => a.id === addr.id);
+                        setOriginSelectedAddress({
+                          formatted_address: [selected ? selected.address : addr.address],
+                          postcode: '',
+                        });
+                        setShowOriginAddressDropdown(false);
+                        setOriginAddressLoading(false);
+                      }, 600);
                     }}
                   >
                     <Text className="text-base text-gray-800 leading-relaxed">
@@ -406,19 +417,31 @@ export default function OriginDestinationScreen() {
                           // Fetch address suggestions for this postcode
                           setDestinationAddressLoading(true);
                           setShowDestinationAddressDropdown(true);
-                          fetch(
-                            `https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`,
-                          )
-                            .then((res) => res.json())
-                            .then((data) => {
-                              setDestinationAddressSuggestions(
-                                Array.isArray(data.suggestions)
-                                  ? data.suggestions
-                                  : [],
-                              );
-                            })
-                            .catch(() => setDestinationAddressSuggestions([]))
-                            .finally(() => setDestinationAddressLoading(false));
+                          setTimeout(() => {
+                            setDestinationAddressSuggestions([
+                              { id: 'mock-21', address: '21 Rosewood Avenue, London, NW2 3RT', url: '/get/mock-21' },
+                              { id: 'mock-22', address: '32 Lavender Road, Manchester, M15 6GH', url: '/get/mock-22' },
+                              { id: 'mock-23', address: '43 Jasmine Street, Birmingham, B16 3TT', url: '/get/mock-23' },
+                              { id: 'mock-24', address: '54 Bluebell Drive, Liverpool, L19 8SD', url: '/get/mock-24' },
+                              { id: 'mock-25', address: '65 Primrose Close, Leeds, LS7 3AB', url: '/get/mock-25' },
+                              { id: 'mock-26', address: '76 Foxglove Lane, Bristol, BS8 9PL', url: '/get/mock-26' },
+                              { id: 'mock-27', address: '87 Buttercup Grove, Sheffield, S11 4QW', url: '/get/mock-27' },
+                              { id: 'mock-28', address: '98 Clover Avenue, Newcastle, NE4 5JP', url: '/get/mock-28' },
+                              { id: 'mock-29', address: '109 Daffodil Road, Nottingham, NG8 3LT', url: '/get/mock-29' },
+                              { id: 'mock-30', address: '120 Sunflower Crescent, Southampton, SO16 6QF', url: '/get/mock-30' },
+                              { id: 'mock-31', address: '131 Tulip Way, Leicester, LE3 2TR', url: '/get/mock-31' },
+                              { id: 'mock-32', address: '142 Orchid Street, Coventry, CV4 7GH', url: '/get/mock-32' },
+                              { id: 'mock-33', address: '153 Peony Court, Reading, RG2 9PL', url: '/get/mock-33' },
+                              { id: 'mock-34', address: '164 Camellia Gardens, Derby, DE2 3AB', url: '/get/mock-34' },
+                              { id: 'mock-35', address: '175 Lotus Avenue, Brighton, BN2 7GH', url: '/get/mock-35' },
+                              { id: 'mock-36', address: '186 Dahlia Lane, Plymouth, PL5 8TR', url: '/get/mock-36' },
+                              { id: 'mock-37', address: '197 Marigold Road, Oxford, OX5 3JP', url: '/get/mock-37' },
+                              { id: 'mock-38', address: '208 Azalea Close, Cambridge, CB2 4LT', url: '/get/mock-38' },
+                              { id: 'mock-39', address: '219 Gardenia Drive, York, YO11 6QF', url: '/get/mock-39' },
+                              { id: 'mock-40', address: '230 Heather Avenue, Glasgow, G13 9PL', url: '/get/mock-40' },
+                            ]);
+                            setDestinationAddressLoading(false);
+                          }, 600);
                         }}
                       >
                         <Text className="text-base text-gray-800">
@@ -457,16 +480,15 @@ export default function OriginDestinationScreen() {
                       className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
                       onPress={() => {
                         setDestinationAddressLoading(true);
-                        fetch(
-                          `https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`,
-                        )
-                          .then((res) => res.json())
-                          .then((data) => {
-                            setDestinationSelectedAddress(data);
-                            setShowDestinationAddressDropdown(false);
-                          })
-                          .catch(() => setDestinationSelectedAddress(null))
-                          .finally(() => setDestinationAddressLoading(false));
+                        setTimeout(() => {
+                          const selected = destinationAddressSuggestions.find(a => a.id === addr.id);
+                          setDestinationSelectedAddress({
+                            formatted_address: [selected ? selected.address : addr.address],
+                            postcode: '',
+                          });
+                          setShowDestinationAddressDropdown(false);
+                          setDestinationAddressLoading(false);
+                        }, 600);
                       }}
                     >
                       <Text className="text-base text-gray-800 leading-relaxed">
