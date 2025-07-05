@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -33,6 +33,16 @@ export default function OriginDestinationScreen() {
   const [showDestinationFloors, setShowDestinationFloors] = useState(false);
   const [distance, setDistance] = useState("12.5 miles");
   const [showMap, setShowMap] = useState(false);
+
+  // Autocomplete state
+  const [originSuggestions, setOriginSuggestions] = useState<string[]>([]);
+  const [destinationSuggestions, setDestinationSuggestions] = useState<string[]>([]);
+  const [originLoading, setOriginLoading] = useState(false);
+  const [destinationLoading, setDestinationLoading] = useState(false);
+  const [originFocused, setOriginFocused] = useState(false);
+  const [destinationFocused, setDestinationFocused] = useState(false);
+  const originDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const destinationDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -83,6 +93,46 @@ export default function OriginDestinationScreen() {
     router.push("/date-time");
   };
 
+  // Fetch suggestions for origin
+  useEffect(() => {
+    if (!originFocused || origin.length < 2) {
+      setOriginSuggestions([]);
+      return;
+    }
+    if (originDebounceRef.current) clearTimeout(originDebounceRef.current);
+    originDebounceRef.current = setTimeout(() => {
+      setOriginLoading(true);
+      fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(origin)}/autocomplete?limit=100`)
+        .then((res) => res.json())
+        .then((data) => {
+          setOriginSuggestions(Array.isArray(data.result) ? data.result : []);
+        })
+        .catch(() => setOriginSuggestions([]))
+        .finally(() => setOriginLoading(false));
+    }, 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [origin, originFocused]);
+
+  // Fetch suggestions for destination
+  useEffect(() => {
+    if (!destinationFocused || destination.length < 2) {
+      setDestinationSuggestions([]);
+      return;
+    }
+    if (destinationDebounceRef.current) clearTimeout(destinationDebounceRef.current);
+    destinationDebounceRef.current = setTimeout(() => {
+      setDestinationLoading(true);
+      fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(destination)}/autocomplete?limit=100`)
+        .then((res) => res.json())
+        .then((data) => {
+          setDestinationSuggestions(Array.isArray(data.result) ? data.result : []);
+        })
+        .catch(() => setDestinationSuggestions([]))
+        .finally(() => setDestinationLoading(false));
+    }, 300);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destination, destinationFocused]);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#0891b2" />
@@ -98,23 +148,55 @@ export default function OriginDestinationScreen() {
         </View>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View className="px-4 py-6">
           {/* Origin Address */}
           <View className="mb-4">
             <Text className="text-base font-semibold text-gray-800 mb-2">
               Pickup Address (Origin)
             </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white">
+            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white relative">
               <MapPin size={20} color="#10b981" />
               <TextInput
                 className="flex-1 ml-3 text-base"
                 value={origin}
-                onChangeText={setOrigin}
-                placeholder="Enter pickup address..."
+                onChangeText={text => {
+                  setOrigin(text);
+                  if (!originFocused) setOriginFocused(true);
+                }}
+                placeholder="Enter UK pickup postcode..."
                 placeholderTextColor="#9CA3AF"
+                onFocus={() => setOriginFocused(true)}
+                onBlur={() => setTimeout(() => setOriginFocused(false), 200)}
+                autoCapitalize="characters"
+                keyboardType="default"
+                autoCorrect={false}
+                maxLength={8}
               />
             </View>
+            {/* Suggestions Dropdown */}
+            {originFocused && origin.length > 1 && (originSuggestions.length > 0 || originLoading) && (
+              <View className="absolute left-0 right-0 z-10 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 70, height: 200, paddingBottom: 4, flex: 1 }}>
+                <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+                  {originSuggestions.map((suggestion) => (
+                    <TouchableOpacity
+                      key={suggestion}
+                      className="p-3 border-b border-gray-100"
+                      onPress={() => {
+                        setOrigin(suggestion);
+                        setOriginSuggestions([]);
+                        setOriginFocused(false);
+                      }}
+                    >
+                      <Text className="text-base text-gray-800">{suggestion}</Text>
+                    </TouchableOpacity>
+                  ))}
+                  {originLoading && (
+                    <Text className="p-3 text-gray-400 text-center">Loading...</Text>
+                  )}
+                </ScrollView>
+              </View>
+            )}
           </View>
 
           {/* Destination Address */}
@@ -122,17 +204,48 @@ export default function OriginDestinationScreen() {
             <Text className="text-base font-semibold text-gray-800 mb-2">
               Delivery Address (Destination)
             </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white">
+            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white relative">
               <Navigation size={20} color="#ef4444" />
               <TextInput
                 className="flex-1 ml-3 text-base"
                 value={destination}
-                onChangeText={setDestination}
-                onBlur={handleDestinationBlur}
-                placeholder="Enter delivery address..."
+                onChangeText={text => {
+                  setDestination(text);
+                  if (!destinationFocused) setDestinationFocused(true);
+                }}
+                onBlur={() => setTimeout(() => setDestinationFocused(false), 200)}
+                onFocus={() => setDestinationFocused(true)}
+                placeholder="Enter UK delivery postcode..."
                 placeholderTextColor="#9CA3AF"
+                autoCapitalize="characters"
+                keyboardType="default"
+                autoCorrect={false}
+                maxLength={8}
               />
             </View>
+            {/* Suggestions Dropdown */}
+            {destinationFocused && destination.length > 1 && (destinationSuggestions.length > 0 || destinationLoading) && (
+              <View className="absolute left-0 right-0 z-10 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 70, height: 200, paddingBottom: 4, flex: 1 }}>
+                <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+                  {destinationSuggestions.map((suggestion) => (
+                    <TouchableOpacity
+                      key={suggestion}
+                      className="p-3 border-b border-gray-100"
+                      onPress={() => {
+                        setDestination(suggestion);
+                        setDestinationSuggestions([]);
+                        setDestinationFocused(false);
+                      }}
+                    >
+                      <Text className="text-base text-gray-800">{suggestion}</Text>
+                    </TouchableOpacity>
+                  ))}
+                  {destinationLoading && (
+                    <Text className="p-3 text-gray-400 text-center">Loading...</Text>
+                  )}
+                </ScrollView>
+              </View>
+            )}
           </View>
 
           {/* Map Preview */}
