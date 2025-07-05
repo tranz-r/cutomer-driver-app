@@ -84,23 +84,28 @@ export default function OriginDestinationScreen() {
     { value: "6+", label: "6th Floor or Higher" },
   ];
 
+  // Helper to get floor number from value
+  const getFloorNumber = (floorValue: string) => {
+    if (floorValue === 'ground') return 0;
+    if (floorValue === '6+') return 6;
+    const n = parseInt(floorValue, 10);
+    return isNaN(n) ? 0 : n;
+  };
+
+  // Updated extra cost calculation
   const calculateExtraCost = () => {
     let extraCost = 0;
+    const originFloorNum = getFloorNumber(originFloor);
+    const destinationFloorNum = getFloorNumber(destinationFloor);
 
-    // Origin extra cost
-    if (!originElevator && originFloor !== "ground" && originFloor !== "1") {
-      extraCost += 15; // 15% extra for no elevator above 2nd floor
+    // Pickup
+    if (!originElevator && originFloorNum > 0) {
+      extraCost += originFloorNum * 10;
     }
-
-    // Destination extra cost
-    if (
-      !destinationElevator &&
-      destinationFloor !== "ground" &&
-      destinationFloor !== "1"
-    ) {
-      extraCost += 15; // 15% extra for no elevator above 2nd floor
+    // Delivery
+    if (!destinationElevator && destinationFloorNum > 0) {
+      extraCost += destinationFloorNum * 10;
     }
-
     return extraCost;
   };
 
@@ -885,57 +890,40 @@ export default function OriginDestinationScreen() {
                   <View className="flex-row items-center">
                     <Building size={16} color="#6b7280" />
                     <Text className="text-base text-gray-800 ml-2">
-                      {floorOptions.find((f) => f.value === originFloor)
-                        ?.label || "Select floor"}
+                      {floorOptions.find((f) => f.value === originFloor)?.label || "Select floor"}
                     </Text>
                   </View>
                   <ChevronRight size={16} color="#9ca3af" />
                 </TouchableOpacity>
               </View>
 
-              <View>
-                <Text className="text-sm font-medium text-gray-700 mb-2">
-                  Is there an elevator?
-                </Text>
-                <View className="flex-row">
-                  <TouchableOpacity
-                    className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
-                      originElevator
-                        ? "bg-green-50 border-green-500"
-                        : "bg-gray-50 border-gray-300"
-                    }`}
-                    onPress={() => setOriginElevator(true)}
-                  >
-                    {originElevator && (
-                      <CheckCircle size={16} color="#10b981" />
-                    )}
-                    <Text
-                      className={`font-medium ml-1 ${
-                        originElevator ? "text-green-700" : "text-gray-600"
+              {getFloorNumber(originFloor) > 0 && (
+                <View>
+                  <Text className="text-sm font-medium text-gray-700 mb-2">
+                    Is there an elevator?
+                  </Text>
+                  <View className="flex-row">
+                    <TouchableOpacity
+                      className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                        originElevator ? "bg-green-50 border-green-500" : "bg-gray-50 border-gray-300"
                       }`}
+                      onPress={() => setOriginElevator(true)}
                     >
-                      Yes
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
-                      !originElevator
-                        ? "bg-red-50 border-red-500"
-                        : "bg-gray-50 border-gray-300"
-                    }`}
-                    onPress={() => setOriginElevator(false)}
-                  >
-                    {!originElevator && <X size={16} color="#ef4444" />}
-                    <Text
-                      className={`font-medium ml-1 ${
-                        !originElevator ? "text-red-700" : "text-gray-600"
+                      {originElevator && <CheckCircle size={16} color="#10b981" />}
+                      <Text className={`font-medium ml-1 ${originElevator ? "text-green-700" : "text-gray-600"}`}>Yes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                        !originElevator ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-300"
                       }`}
+                      onPress={() => setOriginElevator(false)}
                     >
-                      No
-                    </Text>
-                  </TouchableOpacity>
+                      {!originElevator && <X size={16} color="#ef4444" />}
+                      <Text className={`font-medium ml-1 ${!originElevator ? "text-red-700" : "text-gray-600"}`}>No</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
 
             {/* Delivery Location Details */}
@@ -960,57 +948,40 @@ export default function OriginDestinationScreen() {
                   <View className="flex-row items-center">
                     <Building size={16} color="#6b7280" />
                     <Text className="text-base text-gray-800 ml-2">
-                      {floorOptions.find((f) => f.value === destinationFloor)
-                        ?.label || "Select floor"}
+                      {floorOptions.find((f) => f.value === destinationFloor)?.label || "Select floor"}
                     </Text>
                   </View>
                   <ChevronRight size={16} color="#9ca3af" />
                 </TouchableOpacity>
               </View>
 
-              <View>
-                <Text className="text-sm font-medium text-gray-700 mb-2">
-                  Is there an elevator?
-                </Text>
-                <View className="flex-row">
-                  <TouchableOpacity
-                    className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
-                      destinationElevator
-                        ? "bg-green-50 border-green-500"
-                        : "bg-gray-50 border-gray-300"
-                    }`}
-                    onPress={() => setDestinationElevator(true)}
-                  >
-                    {destinationElevator && (
-                      <CheckCircle size={16} color="#10b981" />
-                    )}
-                    <Text
-                      className={`font-medium ml-1 ${
-                        destinationElevator ? "text-green-700" : "text-gray-600"
+              {getFloorNumber(destinationFloor) > 0 && (
+                <View>
+                  <Text className="text-sm font-medium text-gray-700 mb-2">
+                    Is there an elevator?
+                  </Text>
+                  <View className="flex-row">
+                    <TouchableOpacity
+                      className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                        destinationElevator ? "bg-green-50 border-green-500" : "bg-gray-50 border-gray-300"
                       }`}
+                      onPress={() => setDestinationElevator(true)}
                     >
-                      Yes
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
-                      !destinationElevator
-                        ? "bg-red-50 border-red-500"
-                        : "bg-gray-50 border-gray-300"
-                    }`}
-                    onPress={() => setDestinationElevator(false)}
-                  >
-                    {!destinationElevator && <X size={16} color="#ef4444" />}
-                    <Text
-                      className={`font-medium ml-1 ${
-                        !destinationElevator ? "text-red-700" : "text-gray-600"
+                      {destinationElevator && <CheckCircle size={16} color="#10b981" />}
+                      <Text className={`font-medium ml-1 ${destinationElevator ? "text-green-700" : "text-gray-600"}`}>Yes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                        !destinationElevator ? "bg-red-50 border-red-500" : "bg-gray-50 border-gray-300"
                       }`}
+                      onPress={() => setDestinationElevator(false)}
                     >
-                      No
-                    </Text>
-                  </TouchableOpacity>
+                      {!destinationElevator && <X size={16} color="#ef4444" />}
+                      <Text className={`font-medium ml-1 ${!destinationElevator ? "text-red-700" : "text-gray-600"}`}>No</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           </View>
 
@@ -1024,8 +995,7 @@ export default function OriginDestinationScreen() {
                 </Text>
               </View>
               <Text className="text-orange-700 text-sm">
-                +{calculateExtraCost()}% extra cost due to no elevator access
-                above 2nd floor
+                +{calculateExtraCost()}% extra cost due to no elevator access above ground floor
               </Text>
             </View>
           )}
