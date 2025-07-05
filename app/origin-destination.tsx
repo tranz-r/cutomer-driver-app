@@ -15,6 +15,11 @@ import {
   MapPin,
   Navigation,
   AlertCircle,
+  Building,
+  ArrowUp,
+  ArrowDown,
+  CheckCircle,
+  X,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -190,27 +195,32 @@ export default function OriginDestinationScreen() {
         <View className="px-4 py-6">
           {/* Origin Address */}
           <View className="mb-4">
-            <Text className="text-base font-semibold text-gray-800 mb-2">
-              Pickup Address (Origin)
+            <Text className="text-base font-semibold text-gray-800 mb-3">
+              📍 Pickup Address
             </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white relative">
-              <MapPin size={20} color="#10b981" />
-              <TextInput
-                className="flex-1 ml-3 text-base"
-                value={origin}
-                onChangeText={(text) => {
-                  setOrigin(text);
-                  if (!originFocused) setOriginFocused(true);
-                }}
-                placeholder="Enter UK pickup postcode..."
-                placeholderTextColor="#9CA3AF"
-                onFocus={() => setOriginFocused(true)}
-                onBlur={() => setTimeout(() => setOriginFocused(false), 200)}
-                autoCapitalize="characters"
-                keyboardType="default"
-                autoCorrect={false}
-                maxLength={8}
-              />
+            <View className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <Text className="text-sm font-medium text-emerald-700 mb-2">
+                Postcode
+              </Text>
+              <View className="flex-row items-center border border-emerald-300 rounded-lg px-3 py-2 bg-white">
+                <MapPin size={18} color="#10b981" />
+                <TextInput
+                  className="flex-1 ml-2 text-sm font-medium"
+                  value={origin}
+                  onChangeText={(text) => {
+                    setOrigin(text);
+                    if (!originFocused) setOriginFocused(true);
+                  }}
+                  placeholder="e.g. SW1A 1AA"
+                  placeholderTextColor="#9CA3AF"
+                  onFocus={() => setOriginFocused(true)}
+                  onBlur={() => setTimeout(() => setOriginFocused(false), 200)}
+                  autoCapitalize="characters"
+                  keyboardType="default"
+                  autoCorrect={false}
+                  maxLength={8}
+                />
+              </View>
             </View>
             {/* Suggestions Dropdown */}
             {originFocused &&
@@ -239,26 +249,109 @@ export default function OriginDestinationScreen() {
                           setShowOriginAddressDropdown(true);
                           setTimeout(() => {
                             setOriginAddressSuggestions([
-                              { id: 'mock-1', address: '12 Acacia Avenue, London, NW1 4RT', url: '/get/mock-1' },
-                              { id: 'mock-2', address: '34 Maple Road, Manchester, M14 5GH', url: '/get/mock-2' },
-                              { id: 'mock-3', address: '56 Oak Street, Birmingham, B15 2TT', url: '/get/mock-3' },
-                              { id: 'mock-4', address: '78 Elm Drive, Liverpool, L18 9SD', url: '/get/mock-4' },
-                              { id: 'mock-5', address: '90 Willow Close, Leeds, LS6 2AB', url: '/get/mock-5' },
-                              { id: 'mock-6', address: '101 Sycamore Lane, Bristol, BS7 8PL', url: '/get/mock-6' },
-                              { id: 'mock-7', address: '23 Chestnut Grove, Sheffield, S10 3QW', url: '/get/mock-7' },
-                              { id: 'mock-8', address: '45 Poplar Avenue, Newcastle, NE3 4JP', url: '/get/mock-8' },
-                              { id: 'mock-9', address: '67 Beech Road, Nottingham, NG7 2LT', url: '/get/mock-9' },
-                              { id: 'mock-10', address: '89 Cedar Crescent, Southampton, SO15 5QF', url: '/get/mock-10' },
-                              { id: 'mock-11', address: '11 Ashfield Way, Leicester, LE2 1TR', url: '/get/mock-11' },
-                              { id: 'mock-12', address: '22 Rowan Street, Coventry, CV3 6GH', url: '/get/mock-12' },
-                              { id: 'mock-13', address: '33 Hawthorn Court, Reading, RG1 8PL', url: '/get/mock-13' },
-                              { id: 'mock-14', address: '44 Pine Gardens, Derby, DE1 2AB', url: '/get/mock-14' },
-                              { id: 'mock-15', address: '55 Birch Avenue, Brighton, BN1 6GH', url: '/get/mock-15' },
-                              { id: 'mock-16', address: '66 Larch Lane, Plymouth, PL4 7TR', url: '/get/mock-16' },
-                              { id: 'mock-17', address: '77 Spruce Road, Oxford, OX4 2JP', url: '/get/mock-17' },
-                              { id: 'mock-18', address: '88 Magnolia Close, Cambridge, CB1 3LT', url: '/get/mock-18' },
-                              { id: 'mock-19', address: '99 Hazel Drive, York, YO10 5QF', url: '/get/mock-19' },
-                              { id: 'mock-20', address: '100 Holly Avenue, Glasgow, G12 8PL', url: '/get/mock-20' },
+                              {
+                                id: "mock-1",
+                                address: "12 Acacia Avenue, London, NW1 4RT",
+                                url: "/get/mock-1",
+                              },
+                              {
+                                id: "mock-2",
+                                address: "34 Maple Road, Manchester, M14 5GH",
+                                url: "/get/mock-2",
+                              },
+                              {
+                                id: "mock-3",
+                                address: "56 Oak Street, Birmingham, B15 2TT",
+                                url: "/get/mock-3",
+                              },
+                              {
+                                id: "mock-4",
+                                address: "78 Elm Drive, Liverpool, L18 9SD",
+                                url: "/get/mock-4",
+                              },
+                              {
+                                id: "mock-5",
+                                address: "90 Willow Close, Leeds, LS6 2AB",
+                                url: "/get/mock-5",
+                              },
+                              {
+                                id: "mock-6",
+                                address: "101 Sycamore Lane, Bristol, BS7 8PL",
+                                url: "/get/mock-6",
+                              },
+                              {
+                                id: "mock-7",
+                                address:
+                                  "23 Chestnut Grove, Sheffield, S10 3QW",
+                                url: "/get/mock-7",
+                              },
+                              {
+                                id: "mock-8",
+                                address: "45 Poplar Avenue, Newcastle, NE3 4JP",
+                                url: "/get/mock-8",
+                              },
+                              {
+                                id: "mock-9",
+                                address: "67 Beech Road, Nottingham, NG7 2LT",
+                                url: "/get/mock-9",
+                              },
+                              {
+                                id: "mock-10",
+                                address:
+                                  "89 Cedar Crescent, Southampton, SO15 5QF",
+                                url: "/get/mock-10",
+                              },
+                              {
+                                id: "mock-11",
+                                address: "11 Ashfield Way, Leicester, LE2 1TR",
+                                url: "/get/mock-11",
+                              },
+                              {
+                                id: "mock-12",
+                                address: "22 Rowan Street, Coventry, CV3 6GH",
+                                url: "/get/mock-12",
+                              },
+                              {
+                                id: "mock-13",
+                                address: "33 Hawthorn Court, Reading, RG1 8PL",
+                                url: "/get/mock-13",
+                              },
+                              {
+                                id: "mock-14",
+                                address: "44 Pine Gardens, Derby, DE1 2AB",
+                                url: "/get/mock-14",
+                              },
+                              {
+                                id: "mock-15",
+                                address: "55 Birch Avenue, Brighton, BN1 6GH",
+                                url: "/get/mock-15",
+                              },
+                              {
+                                id: "mock-16",
+                                address: "66 Larch Lane, Plymouth, PL4 7TR",
+                                url: "/get/mock-16",
+                              },
+                              {
+                                id: "mock-17",
+                                address: "77 Spruce Road, Oxford, OX4 2JP",
+                                url: "/get/mock-17",
+                              },
+                              {
+                                id: "mock-18",
+                                address:
+                                  "88 Magnolia Close, Cambridge, CB1 3LT",
+                                url: "/get/mock-18",
+                              },
+                              {
+                                id: "mock-19",
+                                address: "99 Hazel Drive, York, YO10 5QF",
+                                url: "/get/mock-19",
+                              },
+                              {
+                                id: "mock-20",
+                                address: "100 Holly Avenue, Glasgow, G12 8PL",
+                                url: "/get/mock-20",
+                              },
                             ]);
                             setOriginAddressLoading(false);
                           }, 600);
@@ -301,10 +394,14 @@ export default function OriginDestinationScreen() {
                       // Fetch full address
                       setOriginAddressLoading(true);
                       setTimeout(() => {
-                        const selected = originAddressSuggestions.find(a => a.id === addr.id);
+                        const selected = originAddressSuggestions.find(
+                          (a) => a.id === addr.id,
+                        );
                         setOriginSelectedAddress({
-                          formatted_address: [selected ? selected.address : addr.address],
-                          postcode: '',
+                          formatted_address: [
+                            selected ? selected.address : addr.address,
+                          ],
+                          postcode: "",
                         });
                         setShowOriginAddressDropdown(false);
                         setOriginAddressLoading(false);
@@ -368,29 +465,34 @@ export default function OriginDestinationScreen() {
 
           {/* Destination Address */}
           <View className="mb-6">
-            <Text className="text-base font-semibold text-gray-800 mb-2">
-              Delivery Address (Destination)
+            <Text className="text-base font-semibold text-gray-800 mb-3">
+              🎯 Delivery Address
             </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-lg p-3 bg-white relative">
-              <Navigation size={20} color="#ef4444" />
-              <TextInput
-                className="flex-1 ml-3 text-base"
-                value={destination}
-                onChangeText={(text) => {
-                  setDestination(text);
-                  if (!destinationFocused) setDestinationFocused(true);
-                }}
-                onBlur={() =>
-                  setTimeout(() => setDestinationFocused(false), 200)
-                }
-                onFocus={() => setDestinationFocused(true)}
-                placeholder="Enter UK delivery postcode..."
-                placeholderTextColor="#9CA3AF"
-                autoCapitalize="characters"
-                keyboardType="default"
-                autoCorrect={false}
-                maxLength={8}
-              />
+            <View className="bg-red-50 border border-red-200 rounded-xl p-4">
+              <Text className="text-sm font-medium text-red-700 mb-2">
+                Postcode
+              </Text>
+              <View className="flex-row items-center border border-red-300 rounded-lg px-3 py-2 bg-white">
+                <Navigation size={18} color="#ef4444" />
+                <TextInput
+                  className="flex-1 ml-2 text-sm font-medium"
+                  value={destination}
+                  onChangeText={(text) => {
+                    setDestination(text);
+                    if (!destinationFocused) setDestinationFocused(true);
+                  }}
+                  onBlur={() =>
+                    setTimeout(() => setDestinationFocused(false), 200)
+                  }
+                  onFocus={() => setDestinationFocused(true)}
+                  placeholder="e.g. W1K 1QA"
+                  placeholderTextColor="#9CA3AF"
+                  autoCapitalize="characters"
+                  keyboardType="default"
+                  autoCorrect={false}
+                  maxLength={8}
+                />
+              </View>
             </View>
             {/* Suggestions Dropdown */}
             {destinationFocused &&
@@ -419,26 +521,112 @@ export default function OriginDestinationScreen() {
                           setShowDestinationAddressDropdown(true);
                           setTimeout(() => {
                             setDestinationAddressSuggestions([
-                              { id: 'mock-21', address: '21 Rosewood Avenue, London, NW2 3RT', url: '/get/mock-21' },
-                              { id: 'mock-22', address: '32 Lavender Road, Manchester, M15 6GH', url: '/get/mock-22' },
-                              { id: 'mock-23', address: '43 Jasmine Street, Birmingham, B16 3TT', url: '/get/mock-23' },
-                              { id: 'mock-24', address: '54 Bluebell Drive, Liverpool, L19 8SD', url: '/get/mock-24' },
-                              { id: 'mock-25', address: '65 Primrose Close, Leeds, LS7 3AB', url: '/get/mock-25' },
-                              { id: 'mock-26', address: '76 Foxglove Lane, Bristol, BS8 9PL', url: '/get/mock-26' },
-                              { id: 'mock-27', address: '87 Buttercup Grove, Sheffield, S11 4QW', url: '/get/mock-27' },
-                              { id: 'mock-28', address: '98 Clover Avenue, Newcastle, NE4 5JP', url: '/get/mock-28' },
-                              { id: 'mock-29', address: '109 Daffodil Road, Nottingham, NG8 3LT', url: '/get/mock-29' },
-                              { id: 'mock-30', address: '120 Sunflower Crescent, Southampton, SO16 6QF', url: '/get/mock-30' },
-                              { id: 'mock-31', address: '131 Tulip Way, Leicester, LE3 2TR', url: '/get/mock-31' },
-                              { id: 'mock-32', address: '142 Orchid Street, Coventry, CV4 7GH', url: '/get/mock-32' },
-                              { id: 'mock-33', address: '153 Peony Court, Reading, RG2 9PL', url: '/get/mock-33' },
-                              { id: 'mock-34', address: '164 Camellia Gardens, Derby, DE2 3AB', url: '/get/mock-34' },
-                              { id: 'mock-35', address: '175 Lotus Avenue, Brighton, BN2 7GH', url: '/get/mock-35' },
-                              { id: 'mock-36', address: '186 Dahlia Lane, Plymouth, PL5 8TR', url: '/get/mock-36' },
-                              { id: 'mock-37', address: '197 Marigold Road, Oxford, OX5 3JP', url: '/get/mock-37' },
-                              { id: 'mock-38', address: '208 Azalea Close, Cambridge, CB2 4LT', url: '/get/mock-38' },
-                              { id: 'mock-39', address: '219 Gardenia Drive, York, YO11 6QF', url: '/get/mock-39' },
-                              { id: 'mock-40', address: '230 Heather Avenue, Glasgow, G13 9PL', url: '/get/mock-40' },
+                              {
+                                id: "mock-21",
+                                address: "21 Rosewood Avenue, London, NW2 3RT",
+                                url: "/get/mock-21",
+                              },
+                              {
+                                id: "mock-22",
+                                address:
+                                  "32 Lavender Road, Manchester, M15 6GH",
+                                url: "/get/mock-22",
+                              },
+                              {
+                                id: "mock-23",
+                                address:
+                                  "43 Jasmine Street, Birmingham, B16 3TT",
+                                url: "/get/mock-23",
+                              },
+                              {
+                                id: "mock-24",
+                                address:
+                                  "54 Bluebell Drive, Liverpool, L19 8SD",
+                                url: "/get/mock-24",
+                              },
+                              {
+                                id: "mock-25",
+                                address: "65 Primrose Close, Leeds, LS7 3AB",
+                                url: "/get/mock-25",
+                              },
+                              {
+                                id: "mock-26",
+                                address: "76 Foxglove Lane, Bristol, BS8 9PL",
+                                url: "/get/mock-26",
+                              },
+                              {
+                                id: "mock-27",
+                                address:
+                                  "87 Buttercup Grove, Sheffield, S11 4QW",
+                                url: "/get/mock-27",
+                              },
+                              {
+                                id: "mock-28",
+                                address: "98 Clover Avenue, Newcastle, NE4 5JP",
+                                url: "/get/mock-28",
+                              },
+                              {
+                                id: "mock-29",
+                                address:
+                                  "109 Daffodil Road, Nottingham, NG8 3LT",
+                                url: "/get/mock-29",
+                              },
+                              {
+                                id: "mock-30",
+                                address:
+                                  "120 Sunflower Crescent, Southampton, SO16 6QF",
+                                url: "/get/mock-30",
+                              },
+                              {
+                                id: "mock-31",
+                                address: "131 Tulip Way, Leicester, LE3 2TR",
+                                url: "/get/mock-31",
+                              },
+                              {
+                                id: "mock-32",
+                                address: "142 Orchid Street, Coventry, CV4 7GH",
+                                url: "/get/mock-32",
+                              },
+                              {
+                                id: "mock-33",
+                                address: "153 Peony Court, Reading, RG2 9PL",
+                                url: "/get/mock-33",
+                              },
+                              {
+                                id: "mock-34",
+                                address: "164 Camellia Gardens, Derby, DE2 3AB",
+                                url: "/get/mock-34",
+                              },
+                              {
+                                id: "mock-35",
+                                address: "175 Lotus Avenue, Brighton, BN2 7GH",
+                                url: "/get/mock-35",
+                              },
+                              {
+                                id: "mock-36",
+                                address: "186 Dahlia Lane, Plymouth, PL5 8TR",
+                                url: "/get/mock-36",
+                              },
+                              {
+                                id: "mock-37",
+                                address: "197 Marigold Road, Oxford, OX5 3JP",
+                                url: "/get/mock-37",
+                              },
+                              {
+                                id: "mock-38",
+                                address: "208 Azalea Close, Cambridge, CB2 4LT",
+                                url: "/get/mock-38",
+                              },
+                              {
+                                id: "mock-39",
+                                address: "219 Gardenia Drive, York, YO11 6QF",
+                                url: "/get/mock-39",
+                              },
+                              {
+                                id: "mock-40",
+                                address: "230 Heather Avenue, Glasgow, G13 9PL",
+                                url: "/get/mock-40",
+                              },
                             ]);
                             setDestinationAddressLoading(false);
                           }, 600);
@@ -481,10 +669,14 @@ export default function OriginDestinationScreen() {
                       onPress={() => {
                         setDestinationAddressLoading(true);
                         setTimeout(() => {
-                          const selected = destinationAddressSuggestions.find(a => a.id === addr.id);
+                          const selected = destinationAddressSuggestions.find(
+                            (a) => a.id === addr.id,
+                          );
                           setDestinationSelectedAddress({
-                            formatted_address: [selected ? selected.address : addr.address],
-                            postcode: '',
+                            formatted_address: [
+                              selected ? selected.address : addr.address,
+                            ],
+                            postcode: "",
                           });
                           setShowDestinationAddressDropdown(false);
                           setDestinationAddressLoading(false);
@@ -564,130 +756,166 @@ export default function OriginDestinationScreen() {
             </View>
           )}
 
-          {/* Floor Selection */}
+          {/* Floor & Access Details */}
           <View className="mb-6">
             <Text className="text-lg font-semibold text-gray-800 mb-4">
-              Floor Details
+              🏢 Floor & Access Details
             </Text>
 
-            {/* Origin Floor */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-2">
-                Pickup Floor
+            <View className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+              <Text className="text-blue-800 text-sm mb-3 font-medium">
+                💡 This helps us prepare the right equipment and estimate
+                accurate timing
               </Text>
-              <TouchableOpacity
-                className="border border-gray-300 rounded-lg p-3 bg-white"
-                onPress={() => setShowOriginFloors(true)}
-              >
-                <Text className="text-base text-gray-800">
-                  {floorOptions.find((f) => f.value === originFloor)?.label ||
-                    "Select floor"}
-                </Text>
-              </TouchableOpacity>
             </View>
 
-            {/* Destination Floor */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-2">
-                Delivery Floor
-              </Text>
-              <TouchableOpacity
-                className="border border-gray-300 rounded-lg p-3 bg-white"
-                onPress={() => setShowDestinationFloors(true)}
-              >
-                <Text className="text-base text-gray-800">
-                  {floorOptions.find((f) => f.value === destinationFloor)
-                    ?.label || "Select floor"}
+            {/* Pickup Location Details */}
+            <View className="bg-white border border-gray-200 rounded-xl p-4 mb-4 shadow-sm">
+              <View className="flex-row items-center mb-3">
+                <View className="bg-emerald-100 p-2 rounded-full mr-3">
+                  <ArrowUp size={16} color="#059669" />
+                </View>
+                <Text className="text-base font-semibold text-gray-900">
+                  Pickup Location
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              </View>
 
-          {/* Elevator Availability */}
-          <View className="mb-6">
-            <Text className="text-lg font-semibold text-gray-800 mb-4">
-              Elevator Availability
-            </Text>
+              <View className="mb-3">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Which floor?
+                </Text>
+                <TouchableOpacity
+                  className="flex-row items-center justify-between border border-gray-300 rounded-lg p-3 bg-gray-50"
+                  onPress={() => setShowOriginFloors(true)}
+                >
+                  <View className="flex-row items-center">
+                    <Building size={16} color="#6b7280" />
+                    <Text className="text-base text-gray-800 ml-2">
+                      {floorOptions.find((f) => f.value === originFloor)
+                        ?.label || "Select floor"}
+                    </Text>
+                  </View>
+                  <ChevronRight size={16} color="#9ca3af" />
+                </TouchableOpacity>
+              </View>
 
-            {/* Origin Elevator */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-2">
-                Elevator at Pickup Location
-              </Text>
-              <View className="flex-row">
-                <TouchableOpacity
-                  className={`flex-1 mr-2 p-3 rounded-lg border ${
-                    originElevator
-                      ? "bg-green-50 border-green-500"
-                      : "bg-gray-50 border-gray-300"
-                  }`}
-                  onPress={() => setOriginElevator(true)}
-                >
-                  <Text
-                    className={`text-center font-medium ${
-                      originElevator ? "text-green-700" : "text-gray-600"
+              <View>
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Is there an elevator?
+                </Text>
+                <View className="flex-row">
+                  <TouchableOpacity
+                    className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                      originElevator
+                        ? "bg-green-50 border-green-500"
+                        : "bg-gray-50 border-gray-300"
                     }`}
+                    onPress={() => setOriginElevator(true)}
                   >
-                    Yes
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className={`flex-1 ml-2 p-3 rounded-lg border ${
-                    !originElevator
-                      ? "bg-red-50 border-red-500"
-                      : "bg-gray-50 border-gray-300"
-                  }`}
-                  onPress={() => setOriginElevator(false)}
-                >
-                  <Text
-                    className={`text-center font-medium ${
-                      !originElevator ? "text-red-700" : "text-gray-600"
+                    {originElevator && (
+                      <CheckCircle size={16} color="#10b981" />
+                    )}
+                    <Text
+                      className={`font-medium ml-1 ${
+                        originElevator ? "text-green-700" : "text-gray-600"
+                      }`}
+                    >
+                      Yes
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                      !originElevator
+                        ? "bg-red-50 border-red-500"
+                        : "bg-gray-50 border-gray-300"
                     }`}
+                    onPress={() => setOriginElevator(false)}
                   >
-                    No
-                  </Text>
-                </TouchableOpacity>
+                    {!originElevator && <X size={16} color="#ef4444" />}
+                    <Text
+                      className={`font-medium ml-1 ${
+                        !originElevator ? "text-red-700" : "text-gray-600"
+                      }`}
+                    >
+                      No
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
-            {/* Destination Elevator */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-2">
-                Elevator at Delivery Location
-              </Text>
-              <View className="flex-row">
+            {/* Delivery Location Details */}
+            <View className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+              <View className="flex-row items-center mb-3">
+                <View className="bg-red-100 p-2 rounded-full mr-3">
+                  <ArrowDown size={16} color="#dc2626" />
+                </View>
+                <Text className="text-base font-semibold text-gray-900">
+                  Delivery Location
+                </Text>
+              </View>
+
+              <View className="mb-3">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Which floor?
+                </Text>
                 <TouchableOpacity
-                  className={`flex-1 mr-2 p-3 rounded-lg border ${
-                    destinationElevator
-                      ? "bg-green-50 border-green-500"
-                      : "bg-gray-50 border-gray-300"
-                  }`}
-                  onPress={() => setDestinationElevator(true)}
+                  className="flex-row items-center justify-between border border-gray-300 rounded-lg p-3 bg-gray-50"
+                  onPress={() => setShowDestinationFloors(true)}
                 >
-                  <Text
-                    className={`text-center font-medium ${
-                      destinationElevator ? "text-green-700" : "text-gray-600"
-                    }`}
-                  >
-                    Yes
-                  </Text>
+                  <View className="flex-row items-center">
+                    <Building size={16} color="#6b7280" />
+                    <Text className="text-base text-gray-800 ml-2">
+                      {floorOptions.find((f) => f.value === destinationFloor)
+                        ?.label || "Select floor"}
+                    </Text>
+                  </View>
+                  <ChevronRight size={16} color="#9ca3af" />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  className={`flex-1 ml-2 p-3 rounded-lg border ${
-                    !destinationElevator
-                      ? "bg-red-50 border-red-500"
-                      : "bg-gray-50 border-gray-300"
-                  }`}
-                  onPress={() => setDestinationElevator(false)}
-                >
-                  <Text
-                    className={`text-center font-medium ${
-                      !destinationElevator ? "text-red-700" : "text-gray-600"
+              </View>
+
+              <View>
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Is there an elevator?
+                </Text>
+                <View className="flex-row">
+                  <TouchableOpacity
+                    className={`flex-1 mr-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                      destinationElevator
+                        ? "bg-green-50 border-green-500"
+                        : "bg-gray-50 border-gray-300"
                     }`}
+                    onPress={() => setDestinationElevator(true)}
                   >
-                    No
-                  </Text>
-                </TouchableOpacity>
+                    {destinationElevator && (
+                      <CheckCircle size={16} color="#10b981" />
+                    )}
+                    <Text
+                      className={`font-medium ml-1 ${
+                        destinationElevator ? "text-green-700" : "text-gray-600"
+                      }`}
+                    >
+                      Yes
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className={`flex-1 ml-2 p-3 rounded-lg border flex-row items-center justify-center ${
+                      !destinationElevator
+                        ? "bg-red-50 border-red-500"
+                        : "bg-gray-50 border-gray-300"
+                    }`}
+                    onPress={() => setDestinationElevator(false)}
+                  >
+                    {!destinationElevator && <X size={16} color="#ef4444" />}
+                    <Text
+                      className={`font-medium ml-1 ${
+                        !destinationElevator ? "text-red-700" : "text-gray-600"
+                      }`}
+                    >
+                      No
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -710,18 +938,18 @@ export default function OriginDestinationScreen() {
 
           {/* Continue Button */}
           <TouchableOpacity
-            className={`py-4 px-6 rounded-xl flex-row justify-center items-center ${
+            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
               origin.trim() && destination.trim()
-                ? "bg-blue-600"
+                ? "bg-cyan-600"
                 : "bg-gray-300"
             }`}
             onPress={handleContinue}
             disabled={!origin.trim() || !destination.trim()}
           >
-            <Text className="text-white text-center font-semibold text-lg mr-2">
-              Continue
+            <Text className="text-white text-center font-bold text-lg mr-3">
+              Continue to Date & Time
             </Text>
-            <ChevronRight size={20} color="white" />
+            <ChevronRight size={22} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>
