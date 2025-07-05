@@ -50,14 +50,24 @@ export default function OriginDestinationScreen() {
   );
 
   // New state for address suggestions and selected address
-  const [originAddressSuggestions, setOriginAddressSuggestions] = useState<any[]>([]);
-  const [destinationAddressSuggestions, setDestinationAddressSuggestions] = useState<any[]>([]);
+  const [originAddressSuggestions, setOriginAddressSuggestions] = useState<
+    any[]
+  >([]);
+  const [destinationAddressSuggestions, setDestinationAddressSuggestions] =
+    useState<any[]>([]);
   const [originAddressLoading, setOriginAddressLoading] = useState(false);
-  const [destinationAddressLoading, setDestinationAddressLoading] = useState(false);
-  const [originSelectedAddress, setOriginSelectedAddress] = useState<any | null>(null);
-  const [destinationSelectedAddress, setDestinationSelectedAddress] = useState<any | null>(null);
-  const [showOriginAddressDropdown, setShowOriginAddressDropdown] = useState(false);
-  const [showDestinationAddressDropdown, setShowDestinationAddressDropdown] = useState(false);
+  const [destinationAddressLoading, setDestinationAddressLoading] =
+    useState(false);
+  const [originSelectedAddress, setOriginSelectedAddress] = useState<
+    any | null
+  >(null);
+  const [destinationSelectedAddress, setDestinationSelectedAddress] = useState<
+    any | null
+  >(null);
+  const [showOriginAddressDropdown, setShowOriginAddressDropdown] =
+    useState(false);
+  const [showDestinationAddressDropdown, setShowDestinationAddressDropdown] =
+    useState(false);
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -227,10 +237,16 @@ export default function OriginDestinationScreen() {
                           // Fetch address suggestions for this postcode
                           setOriginAddressLoading(true);
                           setShowOriginAddressDropdown(true);
-                          fetch(`https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`)
-                            .then(res => res.json())
-                            .then(data => {
-                              setOriginAddressSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+                          fetch(
+                            `https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`,
+                          )
+                            .then((res) => res.json())
+                            .then((data) => {
+                              setOriginAddressSuggestions(
+                                Array.isArray(data.suggestions)
+                                  ? data.suggestions
+                                  : [],
+                              );
                             })
                             .catch(() => setOriginAddressSuggestions([]))
                             .finally(() => setOriginAddressLoading(false));
@@ -255,18 +271,28 @@ export default function OriginDestinationScreen() {
 
           {/* Render address dropdown for origin */}
           {showOriginAddressDropdown && originAddressSuggestions.length > 0 && (
-            <View className="absolute left-0 right-0 z-20 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 120, height: 200, overflow: 'hidden', flex: 0 }}>
-              <ScrollView keyboardShouldPersistTaps="handled" style={{ flexGrow: 1 }}>
+            <View
+              className="bg-white border border-gray-200 rounded-lg mt-2 shadow-lg"
+              style={{ maxHeight: 250, zIndex: 1000 }}
+            >
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={true}
+                nestedScrollEnabled={true}
+                style={{ maxHeight: 250 }}
+              >
                 {originAddressSuggestions.map((addr) => (
                   <TouchableOpacity
                     key={addr.id}
-                    className="p-3 border-b border-gray-100"
+                    className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
                     onPress={() => {
                       // Fetch full address
                       setOriginAddressLoading(true);
-                      fetch(`https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`)
-                        .then(res => res.json())
-                        .then(data => {
+                      fetch(
+                        `https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`,
+                      )
+                        .then((res) => res.json())
+                        .then((data) => {
                           setOriginSelectedAddress(data);
                           setShowOriginAddressDropdown(false);
                         })
@@ -274,11 +300,18 @@ export default function OriginDestinationScreen() {
                         .finally(() => setOriginAddressLoading(false));
                     }}
                   >
-                    <Text className="text-base text-gray-800">{addr.address}</Text>
+                    <Text className="text-base text-gray-800 leading-relaxed">
+                      {addr.address}
+                    </Text>
                   </TouchableOpacity>
                 ))}
                 {originAddressLoading && (
-                  <ActivityIndicator size="small" color="#0891b2" style={{ margin: 8 }} />
+                  <View className="p-4 items-center">
+                    <ActivityIndicator size="small" color="#0891b2" />
+                    <Text className="text-gray-500 text-sm mt-2">
+                      Loading address details...
+                    </Text>
+                  </View>
                 )}
               </ScrollView>
             </View>
@@ -286,12 +319,39 @@ export default function OriginDestinationScreen() {
 
           {/* Render selected address below postcode input for origin */}
           {originSelectedAddress && (
-            <View className="mt-2 mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <Text className="text-base font-semibold text-blue-800 mb-1">Selected Address</Text>
-              {originSelectedAddress.formatted_address && originSelectedAddress.formatted_address.map((line: string, idx: number) => (
-                line ? <Text key={idx} className="text-blue-900 text-sm">{line}</Text> : null
-              ))}
-              <Text className="text-blue-700 text-xs mt-1">{originSelectedAddress.postcode}</Text>
+            <View className="mt-3 mb-4 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl shadow-sm">
+              <View className="flex-row items-center mb-3">
+                <View className="bg-emerald-100 p-2 rounded-full mr-3">
+                  <MapPin size={16} color="#059669" />
+                </View>
+                <Text className="text-lg font-bold text-emerald-900">
+                  Pickup Address
+                </Text>
+              </View>
+              <View className="bg-white rounded-lg p-3 border border-emerald-100">
+                {originSelectedAddress.formatted_address &&
+                  originSelectedAddress.formatted_address.map(
+                    (line: string, idx: number) =>
+                      line ? (
+                        <Text
+                          key={idx}
+                          className="text-gray-800 text-base leading-relaxed"
+                        >
+                          {line}
+                        </Text>
+                      ) : null,
+                  )}
+                <View className="flex-row items-center mt-2 pt-2 border-t border-gray-100">
+                  <Text className="text-emerald-700 font-semibold text-sm">
+                    {originSelectedAddress.postcode}
+                  </Text>
+                  <View className="bg-emerald-100 px-2 py-1 rounded-full ml-auto">
+                    <Text className="text-emerald-700 text-xs font-medium">
+                      ✓ Confirmed
+                    </Text>
+                  </View>
+                </View>
+              </View>
             </View>
           )}
 
@@ -346,10 +406,16 @@ export default function OriginDestinationScreen() {
                           // Fetch address suggestions for this postcode
                           setDestinationAddressLoading(true);
                           setShowDestinationAddressDropdown(true);
-                          fetch(`https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`)
-                            .then(res => res.json())
-                            .then(data => {
-                              setDestinationAddressSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+                          fetch(
+                            `https://api.getaddress.io/autocomplete/${encodeURIComponent(suggestion)}?api-key=${GETADDRESS_API_KEY}`,
+                          )
+                            .then((res) => res.json())
+                            .then((data) => {
+                              setDestinationAddressSuggestions(
+                                Array.isArray(data.suggestions)
+                                  ? data.suggestions
+                                  : [],
+                              );
                             })
                             .catch(() => setDestinationAddressSuggestions([]))
                             .finally(() => setDestinationAddressLoading(false));
@@ -373,43 +439,88 @@ export default function OriginDestinationScreen() {
           </View>
 
           {/* Render address dropdown for destination */}
-          {showDestinationAddressDropdown && destinationAddressSuggestions.length > 0 && (
-            <View className="absolute left-0 right-0 z-20 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 120, height: 200, overflow: 'hidden', flex: 0 }}>
-              <ScrollView keyboardShouldPersistTaps="handled" style={{ flexGrow: 1 }}>
-                {destinationAddressSuggestions.map((addr) => (
-                  <TouchableOpacity
-                    key={addr.id}
-                    className="p-3 border-b border-gray-100"
-                    onPress={() => {
-                      setDestinationAddressLoading(true);
-                      fetch(`https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`)
-                        .then(res => res.json())
-                        .then(data => {
-                          setDestinationSelectedAddress(data);
-                          setShowDestinationAddressDropdown(false);
-                        })
-                        .catch(() => setDestinationSelectedAddress(null))
-                        .finally(() => setDestinationAddressLoading(false));
-                    }}
-                  >
-                    <Text className="text-base text-gray-800">{addr.address}</Text>
-                  </TouchableOpacity>
-                ))}
-                {destinationAddressLoading && (
-                  <ActivityIndicator size="small" color="#0891b2" style={{ margin: 8 }} />
-                )}
-              </ScrollView>
-            </View>
-          )}
+          {showDestinationAddressDropdown &&
+            destinationAddressSuggestions.length > 0 && (
+              <View
+                className="bg-white border border-gray-200 rounded-lg mt-2 shadow-lg"
+                style={{ maxHeight: 250, zIndex: 1000 }}
+              >
+                <ScrollView
+                  keyboardShouldPersistTaps="handled"
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
+                  style={{ maxHeight: 250 }}
+                >
+                  {destinationAddressSuggestions.map((addr) => (
+                    <TouchableOpacity
+                      key={addr.id}
+                      className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
+                      onPress={() => {
+                        setDestinationAddressLoading(true);
+                        fetch(
+                          `https://api.getaddress.io/get/${addr.id}?api-key=${GETADDRESS_API_KEY}`,
+                        )
+                          .then((res) => res.json())
+                          .then((data) => {
+                            setDestinationSelectedAddress(data);
+                            setShowDestinationAddressDropdown(false);
+                          })
+                          .catch(() => setDestinationSelectedAddress(null))
+                          .finally(() => setDestinationAddressLoading(false));
+                      }}
+                    >
+                      <Text className="text-base text-gray-800 leading-relaxed">
+                        {addr.address}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                  {destinationAddressLoading && (
+                    <View className="p-4 items-center">
+                      <ActivityIndicator size="small" color="#0891b2" />
+                      <Text className="text-gray-500 text-sm mt-2">
+                        Loading address details...
+                      </Text>
+                    </View>
+                  )}
+                </ScrollView>
+              </View>
+            )}
 
           {/* Render selected address below postcode input for destination */}
           {destinationSelectedAddress && (
-            <View className="mt-2 mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <Text className="text-base font-semibold text-blue-800 mb-1">Selected Address</Text>
-              {destinationSelectedAddress.formatted_address && destinationSelectedAddress.formatted_address.map((line: string, idx: number) => (
-                line ? <Text key={idx} className="text-blue-900 text-sm">{line}</Text> : null
-              ))}
-              <Text className="text-blue-700 text-xs mt-1">{destinationSelectedAddress.postcode}</Text>
+            <View className="mt-3 mb-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl shadow-sm">
+              <View className="flex-row items-center mb-3">
+                <View className="bg-red-100 p-2 rounded-full mr-3">
+                  <Navigation size={16} color="#dc2626" />
+                </View>
+                <Text className="text-lg font-bold text-red-900">
+                  Delivery Address
+                </Text>
+              </View>
+              <View className="bg-white rounded-lg p-3 border border-red-100">
+                {destinationSelectedAddress.formatted_address &&
+                  destinationSelectedAddress.formatted_address.map(
+                    (line: string, idx: number) =>
+                      line ? (
+                        <Text
+                          key={idx}
+                          className="text-gray-800 text-base leading-relaxed"
+                        >
+                          {line}
+                        </Text>
+                      ) : null,
+                  )}
+                <View className="flex-row items-center mt-2 pt-2 border-t border-gray-100">
+                  <Text className="text-red-700 font-semibold text-sm">
+                    {destinationSelectedAddress.postcode}
+                  </Text>
+                  <View className="bg-red-100 px-2 py-1 rounded-full ml-auto">
+                    <Text className="text-red-700 text-xs font-medium">
+                      ✓ Confirmed
+                    </Text>
+                  </View>
+                </View>
+              </View>
             </View>
           )}
 
