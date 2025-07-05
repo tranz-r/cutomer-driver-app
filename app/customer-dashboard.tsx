@@ -34,7 +34,27 @@ import {
   LogOut,
   Navigation,
   Map,
+  Route,
+  Timer,
+  Shield,
 } from "lucide-react-native";
+
+// Conditionally import MapView only for native platforms
+let MapView: any = null;
+let Marker: any = null;
+let PROVIDER_DEFAULT: any = null;
+
+// Only import react-native-maps on native platforms
+if (Platform.OS === "ios" || Platform.OS === "android") {
+  try {
+    const MapModule = require("react-native-maps");
+    MapView = MapModule.default || MapModule.MapView;
+    Marker = MapModule.Marker;
+    PROVIDER_DEFAULT = MapModule.PROVIDER_DEFAULT;
+  } catch (error) {
+    console.log("react-native-maps not available:", error);
+  }
+}
 import { router, useRouter } from "expo-router";
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
@@ -107,6 +127,12 @@ export default function CustomerDashboard() {
         address: "Currently at: Oxford Street, London",
         eta: "15 minutes",
         status: "On the way to pickup location",
+        pickupLat: 51.5014,
+        pickupLng: -0.1419,
+        deliveryLat: 51.5033,
+        deliveryLng: -0.1195,
+        speed: "25 mph",
+        lastUpdated: "2 minutes ago",
       },
     },
     {
@@ -820,60 +846,218 @@ export default function CustomerDashboard() {
 
             {selectedActiveBooking?.driverLocation && (
               <View>
-                {/* Map Placeholder */}
-                <View className="bg-gray-100 rounded-xl h-64 mb-6 items-center justify-center">
-                  <Navigation size={48} color="#6b7280" />
-                  <Text className="text-gray-600 font-semibold mt-2">
-                    Live Map Integration
-                  </Text>
-                  <Text className="text-gray-500 text-sm text-center mt-1">
-                    Real-time driver tracking will be implemented here
-                  </Text>
+                {/* Live Map with Driver Location */}
+                <View className="bg-white rounded-xl overflow-hidden mb-6 shadow-sm border border-gray-200">
+                  <View className="bg-green-50 px-4 py-3 border-b border-green-200">
+                    <View className="flex-row items-center justify-between">
+                      <View className="flex-row items-center">
+                        <View className="bg-green-500 rounded-full w-3 h-3 mr-2" />
+                        <Text className="text-green-800 font-semibold text-sm">
+                          Live Tracking Active
+                        </Text>
+                      </View>
+                      <Text className="text-green-600 text-xs">
+                        Updated{" "}
+                        {selectedActiveBooking.driverLocation.lastUpdated}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {(Platform.OS === "ios" || Platform.OS === "android") &&
+                  MapView ? (
+                    <MapView
+                      provider={PROVIDER_DEFAULT}
+                      style={{ height: 280 }}
+                      region={{
+                        latitude: selectedActiveBooking.driverLocation.lat,
+                        longitude: selectedActiveBooking.driverLocation.lng,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.02,
+                      }}
+                      showsUserLocation={false}
+                      showsMyLocationButton={false}
+                      showsCompass={true}
+                      showsScale={true}
+                      mapType="standard"
+                    >
+                      {/* Driver Location Marker */}
+                      <Marker
+                        coordinate={{
+                          latitude: selectedActiveBooking.driverLocation.lat,
+                          longitude: selectedActiveBooking.driverLocation.lng,
+                        }}
+                        title={`${selectedActiveBooking.driverName} (Driver)`}
+                        description={`Moving at ${selectedActiveBooking.driverLocation.speed} • ETA: ${selectedActiveBooking.driverLocation.eta}`}
+                        pinColor="#059669"
+                      />
+
+                      {/* Pickup Location Marker */}
+                      <Marker
+                        coordinate={{
+                          latitude:
+                            selectedActiveBooking.driverLocation.pickupLat,
+                          longitude:
+                            selectedActiveBooking.driverLocation.pickupLng,
+                        }}
+                        title="Pickup Location"
+                        description={selectedActiveBooking.origin}
+                        pinColor="#3b82f6"
+                      />
+
+                      {/* Delivery Location Marker */}
+                      <Marker
+                        coordinate={{
+                          latitude:
+                            selectedActiveBooking.driverLocation.deliveryLat,
+                          longitude:
+                            selectedActiveBooking.driverLocation.deliveryLng,
+                        }}
+                        title="Delivery Location"
+                        description={selectedActiveBooking.destination}
+                        pinColor="#ef4444"
+                      />
+                    </MapView>
+                  ) : (
+                    <View
+                      className="bg-blue-100 rounded-lg p-8 items-center justify-center"
+                      style={{ height: 280 }}
+                    >
+                      <Map size={48} color="#3b82f6" />
+                      <Text className="text-blue-800 font-semibold mt-4 text-center">
+                        Map View
+                      </Text>
+                      <Text className="text-blue-600 text-sm text-center mt-2">
+                        Driver location tracking available on mobile
+                      </Text>
+                    </View>
+                  )}
                 </View>
 
-                {/* Driver Status */}
-                <View className="bg-blue-50 rounded-xl p-4 mb-4">
-                  <Text className="text-blue-900 font-semibold mb-2">
-                    Current Status
-                  </Text>
-                  <Text className="text-blue-800">
-                    {selectedActiveBooking.driverLocation.status}
-                  </Text>
+                {/* Enhanced Driver Status Cards */}
+                <View className="space-y-4 mb-6">
+                  {/* Current Status */}
+                  <View className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+                    <View className="flex-row items-center mb-3">
+                      <View className="bg-blue-500 p-2 rounded-full mr-3">
+                        <Route size={16} color="white" />
+                      </View>
+                      <Text className="text-blue-900 font-bold text-base">
+                        Current Status
+                      </Text>
+                    </View>
+                    <Text className="text-blue-800 font-medium">
+                      {selectedActiveBooking.driverLocation.status}
+                    </Text>
+                  </View>
+
+                  {/* ETA & Speed Info */}
+                  <View className="flex-row space-x-3">
+                    <View className="bg-green-50 rounded-xl p-4 flex-1 border border-green-200">
+                      <View className="flex-row items-center mb-2">
+                        <Timer size={16} color="#059669" />
+                        <Text className="text-green-800 font-semibold text-sm ml-2">
+                          ETA
+                        </Text>
+                      </View>
+                      <Text className="text-green-900 font-bold text-lg">
+                        {selectedActiveBooking.driverLocation.eta}
+                      </Text>
+                    </View>
+
+                    <View className="bg-orange-50 rounded-xl p-4 flex-1 border border-orange-200">
+                      <View className="flex-row items-center mb-2">
+                        <Navigation size={16} color="#f59e0b" />
+                        <Text className="text-orange-800 font-semibold text-sm ml-2">
+                          Speed
+                        </Text>
+                      </View>
+                      <Text className="text-orange-900 font-bold text-lg">
+                        {selectedActiveBooking.driverLocation.speed}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
 
-                {/* Location Details */}
-                <View className="space-y-3">
-                  <View className="flex-row items-center">
-                    <MapPin size={20} color="#059669" />
-                    <Text className="text-gray-700 ml-3 flex-1">
+                {/* Driver Contact & Trust Indicators */}
+                <View className="bg-white rounded-xl p-4 mb-6 border border-gray-200">
+                  <View className="flex-row items-center justify-between mb-4">
+                    <View className="flex-row items-center">
+                      <View className="bg-blue-100 p-3 rounded-full mr-3">
+                        <User size={20} color="#3b82f6" />
+                      </View>
+                      <View>
+                        <Text className="text-gray-900 font-bold text-base">
+                          {selectedActiveBooking.driverName}
+                        </Text>
+                        <Text className="text-gray-600 text-sm">
+                          Professional Driver
+                        </Text>
+                      </View>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Shield size={16} color="#059669" />
+                      <Text className="text-green-600 font-semibold text-sm ml-1">
+                        Verified
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <View className="flex-row items-center mb-2">
+                      <MapPin size={16} color="#6b7280" />
+                      <Text className="text-gray-700 font-medium text-sm ml-2">
+                        Current Location
+                      </Text>
+                    </View>
+                    <Text className="text-gray-800 text-sm">
                       {selectedActiveBooking.driverLocation.address}
                     </Text>
                   </View>
-                  <View className="flex-row items-center">
-                    <Clock size={20} color="#f59e0b" />
-                    <Text className="text-gray-700 ml-3">
-                      ETA: {selectedActiveBooking.driverLocation.eta}
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center">
-                    <Phone size={20} color="#3b82f6" />
-                    <Text className="text-gray-700 ml-3">
-                      {selectedActiveBooking.driverPhone}
-                    </Text>
-                  </View>
+
+                  <TouchableOpacity
+                    className="bg-blue-600 py-3 px-4 rounded-lg"
+                    onPress={() =>
+                      callDriver(selectedActiveBooking.driverPhone!)
+                    }
+                  >
+                    <View className="flex-row items-center justify-center">
+                      <Phone size={18} color="white" />
+                      <Text className="text-white font-semibold ml-2">
+                        Call {selectedActiveBooking.driverName}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                  className="bg-blue-600 py-4 px-6 rounded-xl mt-6"
-                  onPress={() => callDriver(selectedActiveBooking.driverPhone!)}
-                >
-                  <View className="flex-row items-center justify-center">
-                    <Phone size={20} color="white" />
-                    <Text className="text-white font-semibold ml-2">
-                      Call Driver
+                {/* Confidence Building Features */}
+                <View className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+                  <View className="flex-row items-center mb-3">
+                    <Shield size={20} color="#059669" />
+                    <Text className="text-green-900 font-bold ml-2">
+                      Your Move is Protected
                     </Text>
                   </View>
-                </TouchableOpacity>
+                  <View className="space-y-2">
+                    <View className="flex-row items-center">
+                      <CheckCircle size={14} color="#059669" />
+                      <Text className="text-green-800 text-sm ml-2">
+                        Real-time GPS tracking active
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <CheckCircle size={14} color="#059669" />
+                      <Text className="text-green-800 text-sm ml-2">
+                        Fully insured and bonded driver
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <CheckCircle size={14} color="#059669" />
+                      <Text className="text-green-800 text-sm ml-2">
+                        24/7 customer support available
+                      </Text>
+                    </View>
+                  </View>
+                </View>
               </View>
             )}
           </View>
