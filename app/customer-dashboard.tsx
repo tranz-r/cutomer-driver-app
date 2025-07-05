@@ -39,22 +39,6 @@ import {
   Shield,
 } from "lucide-react-native";
 
-// Conditionally import MapView only for native platforms
-let MapView: any = null;
-let Marker: any = null;
-let PROVIDER_DEFAULT: any = null;
-
-// Only import react-native-maps on native platforms
-if (Platform.OS === "ios" || Platform.OS === "android") {
-  try {
-    const MapModule = require("react-native-maps");
-    MapView = MapModule.default || MapModule.MapView;
-    Marker = MapModule.Marker;
-    PROVIDER_DEFAULT = MapModule.PROVIDER_DEFAULT;
-  } catch (error) {
-    console.log("react-native-maps not available:", error);
-  }
-}
 import { router, useRouter } from "expo-router";
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
@@ -863,74 +847,40 @@ export default function CustomerDashboard() {
                     </View>
                   </View>
 
-                  {(Platform.OS === "ios" || Platform.OS === "android") &&
-                  MapView ? (
-                    <MapView
-                      provider={PROVIDER_DEFAULT}
-                      style={{ height: 280 }}
-                      region={{
-                        latitude: selectedActiveBooking.driverLocation.lat,
-                        longitude: selectedActiveBooking.driverLocation.lng,
-                        latitudeDelta: 0.02,
-                        longitudeDelta: 0.02,
-                      }}
-                      showsUserLocation={false}
-                      showsMyLocationButton={false}
-                      showsCompass={true}
-                      showsScale={true}
-                      mapType="standard"
-                    >
-                      {/* Driver Location Marker */}
-                      <Marker
-                        coordinate={{
-                          latitude: selectedActiveBooking.driverLocation.lat,
-                          longitude: selectedActiveBooking.driverLocation.lng,
-                        }}
-                        title={`${selectedActiveBooking.driverName} (Driver)`}
-                        description={`Moving at ${selectedActiveBooking.driverLocation.speed} • ETA: ${selectedActiveBooking.driverLocation.eta}`}
-                        pinColor="#059669"
-                      />
-
-                      {/* Pickup Location Marker */}
-                      <Marker
-                        coordinate={{
-                          latitude:
-                            selectedActiveBooking.driverLocation.pickupLat,
-                          longitude:
-                            selectedActiveBooking.driverLocation.pickupLng,
-                        }}
-                        title="Pickup Location"
-                        description={selectedActiveBooking.origin}
-                        pinColor="#3b82f6"
-                      />
-
-                      {/* Delivery Location Marker */}
-                      <Marker
-                        coordinate={{
-                          latitude:
-                            selectedActiveBooking.driverLocation.deliveryLat,
-                          longitude:
-                            selectedActiveBooking.driverLocation.deliveryLng,
-                        }}
-                        title="Delivery Location"
-                        description={selectedActiveBooking.destination}
-                        pinColor="#ef4444"
-                      />
-                    </MapView>
-                  ) : (
-                    <View
-                      className="bg-blue-100 rounded-lg p-8 items-center justify-center"
-                      style={{ height: 280 }}
-                    >
+                  <View
+                    className="bg-gradient-to-br from-blue-50 to-green-50 rounded-lg p-8 items-center justify-center border border-blue-200"
+                    style={{ height: 280 }}
+                  >
+                    <View className="bg-white rounded-full p-4 shadow-md mb-4">
                       <Map size={48} color="#3b82f6" />
-                      <Text className="text-blue-800 font-semibold mt-4 text-center">
-                        Map View
-                      </Text>
-                      <Text className="text-blue-600 text-sm text-center mt-2">
-                        Driver location tracking available on mobile
-                      </Text>
                     </View>
-                  )}
+                    <Text className="text-blue-900 font-bold text-lg text-center mb-2">
+                      Live Driver Tracking
+                    </Text>
+                    <Text className="text-blue-700 text-sm text-center mb-4">
+                      Real-time location updates available on mobile app
+                    </Text>
+                    <View className="bg-white rounded-lg p-4 w-full border border-blue-100">
+                      <View className="flex-row items-center justify-between mb-2">
+                        <Text className="text-gray-600 text-sm">Driver:</Text>
+                        <Text className="text-gray-900 font-semibold">
+                          {selectedActiveBooking.driverName}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center justify-between mb-2">
+                        <Text className="text-gray-600 text-sm">Location:</Text>
+                        <Text className="text-gray-900 font-semibold text-right flex-1 ml-2">
+                          Oxford Street, London
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-gray-600 text-sm">ETA:</Text>
+                        <Text className="text-green-600 font-bold">
+                          {selectedActiveBooking.driverLocation.eta}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                 </View>
 
                 {/* Enhanced Driver Status Cards */}
