@@ -36,13 +36,17 @@ export default function OriginDestinationScreen() {
 
   // Autocomplete state
   const [originSuggestions, setOriginSuggestions] = useState<string[]>([]);
-  const [destinationSuggestions, setDestinationSuggestions] = useState<string[]>([]);
+  const [destinationSuggestions, setDestinationSuggestions] = useState<
+    string[]
+  >([]);
   const [originLoading, setOriginLoading] = useState(false);
   const [destinationLoading, setDestinationLoading] = useState(false);
   const [originFocused, setOriginFocused] = useState(false);
   const [destinationFocused, setDestinationFocused] = useState(false);
   const originDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const destinationDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const destinationDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -102,7 +106,9 @@ export default function OriginDestinationScreen() {
     if (originDebounceRef.current) clearTimeout(originDebounceRef.current);
     originDebounceRef.current = setTimeout(() => {
       setOriginLoading(true);
-      fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(origin)}/autocomplete?limit=100`)
+      fetch(
+        `https://api.postcodes.io/postcodes/${encodeURIComponent(origin)}/autocomplete?limit=100`,
+      )
         .then((res) => res.json())
         .then((data) => {
           setOriginSuggestions(Array.isArray(data.result) ? data.result : []);
@@ -119,13 +125,18 @@ export default function OriginDestinationScreen() {
       setDestinationSuggestions([]);
       return;
     }
-    if (destinationDebounceRef.current) clearTimeout(destinationDebounceRef.current);
+    if (destinationDebounceRef.current)
+      clearTimeout(destinationDebounceRef.current);
     destinationDebounceRef.current = setTimeout(() => {
       setDestinationLoading(true);
-      fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(destination)}/autocomplete?limit=100`)
+      fetch(
+        `https://api.postcodes.io/postcodes/${encodeURIComponent(destination)}/autocomplete?limit=100`,
+      )
         .then((res) => res.json())
         .then((data) => {
-          setDestinationSuggestions(Array.isArray(data.result) ? data.result : []);
+          setDestinationSuggestions(
+            Array.isArray(data.result) ? data.result : [],
+          );
         })
         .catch(() => setDestinationSuggestions([]))
         .finally(() => setDestinationLoading(false));
@@ -148,7 +159,11 @@ export default function OriginDestinationScreen() {
         </View>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="px-4 py-6">
           {/* Origin Address */}
           <View className="mb-4">
@@ -160,7 +175,7 @@ export default function OriginDestinationScreen() {
               <TextInput
                 className="flex-1 ml-3 text-base"
                 value={origin}
-                onChangeText={text => {
+                onChangeText={(text) => {
                   setOrigin(text);
                   if (!originFocused) setOriginFocused(true);
                 }}
@@ -175,28 +190,44 @@ export default function OriginDestinationScreen() {
               />
             </View>
             {/* Suggestions Dropdown */}
-            {originFocused && origin.length > 1 && (originSuggestions.length > 0 || originLoading) && (
-              <View className="absolute left-0 right-0 z-10 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 70, height: 200, paddingBottom: 4, flex: 1 }}>
-                <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
-                  {originSuggestions.map((suggestion) => (
-                    <TouchableOpacity
-                      key={suggestion}
-                      className="p-3 border-b border-gray-100"
-                      onPress={() => {
-                        setOrigin(suggestion);
-                        setOriginSuggestions([]);
-                        setOriginFocused(false);
-                      }}
-                    >
-                      <Text className="text-base text-gray-800">{suggestion}</Text>
-                    </TouchableOpacity>
-                  ))}
-                  {originLoading && (
-                    <Text className="p-3 text-gray-400 text-center">Loading...</Text>
-                  )}
-                </ScrollView>
-              </View>
-            )}
+            {originFocused &&
+              origin.length > 1 &&
+              (originSuggestions.length > 0 || originLoading) && (
+                <View
+                  className="bg-white border border-gray-200 rounded-lg mt-2 shadow-lg"
+                  style={{ maxHeight: 200, zIndex: 1000 }}
+                >
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={true}
+                    nestedScrollEnabled={true}
+                    style={{ maxHeight: 200 }}
+                  >
+                    {originSuggestions.map((suggestion) => (
+                      <TouchableOpacity
+                        key={suggestion}
+                        className="p-3 border-b border-gray-100 last:border-b-0"
+                        onPress={() => {
+                          setOrigin(suggestion);
+                          setOriginSuggestions([]);
+                          setOriginFocused(false);
+                        }}
+                      >
+                        <Text className="text-base text-gray-800">
+                          {suggestion}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                    {originLoading && (
+                      <View className="p-3">
+                        <Text className="text-gray-400 text-center">
+                          Loading...
+                        </Text>
+                      </View>
+                    )}
+                  </ScrollView>
+                </View>
+              )}
           </View>
 
           {/* Destination Address */}
@@ -209,11 +240,13 @@ export default function OriginDestinationScreen() {
               <TextInput
                 className="flex-1 ml-3 text-base"
                 value={destination}
-                onChangeText={text => {
+                onChangeText={(text) => {
                   setDestination(text);
                   if (!destinationFocused) setDestinationFocused(true);
                 }}
-                onBlur={() => setTimeout(() => setDestinationFocused(false), 200)}
+                onBlur={() =>
+                  setTimeout(() => setDestinationFocused(false), 200)
+                }
                 onFocus={() => setDestinationFocused(true)}
                 placeholder="Enter UK delivery postcode..."
                 placeholderTextColor="#9CA3AF"
@@ -224,28 +257,44 @@ export default function OriginDestinationScreen() {
               />
             </View>
             {/* Suggestions Dropdown */}
-            {destinationFocused && destination.length > 1 && (destinationSuggestions.length > 0 || destinationLoading) && (
-              <View className="absolute left-0 right-0 z-10 bg-white border border-gray-200 rounded-lg mt-1 shadow-lg" style={{ top: 70, height: 200, paddingBottom: 4, flex: 1 }}>
-                <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
-                  {destinationSuggestions.map((suggestion) => (
-                    <TouchableOpacity
-                      key={suggestion}
-                      className="p-3 border-b border-gray-100"
-                      onPress={() => {
-                        setDestination(suggestion);
-                        setDestinationSuggestions([]);
-                        setDestinationFocused(false);
-                      }}
-                    >
-                      <Text className="text-base text-gray-800">{suggestion}</Text>
-                    </TouchableOpacity>
-                  ))}
-                  {destinationLoading && (
-                    <Text className="p-3 text-gray-400 text-center">Loading...</Text>
-                  )}
-                </ScrollView>
-              </View>
-            )}
+            {destinationFocused &&
+              destination.length > 1 &&
+              (destinationSuggestions.length > 0 || destinationLoading) && (
+                <View
+                  className="bg-white border border-gray-200 rounded-lg mt-2 shadow-lg"
+                  style={{ maxHeight: 200, zIndex: 1000 }}
+                >
+                  <ScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={true}
+                    nestedScrollEnabled={true}
+                    style={{ maxHeight: 200 }}
+                  >
+                    {destinationSuggestions.map((suggestion) => (
+                      <TouchableOpacity
+                        key={suggestion}
+                        className="p-3 border-b border-gray-100 last:border-b-0"
+                        onPress={() => {
+                          setDestination(suggestion);
+                          setDestinationSuggestions([]);
+                          setDestinationFocused(false);
+                        }}
+                      >
+                        <Text className="text-base text-gray-800">
+                          {suggestion}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                    {destinationLoading && (
+                      <View className="p-3">
+                        <Text className="text-gray-400 text-center">
+                          Loading...
+                        </Text>
+                      </View>
+                    )}
+                  </ScrollView>
+                </View>
+              )}
           </View>
 
           {/* Map Preview */}
