@@ -90,8 +90,8 @@ export default function LandingScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: "#10b981" }}>
-      <StatusBar style="light" backgroundColor="#10b981" />
+    <SafeAreaView className="flex-1" style={{ backgroundColor: "#943DFF" }}>
+      <StatusBar style="light" backgroundColor="#943DFF" />
 
       {/* Main Content */}
       <View className="flex-1 justify-center items-center px-8">
@@ -102,7 +102,7 @@ export default function LandingScreen() {
 
         {/* Get Quote Button */}
         <TouchableOpacity
-          className="bg-black py-4 px-8 rounded-xl w-full mb-8 flex-row justify-center items-center"
+          className="bg-blue-400 py-4 px-8 rounded-xl w-full mb-8 flex-row justify-center items-center"
           onPress={handleGetStarted}
         >
           <Text className="text-white text-center font-semibold text-lg mr-2">
@@ -116,7 +116,8 @@ export default function LandingScreen() {
       <View className="px-8 pb-8">
         {/* Login Button */}
         <TouchableOpacity
-          className="bg-emerald-500 py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
+        style={{ backgroundColor: "#943DFF" }}
+          className=" py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
           <Text className="text-white text-center font-semibold text-lg mr-2">
@@ -127,6 +128,7 @@ export default function LandingScreen() {
 
         {/* Sign Up Button */}
         <TouchableOpacity
+        style={{ backgroundColor: "#fff53d" }}
           className="bg-yellow-500 py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
