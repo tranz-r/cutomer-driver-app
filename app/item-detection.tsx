@@ -12,6 +12,9 @@ import { router } from "expo-router";
 import MediaUploader from "./components/MediaUploader";
 import DetectedItemsList from "./components/DetectedItemsList";
 import ProcessingIndicator from "./components/ProcessingIndicator";
+import VanSvg from "./components/VanSvg";
+import InventorySvg from "./components/InventorySvg";
+import SmartDetectionSvg from "./components/SmartDetectionSvg";
 
 interface MediaItem {
   uri: string;
@@ -97,45 +100,51 @@ export default function ItemDetectionScreen() {
                 Do you know your move size?
               </Text>
 
-              <View className="mb-6">
+              <View className="mb-6 space-y-4">
+                {/* Van Selection Card */}
                 <TouchableOpacity
-                  className="bg-blue-600 py-4 px-6 rounded-xl shadow-lg mb-4"
+                  className="bg-white flex-row items-center justify-between rounded-2xl border border-blue-300 shadow-3xl px-5 py-4 mb-2"
                   onPress={() => router.push("/van-selection")}
+                  style={{ minHeight: 80, elevation: 12 }}
+                  activeOpacity={0.85}
                 >
-                  <Text className="text-white text-center font-semibold text-lg">
-                    Yes, Skip to Van Selection
-                  </Text>
-                  <Text className="text-blue-100 text-center text-sm mt-1">
-                    I already know what van size I need
-                  </Text>
+                  <View className="flex-1 pr-4">
+                    <Text className="text-lg font-bold text-blue-700 mb-1">Yes, Skip to Van Selection</Text>
+                    <Text className="text-gray-500 text-sm">I already know what van size I need</Text>
+                  </View>
+                  <VanSvg width={96} height={56} />
                 </TouchableOpacity>
 
+                {/* Build Inventory Card */}
                 <TouchableOpacity
-                  className="bg-purple-600 py-4 px-6 rounded-xl shadow-lg mb-4"
+                  className="bg-white flex-row items-center justify-between rounded-2xl border border-purple-300 shadow-3xl px-5 py-4 mb-2"
                   onPress={() => router.push("/build-inventory")}
+                  style={{ minHeight: 80, elevation: 12 }}
+                  activeOpacity={0.85}
                 >
-                  <Text className="text-white text-center font-semibold text-lg">
-                    Build Item Inventory
-                  </Text>
-                  <Text className="text-purple-100 text-center text-sm mt-1">
-                    Search and add items from our database
-                  </Text>
+                  <View className="flex-1 pr-4">
+                    <Text className="text-lg font-bold text-purple-700 mb-1">Build Item Inventory</Text>
+                    <Text className="text-gray-500 text-sm">Search and add items from our database</Text>
+                  </View>
+                  <InventorySvg width={96} height={56} />
                 </TouchableOpacity>
 
+                {/* Smart Detection Card */}
                 <TouchableOpacity
-                  className="bg-emerald-600 py-4 px-6 rounded-xl shadow-lg"
+                  className="bg-white flex-row items-center justify-between rounded-2xl border border-emerald-300 shadow-3xl px-5 py-4"
                   onPress={() => setShowMediaUpload(true)}
+                  style={{ minHeight: 80, elevation: 12 }}
+                  activeOpacity={0.85}
                 >
-                  <Text className="text-white text-center font-semibold text-lg">
-                    Use Tranzr Smart Detection
-                  </Text>
-                  <Text className="text-emerald-100 text-center text-sm mt-1">
-                    Upload photos/videos to get accurate sizing
-                  </Text>
+                  <View className="flex-1 pr-4">
+                    <Text className="text-lg font-bold text-emerald-700 mb-1">Use Tranzr Smart Detection</Text>
+                    <Text className="text-gray-500 text-sm">Upload photos/videos to get accurate sizing</Text>
+                  </View>
+                  <SmartDetectionSvg width={96} height={56} />
                 </TouchableOpacity>
               </View>
 
-              <View className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <View className="bg-amber-50 rounded-xl p-4 mt-4">
                 <Text className="text-amber-800 text-sm text-center font-medium">
                   💡 Tranzr Smart Detection uses AI to give you an inventory and
                   estimate your items' volume from photos and videos. Review,
