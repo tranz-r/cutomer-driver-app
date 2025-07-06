@@ -116,7 +116,7 @@ export default function LandingScreen() {
       <View className="px-8 pb-8">
         {/* Login Button */}
         <TouchableOpacity
-        style={{ backgroundColor: "#7080cc" }}
+        style={{ backgroundColor: "#8E70CC" }}
           className=" py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
@@ -128,14 +128,14 @@ export default function LandingScreen() {
 
         {/* Sign Up Button */}
         <TouchableOpacity
-        style={{ backgroundColor: "#8E70CC" }}
+        style={{ backgroundColor: "#70AECC" }}
           className="bg-yellow-500 py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
-          <Text className="text-black text-center font-semibold text-lg mr-2">
+          <Text className="text-white text-center font-semibold text-lg mr-2">
             Sign up for a new account
           </Text>
-          <ChevronRight size={20} color="black" />
+          <ChevronRight size={20} color="white" />
         </TouchableOpacity>
 
         {/* Driver Option */}
