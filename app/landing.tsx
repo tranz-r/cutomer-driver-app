@@ -116,7 +116,7 @@ export default function LandingScreen() {
       <View className="px-8 pb-8">
         {/* Login Button */}
         <TouchableOpacity
-        style={{ backgroundColor: "#8E70CC" }}
+        style={{ backgroundColor: "#7080cc" }}
           className=" py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
