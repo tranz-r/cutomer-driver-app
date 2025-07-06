@@ -84,10 +84,10 @@ export default function ItemDetectionScreen() {
       <View className="bg-emerald-600 pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
-            Item Detection
+            Inventory Options
           </Text>
           <Text className="text-sm text-emerald-200">
-            Get an instant quote for your move
+            Choose how you want to build your inventory
           </Text>
         </View>
       </View>
