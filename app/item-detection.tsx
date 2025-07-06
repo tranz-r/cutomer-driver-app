@@ -113,6 +113,7 @@ export default function ItemDetectionScreen() {
                     <Text className="text-gray-500 text-sm">I already know what van size I need</Text>
                   </View>
                   <VanSvg width={96} height={56} />
+                  <ChevronRight size={28} color="#3b82f6" />
                 </TouchableOpacity>
 
                 {/* Build Inventory Card */}
@@ -127,6 +128,7 @@ export default function ItemDetectionScreen() {
                     <Text className="text-gray-500 text-sm">Search and add items from our database</Text>
                   </View>
                   <InventorySvg width={96} height={56} />
+                  <ChevronRight size={28} color="#a21caf" />
                 </TouchableOpacity>
 
                 {/* Smart Detection Card */}
@@ -141,6 +143,7 @@ export default function ItemDetectionScreen() {
                     <Text className="text-gray-500 text-sm">Upload photos/videos to get accurate sizing</Text>
                   </View>
                   <SmartDetectionSvg width={96} height={56} />
+                  <ChevronRight size={28} color="#059669" />
                 </TouchableOpacity>
               </View>
 
