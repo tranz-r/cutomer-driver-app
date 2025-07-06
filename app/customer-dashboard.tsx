@@ -27,15 +27,10 @@ import {
   Settings,
   CreditCard,
   FileText,
-  Phone,
   Star,
   ChevronRight,
   Package,
   LogOut,
-  Navigation,
-  Map,
-  Route,
-  Timer,
   Shield,
 } from "lucide-react-native";
 
@@ -73,9 +68,6 @@ export default function CustomerDashboard() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [additionalHours, setAdditionalHours] = useState("1");
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showDriverLocation, setShowDriverLocation] = useState(false);
-  const [selectedActiveBooking, setSelectedActiveBooking] =
-    useState<Booking | null>(null);
 
   // Mock user data
   const user = {
@@ -278,10 +270,6 @@ export default function CustomerDashboard() {
     Alert.alert("Download", `Downloading invoice for booking ${booking.id}`);
   };
 
-  const callDriver = (phone: string) => {
-    Alert.alert("Call Driver", `Calling ${phone}`);
-  };
-
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
       { text: "Cancel", style: "cancel" },
@@ -311,11 +299,6 @@ export default function CustomerDashboard() {
       navigation.replace("/auth");
     }
   }, []);
-
-  const handleShowDriverLocation = (booking: Booking) => {
-    setSelectedActiveBooking(booking);
-    setShowDriverLocation(true);
-  };
 
   const renderBookingCard = (booking: Booking) => (
     <View
@@ -386,53 +369,49 @@ export default function CustomerDashboard() {
 
       {/* Driver Info (for active bookings) */}
       {booking.status === "active" && booking.driverName && (
-        <View className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-200">
-          <View className="flex-row justify-between items-center mb-3">
+        <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-4 border border-blue-200">
+          <View className="flex-row items-center justify-between mb-3">
             <View className="flex-1">
               <View className="flex-row items-center mb-2">
-                <View className="bg-blue-100 p-2 rounded-full mr-3">
-                  <User size={16} color="#3b82f6" />
+                <View className="bg-blue-500 p-2 rounded-full mr-3">
+                  <User size={16} color="white" />
                 </View>
                 <View>
                   <Text className="text-base font-bold text-blue-900">
                     {booking.driverName}
                   </Text>
                   <Text className="text-sm text-blue-700">
-                    {booking.driverPhone}
+                    Professional Driver
                   </Text>
                 </View>
               </View>
               {booking.driverLocation && (
-                <Text className="text-sm text-green-600 font-medium">
-                  {booking.driverLocation.status}
-                </Text>
+                <View className="bg-white rounded-lg p-3 mt-2">
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text className="text-sm text-gray-600">Status:</Text>
+                    <Text className="text-sm font-semibold text-green-600">
+                      {booking.driverLocation.status}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text className="text-sm text-gray-600">Location:</Text>
+                    <Text className="text-sm font-semibold text-gray-900 text-right flex-1 ml-2">
+                      {booking.driverLocation.address}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-sm text-gray-600">ETA:</Text>
+                    <Text className="text-sm font-bold text-green-600">
+                      {booking.driverLocation.eta}
+                    </Text>
+                  </View>
+                </View>
               )}
             </View>
-            <View className="flex-row">
-              <TouchableOpacity
-                className="bg-green-500 px-3 py-2 rounded-lg mr-2"
-                onPress={() => handleShowDriverLocation(booking)}
-              >
-                <Map size={16} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="bg-blue-500 px-3 py-2 rounded-lg"
-                onPress={() => callDriver(booking.driverPhone!)}
-              >
-                <Phone size={16} color="white" />
-              </TouchableOpacity>
+            <View className="bg-green-500 p-3 rounded-full">
+              <CheckCircle size={20} color="white" />
             </View>
           </View>
-          {booking.driverLocation && (
-            <View className="bg-white rounded-lg p-3">
-              <Text className="text-sm text-gray-700 mb-1">
-                {booking.driverLocation.address}
-              </Text>
-              <Text className="text-sm font-bold text-green-600">
-                ETA: {booking.driverLocation.eta}
-              </Text>
-            </View>
-          )}
         </View>
       )}
 
@@ -806,210 +785,6 @@ export default function CustomerDashboard() {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Driver Location Modal */}
-      <Modal
-        visible={showDriverLocation}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setShowDriverLocation(false)}
-      >
-        <View className="flex-1 justify-end bg-black/70">
-          <View className="bg-white rounded-t-2xl p-6 max-h-4/5">
-            <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold text-gray-900">
-                🚛 Driver Location
-              </Text>
-              <TouchableOpacity onPress={() => setShowDriverLocation(false)}>
-                <X size={24} color="#6b7280" />
-              </TouchableOpacity>
-            </View>
-
-            {selectedActiveBooking?.driverLocation && (
-              <View>
-                {/* Live Map with Driver Location */}
-                <View className="bg-white rounded-xl overflow-hidden mb-6 shadow-sm border border-gray-200">
-                  <View className="bg-green-50 px-4 py-3 border-b border-green-200">
-                    <View className="flex-row items-center justify-between">
-                      <View className="flex-row items-center">
-                        <View className="bg-green-500 rounded-full w-3 h-3 mr-2" />
-                        <Text className="text-green-800 font-semibold text-sm">
-                          Live Tracking Active
-                        </Text>
-                      </View>
-                      <Text className="text-green-600 text-xs">
-                        Updated{" "}
-                        {selectedActiveBooking.driverLocation.lastUpdated}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View
-                    className="bg-gradient-to-br from-blue-50 to-green-50 rounded-lg p-8 items-center justify-center border border-blue-200"
-                    style={{ height: 280 }}
-                  >
-                    <View className="bg-white rounded-full p-4 shadow-md mb-4">
-                      <Map size={48} color="#3b82f6" />
-                    </View>
-                    <Text className="text-blue-900 font-bold text-lg text-center mb-2">
-                      Live Driver Tracking
-                    </Text>
-                    <Text className="text-blue-700 text-sm text-center mb-4">
-                      Real-time location updates available on mobile app
-                    </Text>
-                    <View className="bg-white rounded-lg p-4 w-full border border-blue-100">
-                      <View className="flex-row items-center justify-between mb-2">
-                        <Text className="text-gray-600 text-sm">Driver:</Text>
-                        <Text className="text-gray-900 font-semibold">
-                          {selectedActiveBooking.driverName}
-                        </Text>
-                      </View>
-                      <View className="flex-row items-center justify-between mb-2">
-                        <Text className="text-gray-600 text-sm">Location:</Text>
-                        <Text className="text-gray-900 font-semibold text-right flex-1 ml-2">
-                          Oxford Street, London
-                        </Text>
-                      </View>
-                      <View className="flex-row items-center justify-between">
-                        <Text className="text-gray-600 text-sm">ETA:</Text>
-                        <Text className="text-green-600 font-bold">
-                          {selectedActiveBooking.driverLocation.eta}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Enhanced Driver Status Cards */}
-                <View className="space-y-4 mb-6">
-                  {/* Current Status */}
-                  <View className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-                    <View className="flex-row items-center mb-3">
-                      <View className="bg-blue-500 p-2 rounded-full mr-3">
-                        <Route size={16} color="white" />
-                      </View>
-                      <Text className="text-blue-900 font-bold text-base">
-                        Current Status
-                      </Text>
-                    </View>
-                    <Text className="text-blue-800 font-medium">
-                      {selectedActiveBooking.driverLocation.status}
-                    </Text>
-                  </View>
-
-                  {/* ETA & Speed Info */}
-                  <View className="flex-row space-x-3">
-                    <View className="bg-green-50 rounded-xl p-4 flex-1 border border-green-200">
-                      <View className="flex-row items-center mb-2">
-                        <Timer size={16} color="#059669" />
-                        <Text className="text-green-800 font-semibold text-sm ml-2">
-                          ETA
-                        </Text>
-                      </View>
-                      <Text className="text-green-900 font-bold text-lg">
-                        {selectedActiveBooking.driverLocation.eta}
-                      </Text>
-                    </View>
-
-                    <View className="bg-orange-50 rounded-xl p-4 flex-1 border border-orange-200">
-                      <View className="flex-row items-center mb-2">
-                        <Navigation size={16} color="#f59e0b" />
-                        <Text className="text-orange-800 font-semibold text-sm ml-2">
-                          Speed
-                        </Text>
-                      </View>
-                      <Text className="text-orange-900 font-bold text-lg">
-                        {selectedActiveBooking.driverLocation.speed}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Driver Contact & Trust Indicators */}
-                <View className="bg-white rounded-xl p-4 mb-6 border border-gray-200">
-                  <View className="flex-row items-center justify-between mb-4">
-                    <View className="flex-row items-center">
-                      <View className="bg-blue-100 p-3 rounded-full mr-3">
-                        <User size={20} color="#3b82f6" />
-                      </View>
-                      <View>
-                        <Text className="text-gray-900 font-bold text-base">
-                          {selectedActiveBooking.driverName}
-                        </Text>
-                        <Text className="text-gray-600 text-sm">
-                          Professional Driver
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="flex-row items-center">
-                      <Shield size={16} color="#059669" />
-                      <Text className="text-green-600 font-semibold text-sm ml-1">
-                        Verified
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View className="bg-gray-50 rounded-lg p-3 mb-4">
-                    <View className="flex-row items-center mb-2">
-                      <MapPin size={16} color="#6b7280" />
-                      <Text className="text-gray-700 font-medium text-sm ml-2">
-                        Current Location
-                      </Text>
-                    </View>
-                    <Text className="text-gray-800 text-sm">
-                      {selectedActiveBooking.driverLocation.address}
-                    </Text>
-                  </View>
-
-                  <TouchableOpacity
-                    className="bg-blue-600 py-3 px-4 rounded-lg"
-                    onPress={() =>
-                      callDriver(selectedActiveBooking.driverPhone!)
-                    }
-                  >
-                    <View className="flex-row items-center justify-center">
-                      <Phone size={18} color="white" />
-                      <Text className="text-white font-semibold ml-2">
-                        Call {selectedActiveBooking.driverName}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Confidence Building Features */}
-                <View className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                  <View className="flex-row items-center mb-3">
-                    <Shield size={20} color="#059669" />
-                    <Text className="text-green-900 font-bold ml-2">
-                      Your Move is Protected
-                    </Text>
-                  </View>
-                  <View className="space-y-2">
-                    <View className="flex-row items-center">
-                      <CheckCircle size={14} color="#059669" />
-                      <Text className="text-green-800 text-sm ml-2">
-                        Real-time GPS tracking active
-                      </Text>
-                    </View>
-                    <View className="flex-row items-center">
-                      <CheckCircle size={14} color="#059669" />
-                      <Text className="text-green-800 text-sm ml-2">
-                        Fully insured and bonded driver
-                      </Text>
-                    </View>
-                    <View className="flex-row items-center">
-                      <CheckCircle size={14} color="#059669" />
-                      <Text className="text-green-800 text-sm ml-2">
-                        24/7 customer support available
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            )}
           </View>
         </View>
       </Modal>
