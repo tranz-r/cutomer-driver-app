@@ -179,8 +179,8 @@ export default function BuildInventoryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7c3aed" translucent={false} />
-      <View className="bg-purple-600 pt-16 pb-6">
+      <StatusBar style="light" backgroundColor="#9333EA" translucent={false} />
+      <View className="bg-purple-600 pt-8 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Build Your Inventory
