@@ -90,8 +90,8 @@ export default function LandingScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: "#943DFF" }}>
-      <StatusBar style="light" backgroundColor="#943DFF" />
+    <SafeAreaView className="flex-1" style={{ backgroundColor: "#7080cc" }}>
+      <StatusBar style="light" backgroundColor="#7080cc" />
 
       {/* Main Content */}
       <View className="flex-1 justify-center items-center px-8">
@@ -102,7 +102,7 @@ export default function LandingScreen() {
 
         {/* Get Quote Button */}
         <TouchableOpacity
-          className="bg-blue-400 py-4 px-8 rounded-xl w-full mb-8 flex-row justify-center items-center"
+          className="bg-black py-4 px-8 rounded-xl w-full mb-8 flex-row justify-center items-center"
           onPress={handleGetStarted}
         >
           <Text className="text-white text-center font-semibold text-lg mr-2">
@@ -116,7 +116,7 @@ export default function LandingScreen() {
       <View className="px-8 pb-8">
         {/* Login Button */}
         <TouchableOpacity
-        style={{ backgroundColor: "#943DFF" }}
+        style={{ backgroundColor: "#7080cc" }}
           className=" py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
@@ -128,7 +128,7 @@ export default function LandingScreen() {
 
         {/* Sign Up Button */}
         <TouchableOpacity
-        style={{ backgroundColor: "#fff53d" }}
+        style={{ backgroundColor: "#8E70CC" }}
           className="bg-yellow-500 py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
           onPress={() => router.push("/auth")}
         >
@@ -139,7 +139,8 @@ export default function LandingScreen() {
         </TouchableOpacity>
 
         {/* Driver Option */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
+        style={{ backgroundColor: "#70AECC" }}
           className="flex-row items-center justify-center py-3 px-4 bg-gray-700 rounded-lg"
           onPress={handleDriverFlow}
         >
@@ -148,7 +149,7 @@ export default function LandingScreen() {
             I'm a driver - Join our team
           </Text>
           <ChevronRight size={16} color="white" className="ml-2" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
