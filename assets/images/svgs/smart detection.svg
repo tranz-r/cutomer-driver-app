@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="500" height="300">
+  <!-- Scanning Grid -->
+  <rect x="90" y="40" width="320" height="220" fill="#ffffff"/>
+  <line x1="150" y1="40" x2="150" y2="260" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="210" y1="40" x2="210" y2="260" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="270" y1="40" x2="270" y2="260" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="330" y1="40" x2="330" y2="260" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="90" y1="100" x2="410" y2="100" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="90" y1="160" x2="410" y2="160" stroke="#d1ecf9" stroke-width="3"/>
+  <line x1="90" y1="220" x2="410" y2="220" stroke="#d1ecf9" stroke-width="3"/>
+
+  <!-- AI Brain Chip -->
+  <circle cx="250" cy="150" r="50" fill="#4dd0e1"/>
+  <circle cx="250" cy="150" r="20" fill="#00acc1"/>
+  <path d="M230,150 h40" stroke="#00838f" stroke-width="4"/>
+  <path d="M250,130 v40" stroke="#00838f" stroke-width="4"/>
+
+  <!-- Detection Highlights -->
+  <rect x="340" y="70" width="60" height="40" fill="#fff59d"/>
+  <path d="M345,90 l12,12 l25,-25" stroke="#fbc02d" stroke-width="4" fill="none"/>
+
+  <rect x="120" y="190" width="60" height="40" fill="#c5e1a5"/>
+  <path d="M125,210 l12,12 l25,-25" stroke="#7cb342" stroke-width="4" fill="none"/>
+
+  <!-- Dynamic Waves -->
+  <circle cx="250" cy="150" r="70" fill="none" stroke="#b2ebf2" stroke-width="3" stroke-dasharray="8 6"/>
+  <circle cx="250" cy="150" r="100" fill="none" stroke="#80deea" stroke-width="3" stroke-dasharray="8 6"/>
+</svg>
