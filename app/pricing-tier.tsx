@@ -340,7 +340,7 @@ export default function PricingTierScreen() {
           {pricingTiers.map(renderTierCard)}
 
           {/* Summary */}
-          <View className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 mb-8 border border-gray-200">
+          <View className="bg-gray-50 border-l-4 border-gray-400 rounded-lg p-6 mb-8">
             <Text className="text-xl font-bold text-gray-900 mb-4">
               Your Selection
             </Text>

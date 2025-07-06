@@ -279,7 +279,7 @@ export default function VanSelectionScreen() {
 
           {/* Summary */}
           {selectedVan && (
-            <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8 border border-blue-100">
+            <View className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
               <Text className="text-xl font-bold text-gray-900 mb-4">
                 Your Selection
               </Text>

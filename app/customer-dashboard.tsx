@@ -564,7 +564,7 @@ export default function CustomerDashboard() {
       {/* Quick Stats */}
       <View className="px-4 -mt-4 mb-6">
         <View className="flex-row justify-between">
-          <View className="bg-white rounded-xl p-4 flex-1 mr-2 shadow-sm">
+          <View className="bg-white border border-gray-100 rounded-xl p-4 flex-1 mr-2">
             <View className="flex-row items-center justify-between">
               <View>
                 <Text className="text-2xl font-bold text-gray-900 mb-1">
@@ -572,12 +572,12 @@ export default function CustomerDashboard() {
                 </Text>
                 <Text className="text-sm text-gray-600">Active Moves</Text>
               </View>
-              <View className="bg-green-500 p-3 rounded-xl">
-                <Truck size={20} color="white" />
+              <View className="bg-green-100 p-3 rounded-xl">
+                <Truck size={20} color="#059669" />
               </View>
             </View>
           </View>
-          <View className="bg-white rounded-xl p-4 flex-1 ml-2 shadow-sm">
+          <View className="bg-white border border-gray-100 rounded-xl p-4 flex-1 ml-2">
             <View className="flex-row items-center justify-between">
               <View>
                 <Text className="text-2xl font-bold text-gray-900 mb-1">
@@ -585,8 +585,8 @@ export default function CustomerDashboard() {
                 </Text>
                 <Text className="text-sm text-gray-600">Total Moves</Text>
               </View>
-              <View className="bg-blue-500 p-3 rounded-xl">
-                <Package size={20} color="white" />
+              <View className="bg-blue-100 p-3 rounded-xl">
+                <Package size={20} color="#2563eb" />
               </View>
             </View>
           </View>

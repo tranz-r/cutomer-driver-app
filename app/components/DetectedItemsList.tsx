@@ -415,18 +415,18 @@ const DetectedItemsList = ({
         </TouchableOpacity>
 
         {/* Total Volume Summary */}
-        <View className="bg-blue-600 p-4 rounded-xl shadow-sm">
+        <View className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
           <View className="flex-row justify-between items-center">
             <View>
-              <Text className="text-blue-100 font-medium text-sm mb-1">
+              <Text className="text-blue-700 font-medium text-sm mb-1">
                 Total Estimated Volume
               </Text>
-              <Text className="text-white font-bold text-2xl">
+              <Text className="text-blue-900 font-bold text-2xl">
                 {totalVolume} m³
               </Text>
             </View>
-            <View className="bg-white/20 p-3 rounded-full">
-              <Package size={24} color="#ffffff" />
+            <View className="bg-blue-200 p-3 rounded-full">
+              <Package size={24} color="#1e40af" />
             </View>
           </View>
         </View>

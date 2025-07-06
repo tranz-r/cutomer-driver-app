@@ -521,23 +521,23 @@ export default function BuildInventoryScreen() {
 
             {/* Total Volume Summary */}
             {items.length > 0 && (
-              <View className="bg-purple-600 p-4 rounded-xl shadow-sm mb-6">
+              <View className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg mb-6">
                 <View className="flex-row justify-between items-center">
                   <View>
-                    <Text className="text-purple-100 font-medium text-sm mb-1">
+                    <Text className="text-purple-700 font-medium text-sm mb-1">
                       Total Estimated Volume
                     </Text>
-                    <Text className="text-white font-bold text-2xl">
+                    <Text className="text-purple-900 font-bold text-2xl">
                       {totalVolume} m³
                     </Text>
-                    <Text className="text-purple-200 text-xs mt-1">
+                    <Text className="text-purple-600 text-xs mt-1">
                       Based on{" "}
                       {items.reduce((sum, item) => sum + item.quantity, 0)}{" "}
                       items
                     </Text>
                   </View>
-                  <View className="bg-white/20 p-3 rounded-full">
-                    <Package size={24} color="#ffffff" />
+                  <View className="bg-purple-200 p-3 rounded-full">
+                    <Package size={24} color="#7c3aed" />
                   </View>
                 </View>
               </View>
