@@ -250,13 +250,13 @@ export default function SummaryScreen() {
 
           {/* Complete Booking Button */}
           <TouchableOpacity
-            className="py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg bg-green-600"
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg bg-slate-600"
             onPress={handleCompleteBooking}
           >
-            <CheckCircle size={22} color="white" />
-            <Text className="text-white text-center font-bold text-lg ml-3">
+            <Text className="text-white text-center font-bold text-lg mr-2">
               Continue
             </Text>
+            <CheckCircle size={20} color="white" />
           </TouchableOpacity>
 
           <Text className="text-center text-sm text-gray-500 mt-3">

@@ -546,7 +546,7 @@ export default function BuildInventoryScreen() {
             {/* Continue Button */}
             {items.length > 0 && (
               <TouchableOpacity
-                className="bg-blue-600 py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+                className="bg-purple-600 py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
                 onPress={handleContinueToVanSelection}
               >
                 <Text className="text-white text-center font-semibold text-lg mr-2">

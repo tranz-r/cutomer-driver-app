@@ -302,16 +302,16 @@ export default function VanSelectionScreen() {
           )}
 
           <TouchableOpacity
-            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
-              selectedVan ? "bg-blue-600" : "bg-gray-300"
+            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${
+              selectedVan ? "bg-orange-600" : "bg-gray-300"
             }`}
             onPress={handleContinueToLocation}
             disabled={!selectedVan}
           >
-            <Text className="text-white text-center font-bold text-lg mr-3">
+            <Text className="text-white text-center font-bold text-lg mr-2">
               Continue
             </Text>
-            <ChevronRight size={22} color="white" />
+            <ChevronRight size={20} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>

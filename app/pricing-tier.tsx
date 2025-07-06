@@ -389,16 +389,16 @@ export default function PricingTierScreen() {
 
           {/* Continue Button */}
           <TouchableOpacity
-            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
+            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${
               selectedTier ? "bg-red-600" : "bg-gray-300"
             }`}
             onPress={handleContinue}
             disabled={!selectedTier}
           >
-            <Text className="text-white text-center font-bold text-lg mr-3">
+            <Text className="text-white text-center font-bold text-lg mr-2">
               Continue
             </Text>
-            <ChevronRight size={22} color="white" />
+            <ChevronRight size={20} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>

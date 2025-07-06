@@ -293,13 +293,13 @@ export default function DateTimeScreen() {
           </View>
 
           <TouchableOpacity
-            className="py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg bg-blue-600"
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg bg-indigo-600"
             onPress={handleContinue}
           >
-            <Text className="text-white text-center font-bold text-lg mr-3">
+            <Text className="text-white text-center font-bold text-lg mr-2">
               Continue
             </Text>
-            <ChevronRight size={22} color="white" />
+            <ChevronRight size={20} color="white" />
           </TouchableOpacity>
         </View>
       </ScrollView>
