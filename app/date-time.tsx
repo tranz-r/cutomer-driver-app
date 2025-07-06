@@ -204,8 +204,7 @@ export default function DateTimeScreen() {
                   Flexible Time
                 </Text>
                 <Text className="text-sm text-orange-700 mt-1">
-                  Save {flexibleDiscount}% (£{quote.discount.toFixed(2)}) by
-                  being flexible with your time slot
+                  Save {flexibleDiscount}% by being flexible with your time slot
                 </Text>
               </View>
               <Percent size={20} color="#f59e0b" />
@@ -289,40 +288,6 @@ export default function DateTimeScreen() {
                     ? "Flexible"
                     : timeSlots.find((t) => t.id === selectedTimeSlot)?.period}
                 </Text>
-              </View>
-              <View className="border-t border-blue-200 mt-4 pt-4">
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text className="text-base text-gray-600">
-                    Base Rate (£{quote.baseRate}/hour):
-                  </Text>
-                  <Text className="text-base font-semibold text-gray-900">
-                    £{quote.subtotal.toFixed(2)}
-                  </Text>
-                </View>
-                {isFlexibleTime && (
-                  <View className="flex-row justify-between items-center mb-2">
-                    <Text className="text-base text-green-600">
-                      Flexible Time Discount ({flexibleDiscount}%):
-                    </Text>
-                    <Text className="text-base font-semibold text-green-600">
-                      -£{quote.discount.toFixed(2)}
-                    </Text>
-                  </View>
-                )}
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text className="text-base text-gray-600">VAT (20%):</Text>
-                  <Text className="text-base font-semibold text-gray-900">
-                    £{quote.vat.toFixed(2)}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between items-center">
-                  <Text className="text-lg font-bold text-gray-900">
-                    Total Estimated:
-                  </Text>
-                  <Text className="text-lg font-bold text-blue-600">
-                    £{quote.total.toFixed(2)}
-                  </Text>
-                </View>
               </View>
             </View>
           </View>

@@ -234,15 +234,6 @@ export default function VanSelectionScreen() {
                         </View>
                       </View>
                     </View>
-                    <View className="ml-4">
-                      <Text
-                        className={`text-xl font-bold ${
-                          van.id === "large" ? "text-blue-600" : "text-gray-400"
-                        }`}
-                      >
-                        {van.price}
-                      </Text>
-                    </View>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -280,11 +271,6 @@ export default function VanSelectionScreen() {
                         </Text>
                       </View>
                     </View>
-                    <View className="ml-4">
-                      <Text className="text-base font-bold text-green-600">
-                        {option.additionalCost}
-                      </Text>
-                    </View>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -310,18 +296,6 @@ export default function VanSelectionScreen() {
                     {driverOptions.find((d) => d.id === selectedDrivers)?.count}{" "}
                     person{selectedDrivers !== "1" ? "s" : ""}
                   </Text>
-                </View>
-                <View className="border-t border-blue-200 mt-4 pt-4">
-                  <View className="flex-row justify-between items-center">
-                    <Text className="text-lg font-bold text-gray-900">
-                      Estimated Rate:
-                    </Text>
-                    <Text className="text-lg font-bold text-blue-600">
-                      {vanTypes.find((v) => v.id === selectedVan)?.price}
-                      {selectedDrivers !== "1" &&
-                        ` ${driverOptions.find((d) => d.id === selectedDrivers)?.additionalCost}`}
-                    </Text>
-                  </View>
                 </View>
               </View>
             </View>

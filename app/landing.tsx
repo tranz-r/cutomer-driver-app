@@ -15,6 +15,7 @@ import {
   Truck,
   ArrowRight,
 } from "lucide-react-native";
+import Svg, { Path } from "react-native-svg";
 
 export default function LandingScreen() {
   const handleGetStarted = () => {
@@ -42,62 +43,70 @@ export default function LandingScreen() {
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6">
-          {/* Header */}
-          <View className="items-center mb-6">
-            <View className="bg-blue-600 rounded-full p-3 mb-3">
-              <Text className="text-xl font-bold text-white">T</Text>
-            </View>
-            <Text className="text-2xl font-bold text-gray-800 mb-2 text-center">
-              Tranzr
-            </Text>
-          </View>
-
           {/* Services Overview */}
-          <View className="mb-6">
-            <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
-              Why Choose Tranzr?
-            </Text>
-
-            <View className="space-y-3">
-              <View className="flex-row items-center bg-blue-50 p-3 rounded-xl">
-                <View className="bg-blue-100 p-2 rounded-full mr-3">
-                  <Clock size={20} color="#3b82f6" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-base font-semibold text-gray-800">
-                    Quick Quotes
-                  </Text>
-                  <Text className="text-sm text-gray-600">
-                    Get instant estimates using AI-powered item detection
-                  </Text>
+          <View className="mb-8">
+            <View className="space-y-4">
+              <View className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-2xl shadow-sm border border-blue-200">
+                <View className="flex-row items-center">
+                  <View className="bg-blue-500 p-3 rounded-full mr-4">
+                    <Clock size={24} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-bold text-blue-900 mb-1">
+                      Quick Quotes
+                    </Text>
+                    <Text className="text-sm text-blue-700">
+                      Get instant estimates using AI-powered item detection
+                    </Text>
+                  </View>
                 </View>
               </View>
 
-              <View className="flex-row items-center bg-green-50 p-3 rounded-xl">
-                <View className="bg-green-100 p-2 rounded-full mr-3">
-                  <Shield size={20} color="#10b981" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-base font-semibold text-gray-800">
-                    Verified Drivers
-                  </Text>
-                  <Text className="text-sm text-gray-600">
-                    All our drivers are background-checked and insured
-                  </Text>
+              <View className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-2xl shadow-sm border border-green-200">
+                <View className="flex-row items-center">
+                  <View className="bg-green-500 p-3 rounded-full mr-4">
+                    <Shield size={24} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-bold text-green-900 mb-1">
+                      Verified Drivers
+                    </Text>
+                    <Text className="text-sm text-green-700">
+                      All our drivers are background-checked and insured
+                    </Text>
+                  </View>
                 </View>
               </View>
 
-              <View className="flex-row items-center bg-purple-50 p-3 rounded-xl">
-                <View className="bg-purple-100 p-2 rounded-full mr-3">
-                  <Calendar size={20} color="#8b5cf6" />
+              <View className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-2xl shadow-sm border border-purple-200">
+                <View className="flex-row items-center">
+                  <View className="bg-purple-500 p-3 rounded-full mr-4">
+                    <Calendar size={24} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-bold text-purple-900 mb-1">
+                      Easy Bookings
+                    </Text>
+                    <Text className="text-sm text-purple-700">
+                      Schedule your move with just a few taps
+                    </Text>
+                  </View>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-base font-semibold text-gray-800">
-                    Easy Bookings
-                  </Text>
-                  <Text className="text-sm text-gray-600">
-                    Schedule your move with just a few taps
-                  </Text>
+              </View>
+
+              <View className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-2xl shadow-sm border border-orange-200">
+                <View className="flex-row items-center">
+                  <View className="bg-orange-500 p-3 rounded-full mr-4">
+                    <Truck size={24} color="white" />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-lg font-bold text-orange-900 mb-1">
+                      Professional Service
+                    </Text>
+                    <Text className="text-sm text-orange-700">
+                      Experienced movers with modern equipment
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
