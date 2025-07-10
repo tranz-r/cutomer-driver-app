@@ -23,13 +23,13 @@ import { router } from "expo-router";
 export default function CustomerDetailsScreen() {
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("+44 ");
   const [collectionName, setCollectionName] = useState("");
   const [collectionEmail, setCollectionEmail] = useState("");
-  const [collectionPhone, setCollectionPhone] = useState("");
+  const [collectionPhone, setCollectionPhone] = useState("+44 ");
   const [deliveryName, setDeliveryName] = useState("");
   const [deliveryEmail, setDeliveryEmail] = useState("");
-  const [deliveryPhone, setDeliveryPhone] = useState("");
+  const [deliveryPhone, setDeliveryPhone] = useState("+44 ");
   const [sameAsCustomerCollection, setSameAsCustomerCollection] =
     useState(true);
   const [sameAsCustomerDelivery, setSameAsCustomerDelivery] = useState(true);
@@ -40,9 +40,46 @@ export default function CustomerDetailsScreen() {
   };
 
   const validatePhone = (phone: string) => {
-    const phoneRegex = /^[+]?[0-9\s-()]{10,}$/;
+    const phoneRegex = /^\+44\s[0-9\s-()]{10,}$/;
     return phoneRegex.test(phone);
   };
+
+  const handlePhoneChange = (text: string, setter: (text: string) => void) => {
+    if (!text.startsWith("+44 ")) {
+      setter("+44 " + text.replace(/^\+44\s?/, ""));
+    } else {
+      setter(text);
+    }
+  };
+
+  const UKFlag = () => (
+    <View className="w-6 h-4 mr-2 rounded-sm overflow-hidden">
+      <View className="flex-1 bg-blue-600" />
+      <View className="absolute inset-0 flex-row">
+        <View className="flex-1" />
+        <View className="w-1 bg-white" />
+        <View className="flex-1" />
+      </View>
+      <View className="absolute inset-0 flex-col">
+        <View className="flex-1" />
+        <View className="h-1 bg-white" />
+        <View className="flex-1" />
+      </View>
+      <View className="absolute inset-0">
+        <View className="flex-1 flex-row">
+          <View className="flex-1" />
+          <View className="w-0.5 bg-red-600" />
+          <View className="flex-1" />
+        </View>
+        <View className="h-0.5 bg-red-600" />
+        <View className="flex-1 flex-row">
+          <View className="flex-1" />
+          <View className="w-0.5 bg-red-600" />
+          <View className="flex-1" />
+        </View>
+      </View>
+    </View>
+  );
 
   const handleContinue = () => {
     // Validate required fields
@@ -164,13 +201,13 @@ export default function CustomerDetailsScreen() {
         </View>
 
         {(!sameAsCustomer || !onSameAsCustomerChange) && (
-          <View className="space-y-4">
+          <View className="space-y-6">
             {/* Name Input */}
-            <View>
-              <Text className="text-sm font-medium text-gray-700 mb-2">
+            <View className="mb-4">
+              <Text className="text-sm font-medium text-gray-700 mb-3">
                 Full Name
               </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-lg p-4 bg-white">
+              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-4 bg-white shadow-sm">
                 <User size={20} color="#6b7280" />
                 <TextInput
                   className="flex-1 ml-3 text-base text-gray-800"
@@ -183,11 +220,11 @@ export default function CustomerDetailsScreen() {
             </View>
 
             {/* Email Input */}
-            <View>
-              <Text className="text-sm font-medium text-gray-700 mb-2">
+            <View className="mb-4">
+              <Text className="text-sm font-medium text-gray-700 mb-3">
                 Email Address
               </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-lg p-4 bg-white">
+              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-4 bg-white shadow-sm">
                 <Mail size={20} color="#6b7280" />
                 <TextInput
                   className="flex-1 ml-3 text-base text-gray-800"
@@ -201,17 +238,19 @@ export default function CustomerDetailsScreen() {
             </View>
 
             {/* Phone Input */}
-            <View>
-              <Text className="text-sm font-medium text-gray-700 mb-2">
+            <View className="mb-4">
+              <Text className="text-sm font-medium text-gray-700 mb-3">
                 Phone Number
               </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-lg p-4 bg-white">
-                <Phone size={20} color="#6b7280" />
+              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-4 bg-white shadow-sm">
+                <UKFlag />
                 <TextInput
-                  className="flex-1 ml-3 text-base text-gray-800"
-                  placeholder="Enter phone number"
+                  className="flex-1 text-base text-gray-800"
+                  placeholder="+44 Enter phone number"
                   value={phoneValue}
-                  onChangeText={onPhoneChange}
+                  onChangeText={(text) =>
+                    handlePhoneChange(text, onPhoneChange)
+                  }
                   keyboardType="phone-pad"
                 />
               </View>
