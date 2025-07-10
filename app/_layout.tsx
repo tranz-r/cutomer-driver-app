@@ -78,6 +78,10 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="date-time" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="customer-details"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="pricing-tier" options={{ headerShown: false }} />
         <Stack.Screen name="summary" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />

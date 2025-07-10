@@ -135,7 +135,7 @@ export default function DateTimeScreen() {
     console.log("Selected Time Slot:", selectedTimeSlot);
     console.log("Flexible Time:", isFlexibleTime);
     console.log("Quote:", quote);
-    router.push("/pricing-tier");
+    router.push("/customer-details");
   };
 
   return (
