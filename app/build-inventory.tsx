@@ -179,13 +179,13 @@ export default function BuildInventoryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#9333EA" />
-      <View className="bg-purple-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Build Your Inventory
           </Text>
-          <Text className="text-sm text-purple-200">
+          <Text className="text-sm text-white">
             Search and add items from our database
           </Text>
         </View>
@@ -546,7 +546,8 @@ export default function BuildInventoryScreen() {
             {/* Continue Button */}
             {items.length > 0 && (
               <TouchableOpacity
-                className="bg-purple-600 py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+                className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+                style={{ backgroundColor: "#70AECC" }}
                 onPress={handleContinueToVanSelection}
               >
                 <Text className="text-white text-center font-semibold text-lg mr-2">

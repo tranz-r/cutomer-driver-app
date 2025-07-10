@@ -307,13 +307,13 @@ export default function PricingTierScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#dc2626" />
-      <View className="bg-red-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Choose Your Service
           </Text>
-          <Text className="text-sm text-red-200">
+          <Text className="text-sm text-white">
             Select the service level that best fits your needs
           </Text>
         </View>
@@ -389,9 +389,8 @@ export default function PricingTierScreen() {
 
           {/* Continue Button */}
           <TouchableOpacity
-            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${
-              selectedTier ? "bg-red-600" : "bg-gray-300"
-            }`}
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handleContinue}
             disabled={!selectedTier}
           >

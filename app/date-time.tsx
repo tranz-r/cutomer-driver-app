@@ -140,13 +140,13 @@ export default function DateTimeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#4f46e5" />
-      <View className="bg-indigo-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Date & Time
           </Text>
-          <Text className="text-sm text-indigo-200">
+          <Text className="text-sm text-white">
             Select your preferred moving date, duration, and time slot.
           </Text>
         </View>
@@ -293,7 +293,8 @@ export default function DateTimeScreen() {
           </View>
 
           <TouchableOpacity
-            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg bg-indigo-600"
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handleContinue}
           >
             <Text className="text-white text-center font-bold text-lg mr-2">

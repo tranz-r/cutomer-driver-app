@@ -80,13 +80,13 @@ export default function ItemDetectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#059669" />
-      <View className="bg-emerald-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Inventory Options Capture
           </Text>
-          <Text className="text-sm text-emerald-200">
+          <Text className="text-sm text-white">
             Choose how you want to build your inventory
           </Text>
         </View>
@@ -203,7 +203,8 @@ export default function ItemDetectionScreen() {
                   <DetectedItemsList />
 
                   <TouchableOpacity
-                    className="mt-8 py-4 px-6 rounded-xl bg-blue-600 flex-row justify-center items-center"
+                    className="mt-8 py-4 px-6 rounded-xl flex-row justify-center items-center"
+                    style={{ backgroundColor: "#70AECC" }}
                     onPress={handleContinueToVanSelection}
                   >
                     <Text className="text-white text-center font-semibold text-lg mr-2">

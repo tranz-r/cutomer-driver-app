@@ -71,15 +71,15 @@ export default function SuccessScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#059669" translucent={false} />
+      <StatusBar style="light" backgroundColor="#7080cc" translucent={false} />
 
       {/* Header */}
-      <View className="bg-emerald-600 pt-24 pb-6">
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Complete
           </Text>
-          <Text className="text-sm text-emerald-200">
+          <Text className="text-sm text-white">
             Your move has been successfully confirmed
           </Text>
         </View>
@@ -184,7 +184,8 @@ export default function SuccessScreen() {
             {/* Action Buttons */}
             <View className="w-full space-y-3">
               <TouchableOpacity
-                className="bg-blue-600 py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg mb-4"
+                className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg mb-4"
+                style={{ backgroundColor: "#70AECC" }}
                 onPress={handleGoToDashboard}
               >
                 <Text className="text-white font-semibold text-lg mr-2">

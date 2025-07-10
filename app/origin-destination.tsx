@@ -179,13 +179,13 @@ export default function OriginDestinationScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#0891b2" />
-      <View className="bg-cyan-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Origin & Destination
           </Text>
-          <Text className="text-sm text-cyan-200">
+          <Text className="text-sm text-white">
             Enter your pickup and delivery addresses to calculate the route and
             costs.
           </Text>
@@ -1033,11 +1033,8 @@ export default function OriginDestinationScreen() {
 
           {/* Continue Button */}
           <TouchableOpacity
-            className={`py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg ${
-              originSelectedAddress && destinationSelectedAddress
-                ? "bg-cyan-600"
-                : "bg-gray-300"
-            }`}
+            className="py-5 px-8 rounded-2xl flex-row justify-center items-center shadow-lg"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handleContinue}
             disabled={!originSelectedAddress || !destinationSelectedAddress}
           >

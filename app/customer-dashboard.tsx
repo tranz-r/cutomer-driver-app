@@ -512,17 +512,17 @@ export default function CustomerDashboard() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <StatusBar style="light" backgroundColor="#1e40af" translucent={false} />
+      <StatusBar style="light" backgroundColor="#7080cc" />
 
       {/* Header */}
-      <View className="bg-blue-600 pt-24 pb-8">
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-8">
         <View className="px-4">
           <View className="flex-row justify-between items-center mb-4">
             <View className="flex-1">
               <Text className="text-2xl font-bold text-white mb-2">
                 Hello, {user.name.split(" ")[0]}! 👋
               </Text>
-              <Text className="text-sm text-blue-100">
+              <Text className="text-sm text-white">
                 Manage your bookings and account
               </Text>
             </View>
@@ -635,7 +635,8 @@ export default function CustomerDashboard() {
               {activeTab === "history" && "Your move history will appear here."}
             </Text>
             <TouchableOpacity
-              className="bg-blue-500 px-6 py-3 rounded-xl"
+              className="bg-[#70AECC] px-6 py-3 rounded-xl"
+              style={{ backgroundColor: "#70AECC" }}
               onPress={() => {
                 try {
                   navigation.push("/item-detection");
@@ -652,7 +653,8 @@ export default function CustomerDashboard() {
 
       {/* Floating Action Button */}
       <TouchableOpacity
-        className="absolute bottom-6 right-4 bg-blue-500 rounded-xl shadow-lg flex-row items-center px-4 py-3"
+        className="absolute bottom-6 right-4 rounded-xl shadow-lg flex-row items-center px-4 py-3"
+        style={{ backgroundColor: "#70AECC" }}
         onPress={() => {
           try {
             navigation.push("/item-detection");

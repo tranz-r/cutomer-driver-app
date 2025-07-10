@@ -122,13 +122,13 @@ export default function VanSelectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#ea580c" />
-      <View className="bg-orange-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-6">
           <Text className="text-2xl font-bold text-white mb-1">
             Select Van & Crew
           </Text>
-          <Text className="text-sm text-orange-200">
+          <Text className="text-sm text-white">
             Choose the right van size and crew for your move.
           </Text>
         </View>
@@ -302,13 +302,11 @@ export default function VanSelectionScreen() {
           )}
 
           <TouchableOpacity
-            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${
-              selectedVan ? "bg-orange-600" : "bg-gray-300"
-            }`}
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handleContinueToLocation}
-            disabled={!selectedVan}
           >
-            <Text className="text-white text-center font-bold text-lg mr-2">
+            <Text className="text-white text-center font-semibold text-lg mr-2">
               Continue
             </Text>
             <ChevronRight size={20} color="white" />

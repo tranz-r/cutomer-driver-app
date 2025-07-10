@@ -66,13 +66,13 @@ export default function SummaryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#475569" />
-      <View className="bg-slate-600 pt-24 pb-6">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
           </Text>
-          <Text className="text-sm text-slate-200">
+          <Text className="text-sm text-white">
             Review your booking details before completing your reservation.
           </Text>
         </View>
@@ -250,7 +250,8 @@ export default function SummaryScreen() {
 
           {/* Complete Booking Button */}
           <TouchableOpacity
-            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg bg-slate-600"
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handleCompleteBooking}
           >
             <Text className="text-white text-center font-bold text-lg mr-2">

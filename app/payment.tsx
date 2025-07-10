@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   CheckCircle,
   Smartphone,
+  ChevronRight,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -176,10 +177,10 @@ export default function PaymentScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="dark" />
+      <StatusBar style="light" backgroundColor="#7080cc" />
 
       {/* Header */}
-      <View className="bg-blue-600 pt-24 pb-6">
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <View className="flex-row items-center">
             <TouchableOpacity
@@ -481,32 +482,14 @@ export default function PaymentScreen() {
 
           {/* Pay Button */}
           <TouchableOpacity
-            className={`py-4 px-6 rounded-xl flex-row justify-center items-center ${
-              isProcessing ? "bg-gray-400" : "bg-green-600"
-            }`}
+            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            style={{ backgroundColor: "#70AECC" }}
             onPress={handlePayment}
-            disabled={isProcessing}
           >
-            {isProcessing ? (
-              <Text className="text-white font-semibold text-lg">
-                {paymentMethod === "apple"
-                  ? "Processing Apple Pay..."
-                  : paymentMethod === "google"
-                    ? "Processing Google Pay..."
-                    : "Processing Payment..."}
-              </Text>
-            ) : (
-              <>
-                <CheckCircle size={22} color="white" />
-                <Text className="text-white font-semibold text-lg ml-2">
-                  {paymentMethod === "apple"
-                    ? `Pay with Apple Pay £${bookingData.total}`
-                    : paymentMethod === "google"
-                      ? `Pay with Google Pay £${bookingData.total}`
-                      : `Pay £${bookingData.total}`}
-                </Text>
-              </>
-            )}
+            <Text className="text-white text-center font-bold text-lg mr-2">
+              Pay Now
+            </Text>
+            <ChevronRight size={20} color="white" />
           </TouchableOpacity>
 
           <Text className="text-xs text-gray-500 text-center mt-4 leading-relaxed">
