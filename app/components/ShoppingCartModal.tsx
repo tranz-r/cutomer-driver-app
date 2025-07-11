@@ -122,8 +122,8 @@ const ShoppingCartModal = ({ visible, onClose }: ShoppingCartModalProps) => {
                             <Text className="text-sm font-bold text-blue-700 mb-2">
                               Dimensions (cm):
                             </Text>
-                            <View className="flex-row space-x-2">
-                              <View className="flex-1">
+                            <View className="flex-row justify-between">
+                              <View className="flex-1 mr-2">
                                 <Text className="text-xs text-blue-600 mb-1">
                                   Height
                                 </Text>
@@ -141,7 +141,7 @@ const ShoppingCartModal = ({ visible, onClose }: ShoppingCartModalProps) => {
                                   placeholder="0"
                                 />
                               </View>
-                              <View className="flex-1">
+                              <View className="flex-1 mx-1">
                                 <Text className="text-xs text-blue-600 mb-1">
                                   Width
                                 </Text>
@@ -159,7 +159,7 @@ const ShoppingCartModal = ({ visible, onClose }: ShoppingCartModalProps) => {
                                   placeholder="0"
                                 />
                               </View>
-                              <View className="flex-1">
+                              <View className="flex-1 ml-2">
                                 <Text className="text-xs text-blue-600 mb-1">
                                   Length
                                 </Text>
