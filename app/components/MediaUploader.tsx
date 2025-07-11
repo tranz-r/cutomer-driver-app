@@ -16,6 +16,7 @@ import {
   X,
   Play,
   Eye,
+  ChevronRight,
 } from "lucide-react-native";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
@@ -29,11 +30,15 @@ interface MediaItem {
 interface MediaUploaderProps {
   onMediaCaptured?: (media: MediaItem[]) => void;
   isProcessing?: boolean;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 const MediaUploader = ({
   onMediaCaptured = () => {},
   isProcessing = false,
+  isCollapsed = false,
+  onToggleCollapse = () => {},
 }: MediaUploaderProps) => {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([
     // Default items for demonstration
@@ -141,21 +146,63 @@ const MediaUploader = ({
     setShowMediaModal(true);
   };
 
+  if (isCollapsed) {
+    return (
+      <TouchableOpacity
+        className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 w-full mb-4"
+        onPress={onToggleCollapse}
+      >
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center">
+            <View className="bg-blue-100 p-2 rounded-full mr-3">
+              <Camera size={20} color="#3b82f6" />
+            </View>
+            <View>
+              <Text className="text-lg font-bold text-gray-900">
+                Capture Your Items
+              </Text>
+              <Text className="text-sm text-gray-500">
+                {mediaItems.length} media file
+                {mediaItems.length !== 1 ? "s" : ""} uploaded
+              </Text>
+            </View>
+          </View>
+          <View className="flex-row items-center">
+            <Text className="text-blue-600 font-medium mr-2">Expand</Text>
+            <ChevronRight
+              size={20}
+              color="#3b82f6"
+              style={{ transform: [{ rotate: "-90deg" }] }}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 w-full">
       {/* Header Section */}
-      <View className="flex-row items-center mb-4">
-        <View className="bg-blue-100 p-2 rounded-full mr-3">
-          <Camera size={20} color="#3b82f6" />
+      <View className="flex-row items-center justify-between mb-4">
+        <View className="flex-row items-center">
+          <View className="bg-blue-100 p-2 rounded-full mr-3">
+            <Camera size={20} color="#3b82f6" />
+          </View>
+          <View>
+            <Text className="text-xl font-bold text-gray-900">
+              Capture Your Items
+            </Text>
+            <Text className="text-xs text-gray-500">
+              AI-powered media capture
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text className="text-xl font-bold text-gray-900">
-            Capture Your Items
-          </Text>
-          <Text className="text-xs text-gray-500">
-            AI-powered media capture
-          </Text>
-        </View>
+        <TouchableOpacity
+          onPress={onToggleCollapse}
+          className="bg-blue-50 px-3 py-1 rounded-lg"
+        >
+          <Text className="text-blue-700 font-semibold text-sm">Collapse</Text>
+        </TouchableOpacity>
       </View>
 
       <Text className="text-sm text-gray-600 text-center leading-relaxed mb-6">
@@ -230,6 +277,15 @@ const MediaUploader = ({
             </Text>
           </View>
         </View>
+      </View>
+
+      {/* Important information */}
+      <View className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4">
+        <Text className="text-orange-800 text-sm text-center font-medium">
+          ⚠️ Important: Make sure all items are clearly visible in your
+          photos/videos. Smart Detection cannot identify items hidden behind
+          other objects. You can manually add any missed items after detection.
+        </Text>
       </View>
 
       {/* Media preview section */}

@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ChevronRight } from "lucide-react-native";
+import { ChevronRight, Camera } from "lucide-react-native";
 import { router } from "expo-router";
 import MediaUploader from "./components/MediaUploader";
 import DetectedItemsList from "./components/DetectedItemsList";
@@ -34,6 +34,8 @@ export default function ItemDetectionScreen() {
     useState("Detecting items...");
   const [showMediaUpload, setShowMediaUpload] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [isMediaUploaderCollapsed, setIsMediaUploaderCollapsed] =
+    useState(false);
   const { addItem } = useCart();
 
   const handleDetectItems = () => {
@@ -64,6 +66,7 @@ export default function ItemDetectionScreen() {
         setTimeout(() => {
           setIsProcessing(false);
           setShowDetectedItems(true);
+          setIsMediaUploaderCollapsed(true);
         }, 500);
       }
     }, 600);
@@ -74,6 +77,7 @@ export default function ItemDetectionScreen() {
     // Reset detection state when media changes
     if (showDetectedItems) {
       setShowDetectedItems(false);
+      setIsMediaUploaderCollapsed(false);
     }
   };
 
@@ -183,16 +187,11 @@ export default function ItemDetectionScreen() {
               <MediaUploader
                 onMediaCaptured={handleMediaCaptured}
                 isProcessing={isProcessing}
+                isCollapsed={isMediaUploaderCollapsed}
+                onToggleCollapse={() =>
+                  setIsMediaUploaderCollapsed(!isMediaUploaderCollapsed)
+                }
               />
-
-              <View className="bg-orange-50 border border-orange-200 rounded-xl p-4 mt-4">
-                <Text className="text-orange-800 text-sm text-center font-medium">
-                  ⚠️ Important: Make sure all items are clearly visible in your
-                  photos/videos. Smart Detection cannot identify items hidden
-                  behind other objects. You can manually add any missed items
-                  after detection.
-                </Text>
-              </View>
 
               {!isProcessing && !showDetectedItems && (
                 <TouchableOpacity
