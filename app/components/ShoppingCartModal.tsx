@@ -53,16 +53,17 @@ const ShoppingCartModal = ({ visible, onClose }: ShoppingCartModalProps) => {
   return (
     <Modal
       visible={visible}
-      transparent={true}
+      transparent={false}
       animationType="slide"
       onRequestClose={onClose}
     >
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ paddingTop: Platform.OS === "ios" ? 44 : 24 }}
       >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-2xl max-h-[90%] flex-1">
+        <View className="flex-1 bg-white">
+          <View className="bg-white flex-1">
             {/* Header */}
             <View className="flex-row items-center justify-between p-4 border-b border-gray-200">
               <View className="flex-row items-center">
