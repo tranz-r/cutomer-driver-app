@@ -12,6 +12,8 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { ChevronRight, Truck, Users, X, Package } from "lucide-react-native";
 import { router } from "expo-router";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 type VanType = {
   id: string;
@@ -37,6 +39,7 @@ export default function VanSelectionScreen() {
     null,
   );
   const [lastTap, setLastTap] = useState<number>(0);
+  const [showCartModal, setShowCartModal] = useState(false);
 
   const vanTypes: VanType[] = [
     {
@@ -124,13 +127,16 @@ export default function VanSelectionScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-6">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Select Van & Crew
-          </Text>
-          <Text className="text-sm text-white">
-            Choose the right van size and crew for your move.
-          </Text>
+        <View className="px-6 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Select Van & Crew
+            </Text>
+            <Text className="text-sm text-white">
+              Choose the right van size and crew for your move.
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -836,6 +842,11 @@ export default function VanSelectionScreen() {
           </View>
         </View>
       </Modal>
+
+      <ShoppingCartModal
+        visible={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </SafeAreaView>
   );
 }

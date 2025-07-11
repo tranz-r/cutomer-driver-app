@@ -19,6 +19,8 @@ import {
   Circle,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 export default function CustomerDetailsScreen() {
   const [customerName, setCustomerName] = useState("");
@@ -33,6 +35,7 @@ export default function CustomerDetailsScreen() {
   const [sameAsCustomerCollection, setSameAsCustomerCollection] =
     useState(true);
   const [sameAsCustomerDelivery, setSameAsCustomerDelivery] = useState(true);
+  const [showCartModal, setShowCartModal] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -273,13 +276,16 @@ export default function CustomerDetailsScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Contact Details
-          </Text>
-          <Text className="text-sm text-white">
-            Please provide contact information for your move
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Contact Details
+            </Text>
+            <Text className="text-sm text-white">
+              Please provide contact information for your move
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -378,6 +384,11 @@ export default function CustomerDetailsScreen() {
         </View>
       </ScrollView>
       <View className="h-8" />
+
+      <ShoppingCartModal
+        visible={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </SafeAreaView>
   );
 }

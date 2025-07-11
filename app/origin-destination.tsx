@@ -22,6 +22,8 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 type FloorOption = {
   value: string;
@@ -73,6 +75,7 @@ export default function OriginDestinationScreen() {
     useState(false);
   const [showDestinationAddressDropdown, setShowDestinationAddressDropdown] =
     useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -181,14 +184,17 @@ export default function OriginDestinationScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Origin & Destination
-          </Text>
-          <Text className="text-sm text-white">
-            Enter your pickup and delivery addresses to calculate the route and
-            costs.
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Origin & Destination
+            </Text>
+            <Text className="text-sm text-white">
+              Enter your pickup and delivery addresses to calculate the route
+              and costs.
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -1142,6 +1148,11 @@ export default function OriginDestinationScreen() {
           </View>
         </View>
       </Modal>
+
+      <ShoppingCartModal
+        visible={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </SafeAreaView>
   );
 }

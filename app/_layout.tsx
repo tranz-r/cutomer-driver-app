@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import { Platform } from "react-native";
+import { CartProvider } from "./contexts/CartContext";
 
 // Mock document for Hermes engine compatibility
 if (typeof document === "undefined") {
@@ -62,38 +63,46 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack
-        screenOptions={({ route }) => ({
-          headerShown: !route.name.startsWith("tempobook"),
-        })}
-      >
-        <Stack.Screen name="splash" options={{ headerShown: false }} />
-        <Stack.Screen name="landing" options={{ headerShown: false }} />
-        <Stack.Screen name="item-detection" options={{ headerShown: false }} />
-        <Stack.Screen name="build-inventory" options={{ headerShown: false }} />
-        <Stack.Screen name="van-selection" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="origin-destination"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="date-time" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="customer-details"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="pricing-tier" options={{ headerShown: false }} />
-        <Stack.Screen name="summary" options={{ headerShown: false }} />
-        <Stack.Screen name="auth" options={{ headerShown: false }} />
-        <Stack.Screen name="payment" options={{ headerShown: false }} />
-        <Stack.Screen name="success" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="customer-dashboard"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <CartProvider>
+      <ThemeProvider value={DefaultTheme}>
+        <Stack
+          screenOptions={({ route }) => ({
+            headerShown: !route.name.startsWith("tempobook"),
+          })}
+        >
+          <Stack.Screen name="splash" options={{ headerShown: false }} />
+          <Stack.Screen name="landing" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="item-detection"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="build-inventory"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="van-selection" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="origin-destination"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="date-time" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="customer-details"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="pricing-tier" options={{ headerShown: false }} />
+          <Stack.Screen name="summary" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="payment" options={{ headerShown: false }} />
+          <Stack.Screen name="success" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="customer-dashboard"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </CartProvider>
   );
 }

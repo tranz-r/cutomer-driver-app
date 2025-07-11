@@ -15,6 +15,9 @@ import ProcessingIndicator from "./components/ProcessingIndicator";
 import VanSvg from "./components/VanSvg";
 import InventorySvg from "./components/InventorySvg";
 import SmartDetectionSvg from "./components/SmartDetectionSvg";
+import { useCart } from "./contexts/CartContext";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 interface MediaItem {
   uri: string;
@@ -30,6 +33,8 @@ export default function ItemDetectionScreen() {
   const [processingMessage, setProcessingMessage] =
     useState("Detecting items...");
   const [showMediaUpload, setShowMediaUpload] = useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const { addItem } = useCart();
 
   const handleDetectItems = () => {
     if (mediaItems.length === 0) return;
@@ -82,13 +87,16 @@ export default function ItemDetectionScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Inventory Options Capture
-          </Text>
-          <Text className="text-sm text-white">
-            Choose how you want to build your inventory
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Inventory Options Capture
+            </Text>
+            <Text className="text-sm text-white">
+              Choose how you want to build your inventory
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -109,8 +117,12 @@ export default function ItemDetectionScreen() {
                   activeOpacity={0.85}
                 >
                   <View className="flex-1 pr-4">
-                    <Text className="text-lg font-bold text-blue-700 mb-1">Yes, Skip to Van Selection</Text>
-                    <Text className="text-gray-500 text-sm">I already know what van size I need</Text>
+                    <Text className="text-lg font-bold text-blue-700 mb-1">
+                      Yes, Skip to Van Selection
+                    </Text>
+                    <Text className="text-gray-500 text-sm">
+                      I already know what van size I need
+                    </Text>
                   </View>
                   <VanSvg width={96} height={56} />
                   <ChevronRight size={28} color="#3b82f6" />
@@ -124,8 +136,12 @@ export default function ItemDetectionScreen() {
                   activeOpacity={0.85}
                 >
                   <View className="flex-1 pr-4">
-                    <Text className="text-lg font-bold text-purple-700 mb-1">Build Item Inventory</Text>
-                    <Text className="text-gray-500 text-sm">Search and add items from our database</Text>
+                    <Text className="text-lg font-bold text-purple-700 mb-1">
+                      Build Item Inventory
+                    </Text>
+                    <Text className="text-gray-500 text-sm">
+                      Search and add items from our database
+                    </Text>
                   </View>
                   <InventorySvg width={96} height={56} />
                   <ChevronRight size={28} color="#a21caf" />
@@ -139,8 +155,12 @@ export default function ItemDetectionScreen() {
                   activeOpacity={0.85}
                 >
                   <View className="flex-1 pr-4">
-                    <Text className="text-lg font-bold text-emerald-700 mb-1">Use Tranzr Smart Detection</Text>
-                    <Text className="text-gray-500 text-sm">Upload photos/videos to get accurate sizing</Text>
+                    <Text className="text-lg font-bold text-emerald-700 mb-1">
+                      Use Tranzr Smart Detection
+                    </Text>
+                    <Text className="text-gray-500 text-sm">
+                      Upload photos/videos to get accurate sizing
+                    </Text>
                   </View>
                   <SmartDetectionSvg width={96} height={56} />
                   <ChevronRight size={28} color="#059669" />
@@ -200,7 +220,18 @@ export default function ItemDetectionScreen() {
 
               {showDetectedItems && (
                 <View className="mt-6">
-                  <DetectedItemsList />
+                  <DetectedItemsList
+                    onAddItem={(item) => {
+                      addItem({
+                        id: item.id,
+                        name: item.name,
+                        height: item.height,
+                        width: item.width,
+                        length: item.length,
+                        volume: item.volume,
+                      });
+                    }}
+                  />
 
                   <TouchableOpacity
                     className="mt-8 py-4 px-6 rounded-xl flex-row justify-center items-center"
@@ -214,6 +245,11 @@ export default function ItemDetectionScreen() {
                   </TouchableOpacity>
                 </View>
               )}
+
+              <ShoppingCartModal
+                visible={showCartModal}
+                onClose={() => setShowCartModal(false)}
+              />
             </View>
           )}
         </View>

@@ -24,6 +24,9 @@ import {
 } from "lucide-react-native";
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
+import { useCart } from "./contexts/CartContext";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 type Item = {
   id: string;
@@ -42,6 +45,8 @@ export default function BuildInventoryScreen() {
     [key: string]: number;
   }>({});
   const [isEditing, setIsEditing] = useState<string | null>(null);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const { addItem } = useCart();
 
   // Helper function to get dimensions from item data
   const getItemDimensions = (item: any) => {
@@ -181,13 +186,16 @@ export default function BuildInventoryScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Build Your Inventory
-          </Text>
-          <Text className="text-sm text-white">
-            Search and add items from our database
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Build Your Inventory
+            </Text>
+            <Text className="text-sm text-white">
+              Search and add items from our database
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -325,7 +333,20 @@ export default function BuildInventoryScreen() {
 
                             <TouchableOpacity
                               className="bg-purple-500 px-6 py-4 rounded-lg shadow-sm min-w-[100px] min-h-[48px] items-center justify-center"
-                              onPress={() => handleSelectItem(item)}
+                              onPress={() => {
+                                handleSelectItem(item);
+                                // Also add to cart
+                                for (let i = 0; i < quantity; i++) {
+                                  addItem({
+                                    id: `${Date.now()}-${i}`,
+                                    name: item.name,
+                                    height: dimensions.height,
+                                    width: dimensions.width,
+                                    length: dimensions.length,
+                                    volume: item.volume_m3 || 0,
+                                  });
+                                }
+                              }}
                             >
                               <Text className="text-white font-bold text-base">
                                 Add {quantity > 1 ? `(${quantity})` : ""}
@@ -575,6 +596,11 @@ export default function BuildInventoryScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
       <View className="h-8" />
+
+      <ShoppingCartModal
+        visible={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </SafeAreaView>
   );
 }

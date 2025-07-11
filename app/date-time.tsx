@@ -18,6 +18,8 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import ShoppingCartIcon from "./components/ShoppingCartIcon";
+import ShoppingCartModal from "./components/ShoppingCartModal";
 
 type TimeSlot = {
   id: string;
@@ -32,6 +34,7 @@ export default function DateTimeScreen() {
   const [isFlexibleTime, setIsFlexibleTime] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showHoursPicker, setShowHoursPicker] = useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
 
   const timeSlots: TimeSlot[] = [
     { id: "morning", time: "8:00 - 12:00", period: "Morning" },
@@ -142,13 +145,16 @@ export default function DateTimeScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Date & Time
-          </Text>
-          <Text className="text-sm text-white">
-            Select your preferred moving date, duration, and time slot.
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Date & Time
+            </Text>
+            <Text className="text-sm text-white">
+              Select your preferred moving date, duration, and time slot.
+            </Text>
+          </View>
+          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -464,6 +470,11 @@ export default function DateTimeScreen() {
           </View>
         </View>
       </Modal>
+
+      <ShoppingCartModal
+        visible={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </SafeAreaView>
   );
 }

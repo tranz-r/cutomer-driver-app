@@ -22,6 +22,7 @@ import {
   ChevronRight,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import { useCart } from "./contexts/CartContext";
 
 export default function PaymentScreen() {
   const [cardNumber, setCardNumber] = useState("");
@@ -33,6 +34,7 @@ export default function PaymentScreen() {
   const [paymentMethod, setPaymentMethod] = useState<
     "card" | "apple" | "google"
   >("card");
+  const { clearCart } = useCart();
 
   // Mock booking data - in real app this would come from state/props
   const bookingData = {
@@ -150,7 +152,8 @@ export default function PaymentScreen() {
 
       if (paymentResult.success) {
         setIsProcessing(false);
-        // Generate booking confirmation number and pass to success page
+        // Clear cart and generate booking confirmation number
+        clearCart();
         const confirmationNumber = "TRZ" + Date.now().toString().slice(-6);
         router.replace(`/success?confirmation=${confirmationNumber}`);
       } else {
