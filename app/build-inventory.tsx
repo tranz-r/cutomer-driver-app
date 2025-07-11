@@ -21,6 +21,7 @@ import {
   Star,
   Trash2,
   Edit,
+  Camera,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
@@ -49,7 +50,8 @@ export default function BuildInventoryScreen() {
   const [confirmationMessage, setConfirmationMessage] = useState<string | null>(
     null,
   );
-  const { addItem } = useCart();
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { addItem, getTotalItems } = useCart();
 
   // Helper function to get dimensions from item data
   const getItemDimensions = (item: any) => {
@@ -181,7 +183,7 @@ export default function BuildInventoryScreen() {
     .toFixed(2);
 
   const handleContinueToVanSelection = () => {
-    console.log("Navigating to van-selection with inventory:", items);
+    console.log("Navigating to van-selection...");
     router.push("/van-selection");
   };
 
@@ -226,6 +228,8 @@ export default function BuildInventoryScreen() {
                     placeholderTextColor="#9CA3AF"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setIsSearchFocused(false)}
                   />
                   {searchQuery.length > 0 && (
                     <TouchableOpacity
@@ -237,21 +241,40 @@ export default function BuildInventoryScreen() {
                   )}
                 </View>
 
-                {/* Search Stats */}
-                {searchQuery.length > 0 && (
-                  <View className="mt-2 px-2">
-                    <View className="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                      <Text className="text-sm font-bold text-purple-800">
-                        Found {filteredItems.length} items matching "
-                        {searchQuery}"
+                {/* Smart Detection Button - Only show when not typing */}
+                {!isSearchFocused && searchQuery.length === 0 && (
+                  <View className="mt-4">
+                    <TouchableOpacity
+                      className="bg-blue-500 px-6 py-4 rounded-xl flex-row items-center justify-center shadow-sm"
+                      onPress={() => router.push("/smart-detection")}
+                      chris
+                    >
+                      <Camera size={20} color="white" className="mr-2" />
+                      <Text className="text-white font-bold text-base ml-2">
+                        Smart Detection
                       </Text>
-                      <Text className="text-xs text-purple-600 mt-1">
-                        💡 Scroll down to see all available options
-                      </Text>
-                    </View>
+                    </TouchableOpacity>
+                    <Text className="text-gray-500 text-sm text-center mt-2">
+                      Use AI to detect items from photos
+                    </Text>
                   </View>
                 )}
               </View>
+
+              {/* Search Stats */}
+              {searchQuery.length > 0 && (
+                <View className="mt-2 px-2">
+                  <View className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                    <Text className="text-sm font-bold text-purple-800">
+                      Found {filteredItems.length} items matching "{searchQuery}
+                      "
+                    </Text>
+                    <Text className="text-xs text-purple-600 mt-1">
+                      💡 Scroll down to see all available options
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
 
             {/* Search Results */}
@@ -377,15 +400,23 @@ export default function BuildInventoryScreen() {
         {/* Fixed Continue Button at Bottom */}
         <View className="px-4 pb-8 pt-4 bg-white border-t border-gray-100">
           <TouchableOpacity
-            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${
+              getTotalItems() === 0 ? "opacity-50" : ""
+            }`}
             style={{ backgroundColor: "#70AECC" }}
             onPress={handleContinueToVanSelection}
+            disabled={getTotalItems() === 0}
           >
             <Text className="text-white text-center font-semibold text-lg mr-2">
-              Continue to Van Selection
+              Continue
             </Text>
             <ChevronRight size={20} color="white" />
           </TouchableOpacity>
+          {getTotalItems() === 0 && (
+            <Text className="text-gray-500 text-sm text-center mt-2">
+              Add items to your cart to continue
+            </Text>
+          )}
         </View>
       </KeyboardAvoidingView>
 

@@ -80,6 +80,10 @@ export default function RootLayout() {
             name="build-inventory"
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="smart-detection"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="van-selection" options={{ headerShown: false }} />
           <Stack.Screen
             name="origin-destination"
