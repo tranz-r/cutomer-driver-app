@@ -23,8 +23,8 @@ import {
   Info,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import ShoppingCartIcon from "./components/ShoppingCartIcon";
-import ShoppingCartModal from "./components/ShoppingCartModal";
+import InventoryCartIcon from "./components/InventoryCartIcon";
+import InventoryCartModal from "./components/InventoryCartModal";
 
 type PricingTier = {
   id: string;
@@ -50,7 +50,7 @@ export default function PricingTierScreen() {
     name: string;
     info: string;
   } | null>(null);
-  const [showCartModal, setShowCartModal] = useState(false);
+  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
 
   const pricingTiers: PricingTier[] = [
     {
@@ -321,7 +321,7 @@ export default function PricingTierScreen() {
               Select the service level that best fits your needs
             </Text>
           </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
         </View>
       </View>
 
@@ -441,9 +441,9 @@ export default function PricingTierScreen() {
         </View>
       </Modal>
 
-      <ShoppingCartModal
-        visible={showCartModal}
-        onClose={() => setShowCartModal(false)}
+      <InventoryCartModal
+        visible={showInventoryCartModal}
+        onClose={() => setShowInventoryCartModal(false)}
       />
     </SafeAreaView>
   );

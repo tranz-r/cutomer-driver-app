@@ -30,7 +30,7 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = "@tranzr_cart";
+const CART_STORAGE_KEY = "@tranzr_inventory_cart";
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -52,7 +52,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         setItems(JSON.parse(storedCart));
       }
     } catch (error) {
-      console.error("Error loading cart from storage:", error);
+      console.error("Error loading inventory cart from storage:", error);
     }
   };
 
@@ -60,7 +60,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     try {
       await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     } catch (error) {
-      console.error("Error saving cart to storage:", error);
+      console.error("Error saving inventory cart to storage:", error);
     }
   };
 

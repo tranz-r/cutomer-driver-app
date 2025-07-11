@@ -68,6 +68,7 @@ export default function CustomerDashboard() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [additionalHours, setAdditionalHours] = useState("1");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
 
   // Mock user data
   const user = {
@@ -841,6 +842,13 @@ export default function CustomerDashboard() {
           </View>
         </View>
       </Modal>
+
+      {/* Inventory Cart Modal */}
+      <InventoryCartModal
+        visible={showInventoryCartModal}
+        onClose={() => setShowInventoryCartModal(false)}
+      />
+
       <View className="h-8" />
     </SafeAreaView>
   );

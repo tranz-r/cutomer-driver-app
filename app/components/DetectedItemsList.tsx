@@ -175,7 +175,7 @@ const DetectedItemsList = ({
         >
           <ShoppingCart size={16} color="white" />
           <Text className="text-white font-bold text-sm ml-2">
-            {items.length} items added to cart!
+            {items.length} items added to inventory cart!
           </Text>
         </Animated.View>
       )}
@@ -194,7 +194,7 @@ const DetectedItemsList = ({
             </Text>
             <Text className="text-xs text-gray-500">
               {autoAddToCart
-                ? "Auto-adding to cart..."
+                ? "Auto-adding to inventory cart..."
                 : "AI-powered item recognition"}
             </Text>
           </View>
@@ -224,7 +224,7 @@ const DetectedItemsList = ({
                   </Text>
                   <Text className="text-green-700 text-sm">
                     All detected items have been automatically added to your
-                    cart
+                    inventory cart
                   </Text>
                   <Text className="text-green-600 text-xs mt-1">
                     Total Volume: {totalVolume} m³

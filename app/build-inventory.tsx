@@ -26,8 +26,8 @@ import {
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
 import { useCart } from "./contexts/CartContext";
-import ShoppingCartIcon from "./components/ShoppingCartIcon";
-import ShoppingCartModal from "./components/ShoppingCartModal";
+import InventoryCartIcon from "./components/InventoryCartIcon";
+import InventoryCartModal from "./components/InventoryCartModal";
 
 type Item = {
   id: string;
@@ -46,7 +46,7 @@ export default function BuildInventoryScreen() {
     [key: string]: number;
   }>({});
   const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [showCartModal, setShowCartModal] = useState(false);
+  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState<string | null>(
     null,
   );
@@ -200,7 +200,7 @@ export default function BuildInventoryScreen() {
               Search and add items from our database
             </Text>
           </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
         </View>
       </View>
 
@@ -361,7 +361,7 @@ export default function BuildInventoryScreen() {
                               className="bg-purple-500 px-6 py-4 rounded-lg shadow-sm min-w-[100px] min-h-[48px] items-center justify-center"
                               onPress={() => {
                                 handleSelectItem(item);
-                                // Also add to cart
+                                // Also add to inventory cart
                                 for (let i = 0; i < quantity; i++) {
                                   addItem({
                                     id: `${Date.now()}-${i}`,
@@ -374,7 +374,7 @@ export default function BuildInventoryScreen() {
                                 }
                                 // Show confirmation message
                                 setConfirmationMessage(
-                                  `Added ${quantity} ${item.name}${quantity > 1 ? "s" : ""} to cart`,
+                                  `Added ${quantity} ${item.name}${quantity > 1 ? "s" : ""} to inventory cart`,
                                 );
                                 setTimeout(
                                   () => setConfirmationMessage(null),
@@ -414,7 +414,7 @@ export default function BuildInventoryScreen() {
           </TouchableOpacity>
           {getTotalItems() === 0 && (
             <Text className="text-gray-500 text-sm text-center mt-2">
-              Add items to your cart to continue
+              Add items to your inventory cart to continue
             </Text>
           )}
         </View>
@@ -431,9 +431,9 @@ export default function BuildInventoryScreen() {
         </View>
       )}
 
-      <ShoppingCartModal
-        visible={showCartModal}
-        onClose={() => setShowCartModal(false)}
+      <InventoryCartModal
+        visible={showInventoryCartModal}
+        onClose={() => setShowInventoryCartModal(false)}
       />
     </SafeAreaView>
   );

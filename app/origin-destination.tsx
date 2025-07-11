@@ -22,8 +22,8 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import ShoppingCartIcon from "./components/ShoppingCartIcon";
-import ShoppingCartModal from "./components/ShoppingCartModal";
+import InventoryCartIcon from "./components/InventoryCartIcon";
+import InventoryCartModal from "./components/InventoryCartModal";
 
 type FloorOption = {
   value: string;
@@ -75,7 +75,7 @@ export default function OriginDestinationScreen() {
     useState(false);
   const [showDestinationAddressDropdown, setShowDestinationAddressDropdown] =
     useState(false);
-  const [showCartModal, setShowCartModal] = useState(false);
+  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -193,7 +193,7 @@ export default function OriginDestinationScreen() {
               Enter your pickup and delivery addresses.
             </Text>
           </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
         </View>
       </View>
 
@@ -1148,9 +1148,9 @@ export default function OriginDestinationScreen() {
         </View>
       </Modal>
 
-      <ShoppingCartModal
-        visible={showCartModal}
-        onClose={() => setShowCartModal(false)}
+      <InventoryCartModal
+        visible={showInventoryCartModal}
+        onClose={() => setShowInventoryCartModal(false)}
       />
     </SafeAreaView>
   );

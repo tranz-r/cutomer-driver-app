@@ -19,8 +19,8 @@ import {
   Circle,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import ShoppingCartIcon from "./components/ShoppingCartIcon";
-import ShoppingCartModal from "./components/ShoppingCartModal";
+import InventoryCartIcon from "./components/InventoryCartIcon";
+import InventoryCartModal from "./components/InventoryCartModal";
 
 export default function CustomerDetailsScreen() {
   const [customerName, setCustomerName] = useState("");
@@ -33,9 +33,9 @@ export default function CustomerDetailsScreen() {
   const [deliveryEmail, setDeliveryEmail] = useState("");
   const [deliveryPhone, setDeliveryPhone] = useState("+44 ");
   const [sameAsCustomerCollection, setSameAsCustomerCollection] =
-    useState(true);
-  const [sameAsCustomerDelivery, setSameAsCustomerDelivery] = useState(true);
-  const [showCartModal, setShowCartModal] = useState(false);
+    useState(false);
+  const [sameAsCustomerDelivery, setSameAsCustomerDelivery] = useState(false);
+  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -285,7 +285,7 @@ export default function CustomerDetailsScreen() {
               Please provide contact information for your move
             </Text>
           </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
         </View>
       </View>
 
@@ -385,9 +385,9 @@ export default function CustomerDetailsScreen() {
       </ScrollView>
       <View className="h-8" />
 
-      <ShoppingCartModal
-        visible={showCartModal}
-        onClose={() => setShowCartModal(false)}
+      <InventoryCartModal
+        visible={showInventoryCartModal}
+        onClose={() => setShowInventoryCartModal(false)}
       />
     </SafeAreaView>
   );

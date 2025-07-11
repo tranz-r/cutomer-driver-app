@@ -6,8 +6,9 @@ import MediaUploader from "./MediaUploader";
 import DetectedItemsList from "./DetectedItemsList";
 import ProcessingIndicator from "./ProcessingIndicator";
 import { useCart } from "../contexts/CartContext";
-import ShoppingCartIcon from "./ShoppingCartIcon";
-import ShoppingCartModal from "./ShoppingCartModal";
+
+import InventoryCartIcon from "./InventoryCartIcon";
+import InventoryCartModal from "./InventoryCartModal";
 
 interface MediaItem {
   uri: string;
@@ -89,7 +90,7 @@ export default function SmartDetection() {
               AI-powered item detection from photos and videos
             </Text>
           </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+          <InventoryCartIcon onPress={() => setShowCartModal(true)} />
         </View>
       </View>
 
@@ -160,7 +161,7 @@ export default function SmartDetection() {
             </View>
           )}
 
-          <ShoppingCartModal
+          <InventoryCartModal
             visible={showCartModal}
             onClose={() => setShowCartModal(false)}
           />
