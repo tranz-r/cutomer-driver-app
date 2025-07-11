@@ -182,25 +182,15 @@ const DetectedItemsList = ({
 
     if (newItem.name && !isNaN(height) && !isNaN(width) && !isNaN(length)) {
       const volume = (height * width * length) / 1000000;
-      const newItemData: Item = {
-        id: Date.now().toString(),
+      const newItemData = {
         name: newItem.name,
         height,
         width,
         length,
         volume,
       };
-      const updatedItems = [...items, newItemData];
-      setItems(updatedItems);
-      onAddItem(newItemData);
-      // Add to cart directly since onAddItem in parent already handles cart addition
-      onAddToCart({
-        name: newItemData.name,
-        height: newItemData.height,
-        width: newItemData.width,
-        length: newItemData.length,
-        volume: newItemData.volume,
-      });
+      // Add directly to cart instead of detectedItemsList
+      onAddToCart(newItemData);
       setNewItem({ name: "", height: "", width: "", length: "" });
       setShowAddModal(false);
     }
@@ -273,17 +263,15 @@ const DetectedItemsList = ({
     const dimensions = getItemDimensions(selectedItem);
 
     for (let i = 0; i < quantity; i++) {
-      const newItemData: Item = {
-        id: `${Date.now()}-${i}`,
+      const newItemData = {
         name: selectedItem.name,
         height: dimensions.height,
         width: dimensions.width,
         length: dimensions.length,
         volume: selectedItem.volume_m3 || 0,
       };
-      const updatedItems = [...items, newItemData];
-      setItems(updatedItems);
-      onAddItem(newItemData);
+      // Add directly to cart instead of detectedItemsList
+      onAddToCart(newItemData);
     }
 
     // Reset state
@@ -349,174 +337,45 @@ const DetectedItemsList = ({
           className="bg-blue-50 px-3 py-1 rounded-lg"
         >
           <Text className="text-blue-700 font-semibold text-sm">
-            {isExpanded ? "Collapse" : "Expand"}
+            {isExpanded ? "Hide" : "Show Details"}
           </Text>
         </TouchableOpacity>
       </View>
 
       {isExpanded && (
-        <View className="space-y-4 mb-4">
-          {items.map((item, index) => (
-            <View key={item.id} className="mb-4">
-              {isEditing === item.id ? (
-                <View className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                  <TextInput
-                    className="border border-blue-300 rounded-lg p-2 mb-2 bg-white text-sm font-medium"
-                    value={item.name}
-                    onChangeText={(text) => {
-                      const updatedItems = items.map((i) =>
-                        i.id === item.id ? { ...i, name: text } : i,
-                      );
-                      setItems(updatedItems);
-                    }}
-                    placeholder="Item name"
-                  />
-                  <View className="flex-row justify-between mb-4">
-                    <View className="flex-1 mx-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-2">
-                        Height (cm)
-                      </Text>
-                      <TextInput
-                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
-                        value={item.height.toString()}
-                        onChangeText={(text) => {
-                          const height = parseFloat(text) || 0;
-                          const updatedItems = items.map((i) =>
-                            i.id === item.id
-                              ? {
-                                  ...i,
-                                  height,
-                                  volume:
-                                    (height * i.width * i.length) / 1000000,
-                                }
-                              : i,
-                          );
-                          setItems(updatedItems);
-                        }}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                    <View className="flex-1 mx-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-2">
-                        Width (cm)
-                      </Text>
-                      <TextInput
-                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
-                        value={item.width.toString()}
-                        onChangeText={(text) => {
-                          const width = parseFloat(text) || 0;
-                          const updatedItems = items.map((i) =>
-                            i.id === item.id
-                              ? {
-                                  ...i,
-                                  width,
-                                  volume:
-                                    (i.height * width * i.length) / 1000000,
-                                }
-                              : i,
-                          );
-                          setItems(updatedItems);
-                        }}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                    <View className="flex-1 mx-1">
-                      <Text className="text-xs font-semibold text-blue-700 mb-2">
-                        Length (cm)
-                      </Text>
-                      <TextInput
-                        className="border border-blue-300 rounded-lg p-3 bg-white text-center font-medium text-sm"
-                        value={item.length.toString()}
-                        onChangeText={(text) => {
-                          const length = parseFloat(text) || 0;
-                          const updatedItems = items.map((i) =>
-                            i.id === item.id
-                              ? {
-                                  ...i,
-                                  length,
-                                  volume:
-                                    (i.height * i.width * length) / 1000000,
-                                }
-                              : i,
-                          );
-                          setItems(updatedItems);
-                        }}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  </View>
-                  <View className="flex-row justify-between mt-6">
-                    <TouchableOpacity
-                      className="bg-gray-200 px-8 py-3 rounded-lg flex-1 mr-4"
-                      onPress={() => setIsEditing(null)}
-                    >
-                      <Text className="font-semibold text-gray-700 text-sm text-center">
-                        Cancel
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      className="bg-blue-600 px-8 py-3 rounded-lg flex-1"
-                      onPress={() => {
-                        const currentItem = items.find((i) => i.id === item.id);
-                        if (currentItem) {
-                          onUpdateItem(currentItem);
-                        }
-                        setIsEditing(null);
-                      }}
-                    >
-                      <Text className="text-white font-semibold text-sm text-center">
-                        Save
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+        <View className="mb-4">
+          {/* Detection Summary */}
+          <View className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center flex-1">
+                <View className="bg-green-100 p-2 rounded-full mr-3">
+                  <ShoppingCart size={20} color="#16a34a" />
                 </View>
-              ) : (
-                <View className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                  <View className="flex-row justify-between items-center">
-                    <View className="flex-row items-center flex-1">
-                      <View className="bg-blue-100 p-1.5 rounded-full mr-2">
-                        <Text className="text-blue-600 font-bold text-sm">
-                          {index + 1}
-                        </Text>
-                      </View>
-                      <View className="flex-1">
-                        <Text className="font-bold text-lg text-gray-900">
-                          {item.name}
-                        </Text>
-                        <Text className="text-gray-600 text-sm">
-                          {item.height} × {item.width} × {item.length} cm
-                        </Text>
-                        <Text className="text-gray-500 text-xs mt-1">
-                          Volume: {item.volume.toFixed(2)} m³
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="flex-row items-center">
-                      <TouchableOpacity
-                        className="bg-blue-50 p-4 rounded-full min-w-[48px] min-h-[48px] items-center justify-center mr-3"
-                        onPress={() => setIsEditing(item.id)}
-                      >
-                        <Edit size={22} color="#3b82f6" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        className="bg-red-50 p-4 rounded-full min-w-[48px] min-h-[48px] items-center justify-center"
-                        onPress={() => handleRemoveItem(item.id)}
-                      >
-                        <Trash2 size={22} color="#ef4444" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                <View className="flex-1">
+                  <Text className="font-bold text-lg text-green-900">
+                    {items.length} Items Detected & Added
+                  </Text>
+                  <Text className="text-green-700 text-sm">
+                    All detected items have been automatically added to your
+                    cart
+                  </Text>
+                  <Text className="text-green-600 text-xs mt-1">
+                    Total Volume: {totalVolume} m³
+                  </Text>
                 </View>
-              )}
+              </View>
+              <View className="bg-green-200 p-2 rounded-full">
+                <Text className="text-green-800 font-bold text-lg">✓</Text>
+              </View>
             </View>
-          ))}
+          </View>
         </View>
       )}
 
       <View className="mt-4 pt-4 border-t border-gray-200">
         {/* Add Custom Item Button */}
         <TouchableOpacity
-          className="bg-purple-500 p-3 rounded-xl shadow-sm mb-4"
+          className="bg-purple-500 p-3 rounded-xl shadow-sm"
           onPress={() => setShowAddModal(true)}
         >
           <View className="flex-row items-center justify-center">
@@ -527,22 +386,9 @@ const DetectedItemsList = ({
           </View>
         </TouchableOpacity>
 
-        {/* Total Volume Summary */}
-        <View className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-blue-700 font-medium text-sm mb-1">
-                Total Estimated Volume
-              </Text>
-              <Text className="text-blue-900 font-bold text-2xl">
-                {totalVolume} m³
-              </Text>
-            </View>
-            <View className="bg-blue-200 p-3 rounded-full">
-              <Package size={24} color="#1e40af" />
-            </View>
-          </View>
-        </View>
+        <Text className="text-gray-500 text-xs text-center mt-2">
+          Didn't detect something? Add it manually above
+        </Text>
       </View>
 
       {/* Add Item Modal */}

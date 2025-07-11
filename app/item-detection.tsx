@@ -49,9 +49,10 @@ export default function ItemDetectionScreen() {
     const progressSteps = [
       { progress: 0.2, message: "Uploading media to backend..." },
       { progress: 0.4, message: "Analyzing images with AI..." },
-      { progress: 0.6, message: "Detecting furniture items..." },
+      { progress: 0.6, message: "Detecting your items..." },
       { progress: 0.8, message: "Calculating dimensions..." },
-      { progress: 1.0, message: "Processing complete!" },
+      { progress: 1.9, message: "Processing complete!" },
+      { progress: 1.0, message: "Adding items to your inventory cart!" },
     ];
 
     let stepIndex = 0;
@@ -220,10 +221,6 @@ export default function ItemDetectionScreen() {
               {showDetectedItems && (
                 <View className="mt-6">
                   <DetectedItemsList
-                    onAddItem={(item) => {
-                      // Only handle local state, don't add to cart here
-                      console.log("Item added to detected list:", item.name);
-                    }}
                     onAddToCart={(item) => {
                       addItem({
                         id: Date.now().toString(),
