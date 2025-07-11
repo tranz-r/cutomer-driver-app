@@ -12,27 +12,19 @@ import { router } from "expo-router";
 import VanSvg from "./components/VanSvg";
 import InventorySvg from "./components/InventorySvg";
 import SmartDetectionSvg from "./components/SmartDetectionSvg";
-import { useCart } from "./contexts/CartContext";
-import ShoppingCartIcon from "./components/ShoppingCartIcon";
-import ShoppingCartModal from "./components/ShoppingCartModal";
 
 export default function ItemDetectionScreen() {
-  const [showCartModal, setShowCartModal] = useState(false);
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4 flex-row items-center justify-between">
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Inventory Options Capture
-            </Text>
-            <Text className="text-sm text-white">
-              Choose how you want to build your inventory
-            </Text>
-          </View>
-          <ShoppingCartIcon onPress={() => setShowCartModal(true)} />
+        <View className="px-4">
+          <Text className="text-2xl font-bold text-white mb-1">
+            Inventory Options Capture
+          </Text>
+          <Text className="text-sm text-white">
+            Choose how you want to build your inventory
+          </Text>
         </View>
       </View>
 
@@ -75,7 +67,7 @@ export default function ItemDetectionScreen() {
                     Build Item Inventory
                   </Text>
                   <Text className="text-gray-500 text-sm">
-                    Search and add items from our database
+                    Start by searching and add items from our database
                   </Text>
                 </View>
                 <InventorySvg width={96} height={56} />
@@ -94,7 +86,7 @@ export default function ItemDetectionScreen() {
                     Use Tranzr Smart Detection
                   </Text>
                   <Text className="text-gray-500 text-sm">
-                    Upload photos/videos to get accurate sizing
+                    Start by uploading photos/videos to get accurate sizing
                   </Text>
                 </View>
                 <SmartDetectionSvg width={96} height={56} />
@@ -111,11 +103,6 @@ export default function ItemDetectionScreen() {
               </Text>
             </View>
           </View>
-
-          <ShoppingCartModal
-            visible={showCartModal}
-            onClose={() => setShowCartModal(false)}
-          />
         </View>
       </ScrollView>
       <View className="h-8" />
