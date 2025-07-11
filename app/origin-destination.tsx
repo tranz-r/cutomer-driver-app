@@ -190,8 +190,7 @@ export default function OriginDestinationScreen() {
               Origin & Destination
             </Text>
             <Text className="text-sm text-white">
-              Enter your pickup and delivery addresses to calculate the route
-              and costs.
+              Enter your pickup and delivery addresses.
             </Text>
           </View>
           <ShoppingCartIcon onPress={() => setShowCartModal(true)} />

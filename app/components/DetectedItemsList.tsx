@@ -4,27 +4,9 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  TextInput,
-  Modal,
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   Animated,
 } from "react-native";
-import {
-  Trash2,
-  Edit,
-  Plus,
-  RefreshCw,
-  X,
-  Package,
-  Search,
-  Minus,
-  ChevronDown,
-  Star,
-  ShoppingCart,
-} from "lucide-react-native";
+import { Plus, Package, ShoppingCart } from "lucide-react-native";
 import itemsData from "../../Tranzr-Item-data-with-enrichment.json";
 
 type Item = {
@@ -48,6 +30,7 @@ type DetectedItemsListProps = {
 };
 
 import { useCart } from "../contexts/CartContext";
+import { router } from "expo-router";
 
 const DetectedItemsList = ({
   items: initialItems = [
@@ -78,20 +61,7 @@ const DetectedItemsList = ({
   autoAddToCart = false,
 }: DetectedItemsListProps) => {
   const [items, setItems] = useState<Item[]>(initialItems);
-  const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [newItem, setNewItem] = useState<{
-    name: string;
-    height: string;
-    width: string;
-    length: string;
-  }>({ name: "", height: "", width: "", length: "" });
-  const [showAddModal, setShowAddModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedItemQuantities, setSelectedItemQuantities] = useState<{
-    [key: string]: number;
-  }>({});
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [showCartAnimation, setShowCartAnimation] = useState(false);
   const [addedItemsCount, setAddedItemsCount] = useState(0);
   const cartAnimationScale = useRef(new Animated.Value(1)).current;
@@ -175,111 +145,8 @@ const DetectedItemsList = ({
     .reduce((sum, item) => sum + item.volume, 0)
     .toFixed(2);
 
-  const handleAddItem = () => {
-    const height = parseFloat(newItem.height);
-    const width = parseFloat(newItem.width);
-    const length = parseFloat(newItem.length);
-
-    if (newItem.name && !isNaN(height) && !isNaN(width) && !isNaN(length)) {
-      const volume = (height * width * length) / 1000000;
-      const newItemData = {
-        name: newItem.name,
-        height,
-        width,
-        length,
-        volume,
-      };
-      // Add directly to cart instead of detectedItemsList
-      onAddToCart(newItemData);
-      setNewItem({ name: "", height: "", width: "", length: "" });
-      setShowAddModal(false);
-    }
-  };
-
-  // Helper function to get dimensions from item data
-  const getItemDimensions = (item: any) => {
-    // Handle different dimension property formats
-    if (item.dimensions_cm) {
-      return {
-        height: item.dimensions_cm.height,
-        width: item.dimensions_cm.width,
-        length: item.dimensions_cm.length,
-      };
-    } else if (item.length_cm || item.width_cm || item.height_cm) {
-      return {
-        height: item.height_cm || item.height || 0,
-        width: item.width_cm || item.width || 0,
-        length: item.length_cm || item.length || 0,
-      };
-    } else {
-      return {
-        height: item.height || 0,
-        width: item.width || 0,
-        length: item.length || 0,
-      };
-    }
-  };
-
-  // Memoized filtered items for better performance
-  const filteredItems = useMemo(() => {
-    if (searchQuery.trim() === "") {
-      return itemsData.goods
-        .sort((a, b) => (b.popularity_index || 0) - (a.popularity_index || 0))
-        .slice(0, 20); // Show top 20 popular items when no search
-    }
-
-    const query = searchQuery.toLowerCase();
-    return itemsData.goods
-      .filter((item) => {
-        const nameMatch = item.name.toLowerCase().includes(query);
-        const categoryMatch =
-          item.category_id && item.category_id.toString().includes(query);
-        return nameMatch || categoryMatch;
-      })
-      .sort((a, b) => {
-        // Prioritize exact matches and popular items
-        const aExact = a.name.toLowerCase().startsWith(query) ? 1 : 0;
-        const bExact = b.name.toLowerCase().startsWith(query) ? 1 : 0;
-        if (aExact !== bExact) return bExact - aExact;
-        return (b.popularity_index || 0) - (a.popularity_index || 0);
-      })
-      .slice(0, 50); // Limit results for performance
-  }, [searchQuery]);
-
-  const handleSearchChange = (text: string) => {
-    setSearchQuery(text);
-    setShowSuggestions(text.length > 0);
-  };
-
-  const handleQuantityChange = (itemName: string, change: number) => {
-    setSelectedItemQuantities((prev) => ({
-      ...prev,
-      [itemName]: Math.max(1, (prev[itemName] || 1) + change),
-    }));
-  };
-
-  const handleSelectItem = (selectedItem: any) => {
-    const quantity = selectedItemQuantities[selectedItem.name] || 1;
-    const dimensions = getItemDimensions(selectedItem);
-
-    for (let i = 0; i < quantity; i++) {
-      const newItemData = {
-        name: selectedItem.name,
-        height: dimensions.height,
-        width: dimensions.width,
-        length: dimensions.length,
-        volume: selectedItem.volume_m3 || 0,
-      };
-      // Add directly to cart instead of detectedItemsList
-      onAddToCart(newItemData);
-    }
-
-    // Reset state
-    setSearchQuery("");
-    setSelectedItemQuantities({});
-    setShowSuggestions(false);
-    setShowAddModal(false);
-    Keyboard.dismiss();
+  const handleAddCustomItem = () => {
+    router.push("/build-inventory");
   };
 
   const handleUpdateItem = (item: Item) => {
@@ -376,7 +243,7 @@ const DetectedItemsList = ({
         {/* Add Custom Item Button */}
         <TouchableOpacity
           className="bg-purple-500 p-3 rounded-xl shadow-sm"
-          onPress={() => setShowAddModal(true)}
+          onPress={handleAddCustomItem}
         >
           <View className="flex-row items-center justify-center">
             <Plus size={18} color="white" />
@@ -390,210 +257,6 @@ const DetectedItemsList = ({
           Didn't detect something? Add it manually above
         </Text>
       </View>
-
-      {/* Add Item Modal */}
-      <Modal
-        visible={showAddModal}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setShowAddModal(false)}
-      >
-        <KeyboardAvoidingView
-          className="flex-1"
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <View className="flex-1 justify-end bg-black/50">
-            <View className="bg-white rounded-t-2xl p-4 shadow-lg max-h-[90%]">
-              {/* Header */}
-              <View className="items-center mb-4">
-                <View className="w-10 h-1 bg-gray-300 rounded-full mb-3" />
-                <Text className="text-xl font-bold text-gray-900 mb-1">
-                  Add Item from Database
-                </Text>
-                <Text className="text-gray-500 text-center text-sm">
-                  Search from our extensive items database
-                </Text>
-              </View>
-
-              {/* Modern Search Input */}
-              <View className="mb-4">
-                <Text className="text-sm font-bold text-gray-800 mb-2">
-                  Search Items Database
-                </Text>
-                <View className="relative">
-                  <View className="flex-row items-center border-2 border-purple-200 rounded-xl bg-white shadow-sm">
-                    <View className="pl-4">
-                      <Search size={20} color="#8B5CF6" />
-                    </View>
-                    <TextInput
-                      className="flex-1 p-4 text-base font-medium"
-                      value={searchQuery}
-                      onChangeText={handleSearchChange}
-                      onFocus={() => setShowSuggestions(true)}
-                      placeholder="Type to search hundreds of items..."
-                      placeholderTextColor="#9CA3AF"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                    />
-                    {searchQuery.length > 0 && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSearchQuery("");
-                          setShowSuggestions(false);
-                        }}
-                        className="pr-4"
-                      >
-                        <X size={20} color="#9CA3AF" />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-
-                  {/* Search Stats */}
-                  {searchQuery.length > 0 && (
-                    <View className="mt-2 px-2">
-                      <View className="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                        <Text className="text-sm font-bold text-purple-800">
-                          Found {filteredItems.length} items matching "
-                          {searchQuery}"
-                        </Text>
-                        <Text className="text-xs text-purple-600 mt-1">
-                          💡 Scroll down to see all available options
-                        </Text>
-                      </View>
-                    </View>
-                  )}
-                </View>
-              </View>
-
-              {/* Modern Search Results */}
-              {filteredItems.length > 0 && (
-                <View className="mb-4" style={{ maxHeight: 400 }}>
-                  <ScrollView
-                    className="bg-gray-50 rounded-xl p-2"
-                    keyboardShouldPersistTaps="handled"
-                    showsVerticalScrollIndicator={false}
-                  >
-                    {filteredItems.map((item, index) => {
-                      const quantity = selectedItemQuantities[item.name] || 1;
-                      const isPopular = (item.popularity_index || 0) > 50;
-                      const dimensions = getItemDimensions(item);
-
-                      return (
-                        <View
-                          key={`${item.id || item.name}-${index}`}
-                          className="bg-white border border-gray-100 rounded-xl p-4 mb-2 shadow-sm"
-                        >
-                          <View className="flex-row justify-between items-start">
-                            <View className="flex-1 mr-3">
-                              <View className="flex-row items-center mb-1">
-                                <Text className="font-bold text-gray-900 text-base flex-1">
-                                  {item.name}
-                                </Text>
-                                {isPopular && (
-                                  <View className="bg-yellow-100 px-2 py-1 rounded-full ml-2">
-                                    <View className="flex-row items-center">
-                                      <Star
-                                        size={12}
-                                        color="#F59E0B"
-                                        fill="#F59E0B"
-                                      />
-                                      <Text className="text-yellow-700 text-xs font-semibold ml-1">
-                                        Popular
-                                      </Text>
-                                    </View>
-                                  </View>
-                                )}
-                              </View>
-
-                              <View className="flex-row items-center mb-2">
-                                <Text className="text-purple-600 text-sm font-medium">
-                                  {dimensions.height} × {dimensions.width} ×{" "}
-                                  {dimensions.length} cm
-                                </Text>
-                              </View>
-
-                              <Text className="text-gray-500 text-sm">
-                                Vol: {item.volume_m3 || 0} m³
-                              </Text>
-                            </View>
-
-                            <View className="items-center">
-                              <View className="flex-row items-center bg-gray-100 rounded-lg mb-3">
-                                <TouchableOpacity
-                                  className="p-4 min-w-[48px] min-h-[48px] items-center justify-center"
-                                  onPress={() =>
-                                    handleQuantityChange(item.name, -1)
-                                  }
-                                >
-                                  <Minus size={20} color="#6B7280" />
-                                </TouchableOpacity>
-                                <Text className="mx-4 font-bold text-xl min-w-[32px] text-center">
-                                  {quantity}
-                                </Text>
-                                <TouchableOpacity
-                                  className="p-4 min-w-[48px] min-h-[48px] items-center justify-center"
-                                  onPress={() =>
-                                    handleQuantityChange(item.name, 1)
-                                  }
-                                >
-                                  <Plus size={20} color="#6B7280" />
-                                </TouchableOpacity>
-                              </View>
-
-                              <TouchableOpacity
-                                className="bg-purple-500 px-6 py-4 rounded-lg shadow-sm min-w-[100px] min-h-[48px] items-center justify-center"
-                                onPress={() => handleSelectItem(item)}
-                              >
-                                <Text className="text-white font-bold text-base">
-                                  Add {quantity > 1 ? `(${quantity})` : ""}
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
-                </View>
-              )}
-
-              {/* No Results Message */}
-              {searchQuery.length > 0 && filteredItems.length === 0 && (
-                <View className="mb-4 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-                  <View className="items-center">
-                    <Search size={32} color="#9CA3AF" />
-                    <Text className="text-gray-500 font-medium mt-2 text-center">
-                      No items found for "{searchQuery}"
-                    </Text>
-                    <Text className="text-gray-400 text-sm mt-1 text-center">
-                      Try a different search term
-                    </Text>
-                  </View>
-                </View>
-              )}
-
-              {/* Action Button */}
-              <View className="mt-6">
-                <TouchableOpacity
-                  className="bg-gray-100 px-8 py-4 rounded-xl shadow-sm"
-                  onPress={() => {
-                    setShowAddModal(false);
-                    setSearchQuery("");
-                    setSelectedItemQuantities({});
-                    setShowSuggestions(false);
-                    setNewItem({ name: "", height: "", width: "", length: "" });
-                    Keyboard.dismiss();
-                  }}
-                >
-                  <Text className="text-gray-700 font-bold text-base text-center">
-                    Close
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
     </View>
   );
 };
