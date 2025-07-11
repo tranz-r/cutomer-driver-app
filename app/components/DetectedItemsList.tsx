@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from "react-native";
 import {
   Trash2,
@@ -22,6 +23,7 @@ import {
   Minus,
   ChevronDown,
   Star,
+  ShoppingCart,
 } from "lucide-react-native";
 import itemsData from "../../Tranzr-Item-data-with-enrichment.json";
 
@@ -41,7 +43,11 @@ type DetectedItemsListProps = {
   onUpdateItem?: (item: Item) => void;
   onRecalculate?: () => void;
   isVisible?: boolean;
+  onAddToCart?: (item: Omit<Item, "id">) => void;
+  autoAddToCart?: boolean;
 };
+
+import { useCart } from "../contexts/CartContext";
 
 const DetectedItemsList = ({
   items: initialItems = [
@@ -68,6 +74,8 @@ const DetectedItemsList = ({
   onUpdateItem = () => {},
   onRecalculate = () => {},
   isVisible = true,
+  onAddToCart = () => {},
+  autoAddToCart = false,
 }: DetectedItemsListProps) => {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -84,6 +92,82 @@ const DetectedItemsList = ({
     [key: string]: number;
   }>({});
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showCartAnimation, setShowCartAnimation] = useState(false);
+  const [addedItemsCount, setAddedItemsCount] = useState(0);
+  const cartAnimationScale = useRef(new Animated.Value(1)).current;
+  const cartAnimationOpacity = useRef(new Animated.Value(0)).current;
+  const { getTotalItems } = useCart();
+
+  // Auto-add items to cart when component becomes visible and autoAddToCart is enabled
+  useEffect(() => {
+    if (isVisible && autoAddToCart && items.length > 0) {
+      const timer = setTimeout(() => {
+        handleAutoAddToCart();
+      }, 1000); // Delay to allow the detection animation to complete
+
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, autoAddToCart, items.length]);
+
+  const handleAutoAddToCart = () => {
+    const initialCartCount = getTotalItems();
+    items.forEach((item, index) => {
+      setTimeout(() => {
+        onAddToCart({
+          name: item.name,
+          height: item.height,
+          width: item.width,
+          length: item.length,
+          volume: item.volume,
+        });
+
+        // Update count to show current cart total
+        const currentCartTotal = initialCartCount + index + 1;
+        setAddedItemsCount(currentCartTotal);
+
+        // Trigger animation for each item added
+        triggerCartAnimation();
+
+        // Show completion message after all items are added
+        if (index === items.length - 1) {
+          setTimeout(() => {
+            setShowCartAnimation(true);
+            setTimeout(() => setShowCartAnimation(false), 3000);
+          }, 500);
+        }
+      }, index * 300); // Stagger the additions
+    });
+  };
+
+  const triggerCartAnimation = () => {
+    // Scale animation
+    Animated.sequence([
+      Animated.timing(cartAnimationScale, {
+        toValue: 1.2,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(cartAnimationScale, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Opacity animation for the notification
+    Animated.sequence([
+      Animated.timing(cartAnimationOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(cartAnimationOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   if (!isVisible) return null;
 
@@ -109,6 +193,14 @@ const DetectedItemsList = ({
       const updatedItems = [...items, newItemData];
       setItems(updatedItems);
       onAddItem(newItemData);
+      // Add to cart directly since onAddItem in parent already handles cart addition
+      onAddToCart({
+        name: newItemData.name,
+        height: newItemData.height,
+        width: newItemData.width,
+        length: newItemData.length,
+        volume: newItemData.volume,
+      });
       setNewItem({ name: "", height: "", width: "", length: "" });
       setShowAddModal(false);
     }
@@ -217,17 +309,38 @@ const DetectedItemsList = ({
 
   return (
     <View className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+      {/* Cart Animation Notification */}
+      {showCartAnimation && (
+        <Animated.View
+          className="absolute top-2 right-2 bg-green-500 px-3 py-2 rounded-full z-10 flex-row items-center"
+          style={{
+            opacity: cartAnimationOpacity,
+            transform: [{ scale: cartAnimationScale }],
+          }}
+        >
+          <ShoppingCart size={16} color="white" />
+          <Text className="text-white font-bold text-sm ml-2">
+            {items.length} items added to cart!
+          </Text>
+        </Animated.View>
+      )}
+
       <View className="flex-row justify-between items-center mb-4">
         <View className="flex-row items-center">
-          <View className="bg-blue-100 p-2 rounded-full mr-3">
+          <Animated.View
+            className="bg-blue-100 p-2 rounded-full mr-3"
+            style={{ transform: [{ scale: cartAnimationScale }] }}
+          >
             <Package size={20} color="#3b82f6" />
-          </View>
+          </Animated.View>
           <View>
             <Text className="text-xl font-bold text-gray-900">
               Detected Items
             </Text>
             <Text className="text-xs text-gray-500">
-              AI-powered item recognition
+              {autoAddToCart
+                ? "Auto-adding to cart..."
+                : "AI-powered item recognition"}
             </Text>
           </View>
         </View>

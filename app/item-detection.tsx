@@ -221,8 +221,12 @@ export default function ItemDetectionScreen() {
                 <View className="mt-6">
                   <DetectedItemsList
                     onAddItem={(item) => {
+                      // Only handle local state, don't add to cart here
+                      console.log("Item added to detected list:", item.name);
+                    }}
+                    onAddToCart={(item) => {
                       addItem({
-                        id: item.id,
+                        id: Date.now().toString(),
                         name: item.name,
                         height: item.height,
                         width: item.width,
@@ -230,6 +234,7 @@ export default function ItemDetectionScreen() {
                         volume: item.volume,
                       });
                     }}
+                    autoAddToCart={true}
                   />
 
                   <TouchableOpacity
