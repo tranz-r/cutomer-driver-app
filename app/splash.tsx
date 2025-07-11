@@ -135,7 +135,7 @@ export default function SplashScreen() {
       style={{
         backgroundColor: backgroundGradient.interpolate({
           inputRange: [0, 1],
-          outputRange: ["#1e40af", "#3b82f6"],
+          outputRange: ["#7080cc", "#7080cc"],
         }),
       }}
     >

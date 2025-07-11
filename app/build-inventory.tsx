@@ -245,11 +245,11 @@ export default function BuildInventoryScreen() {
                 {!isSearchFocused && searchQuery.length === 0 && (
                   <View className="mt-4">
                     <TouchableOpacity
-                      className="bg-blue-500 px-6 py-4 rounded-xl flex-row items-center justify-center shadow-sm"
+                      className="bg-green-500 px-6 py-4 rounded-xl flex-row items-center justify-center shadow-sm"
                       onPress={() => router.push("/smart-detection")}
                       chris
                     >
-                      <Camera size={20} color="white" className="mr-2" />
+                      <Camera size={24} color="white" className="mr-2" />
                       <Text className="text-white font-bold text-base ml-2">
                         Smart Detection
                       </Text>
