@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -19,10 +20,22 @@ import {
   ArrowLeft,
   CheckCircle,
   Menu,
+  Smartphone,
 } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Svg, { Path, G } from "react-native-svg";
 import SlideOutMenu from "./components/SlideOutMenu";
+import { useAuth } from "./contexts/AuthContext";
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithOTP,
+  verifyOTP,
+  signInWithGoogle,
+  signInWithFacebook,
+  signInWithApple,
+  resetPassword,
+} from "../lib/supabase";
 
 // Facebook Icon Component
 const FacebookIcon = () => (
@@ -62,20 +75,39 @@ const AppleIcon = () => (
 
 export default function AuthScreen() {
   const { redirectTo } = useLocalSearchParams();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const { user, loading: authLoading } = useAuth();
+  const [authMode, setAuthMode] = useState<
+    "signin" | "signup" | "otp" | "verify-otp" | "forgot-password"
+  >("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
+  const isSignUp = authMode === "signup";
+
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  // Redirect if user is already authenticated
+  useEffect(() => {
+    if (!authLoading && user) {
+      if (redirectTo === "dashboard") {
+        router.replace("/customer-dashboard");
+      } else if (redirectTo === "payment") {
+        router.replace("/payment");
+      } else {
+        router.replace("/customer-dashboard");
+      }
+    }
+  }, [user, authLoading, redirectTo]);
 
   const handleEmailAuth = async () => {
     if (!email.trim() || !password.trim()) {
@@ -93,7 +125,7 @@ export default function AuthScreen() {
       return;
     }
 
-    if (isSignUp) {
+    if (authMode === "signup") {
       if (!fullName.trim()) {
         Alert.alert("Error", "Please enter your full name");
         return;
@@ -106,83 +138,145 @@ export default function AuthScreen() {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-
-      // Check if redirectTo parameter is set to dashboard
-      if (redirectTo === "dashboard") {
-        // User came from success screen, redirect to dashboard
-        Alert.alert(
-          "Success",
-          isSignUp ? "Account created successfully!" : "Welcome back!",
-          [
-            {
-              text: "OK",
-              onPress: () => router.replace("/customer-dashboard"),
-            },
-          ],
-        );
-      } else if (redirectTo === "payment") {
-        // User came from booking flow (summary screen), redirect to payment
-        Alert.alert(
-          "Success",
-          isSignUp
-            ? "Account created successfully! Redirecting to payment..."
-            : "Welcome back! Redirecting to payment...",
-          [
-            {
-              text: "OK",
-              onPress: () => router.replace("/payment"),
-            },
-          ],
-        );
+    try {
+      let result;
+      if (authMode === "signup") {
+        result = await signUpWithEmail(email, password, fullName);
+        if (result.error) {
+          Alert.alert("Sign Up Error", result.error.message);
+        } else {
+          Alert.alert(
+            "Check Your Email",
+            "We've sent you a confirmation link. Please check your email and click the link to verify your account.",
+            [{ text: "OK", onPress: () => setAuthMode("signin") }],
+          );
+        }
       } else {
-        // Normal login flow (from landing page), go to dashboard
-        Alert.alert(
-          "Success",
-          isSignUp ? "Account created successfully!" : "Welcome back!",
-          [
-            {
-              text: "OK",
-              onPress: () => router.replace("/customer-dashboard"),
-            },
-          ],
-        );
+        result = await signInWithEmail(email, password);
+        if (result.error) {
+          Alert.alert("Sign In Error", result.error.message);
+        } else {
+          // Navigation will be handled by the useEffect hook when user state changes
+        }
       }
-    }, 1500);
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSocialAuth = (provider: string) => {
-    // Check if redirectTo parameter is set to dashboard
-    if (redirectTo === "dashboard") {
-      // User came from success screen, redirect to dashboard
-      Alert.alert("Success", `Signed in with ${provider}!`, [
-        {
-          text: "OK",
-          onPress: () => router.replace("/customer-dashboard"),
-        },
-      ]);
-    } else if (redirectTo === "payment") {
-      // User came from booking flow (summary screen), redirect to payment
-      Alert.alert(
-        "Success",
-        `Signed in with ${provider}! Redirecting to payment...`,
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/payment"),
-          },
-        ],
-      );
-    } else {
-      // Normal login flow (from landing page), go to dashboard
-      Alert.alert("Success", `Signed in with ${provider}!`, [
-        {
-          text: "OK",
-          onPress: () => router.replace("/customer-dashboard"),
-        },
-      ]);
+  const handleOTPAuth = async () => {
+    if (!email.trim()) {
+      Alert.alert("Error", "Please enter your email address");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await signInWithOTP(email);
+      if (error) {
+        Alert.alert("Error", error.message);
+      } else {
+        Alert.alert(
+          "Check Your Email",
+          "We've sent you a magic link and OTP code. You can either click the link or enter the code below.",
+        );
+        setAuthMode("verify-otp");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (!otpCode.trim()) {
+      Alert.alert("Error", "Please enter the OTP code");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await verifyOTP(email, otpCode);
+      if (error) {
+        Alert.alert("Error", error.message);
+      } else {
+        // Navigation will be handled by the useEffect hook when user state changes
+      }
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      Alert.alert("Error", "Please enter your email address");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await resetPassword(email);
+      if (error) {
+        Alert.alert("Error", error.message);
+      } else {
+        Alert.alert(
+          "Check Your Email",
+          "We've sent you a password reset link. Please check your email and follow the instructions.",
+          [{ text: "OK", onPress: () => setAuthMode("signin") }],
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialAuth = async (
+    provider: "google" | "facebook" | "apple",
+  ) => {
+    setIsLoading(true);
+
+    try {
+      let result;
+      switch (provider) {
+        case "google":
+          result = await signInWithGoogle();
+          break;
+        case "facebook":
+          result = await signInWithFacebook();
+          break;
+        case "apple":
+          result = await signInWithApple();
+          break;
+      }
+
+      if (result.error) {
+        Alert.alert("Social Login Error", result.error.message);
+      }
+      // Navigation will be handled by the useEffect hook when user state changes
+    } catch (error) {
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -214,49 +308,75 @@ export default function AuthScreen() {
         {/* Title */}
         <View className="items-center mb-8">
           <Text className="text-2xl font-bold text-gray-900 mb-2">
-            {isSignUp ? "Join Tranzr" : "Sign In"}
+            {authMode === "signup"
+              ? "Join Tranzr"
+              : authMode === "otp"
+                ? "Magic Link"
+                : authMode === "verify-otp"
+                  ? "Enter OTP"
+                  : authMode === "forgot-password"
+                    ? "Reset Password"
+                    : "Sign In"}
           </Text>
+          {authMode === "otp" && (
+            <Text className="text-sm text-gray-600 text-center">
+              We'll send you a magic link to sign in without a password
+            </Text>
+          )}
+          {authMode === "verify-otp" && (
+            <Text className="text-sm text-gray-600 text-center">
+              Enter the 6-digit code we sent to {email}
+            </Text>
+          )}
         </View>
 
-        {/* Social Login Buttons */}
-        <View className="mb-6">
-          <Text className="text-center text-gray-600 mb-6">
-            Continue with social
-          </Text>
-          <View className="flex-row justify-center items-center">
-            <TouchableOpacity
-              className="w-16 h-16 bg-[#1877F2] rounded-full items-center justify-center shadow-lg mx-4"
-              onPress={() => handleSocialAuth("Facebook")}
-            >
-              <FacebookIcon />
-            </TouchableOpacity>
+        {/* Social Login Buttons - Only show for signin and signup */}
+        {(authMode === "signin" || authMode === "signup") && (
+          <View className="mb-6">
+            <Text className="text-center text-gray-600 mb-6">
+              Continue with social
+            </Text>
+            <View className="flex-row justify-center items-center">
+              <TouchableOpacity
+                className="w-16 h-16 bg-[#1877F2] rounded-full items-center justify-center shadow-lg mx-4"
+                onPress={() => handleSocialAuth("facebook")}
+                disabled={isLoading}
+              >
+                <FacebookIcon />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="w-16 h-16 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm mx-4"
-              onPress={() => handleSocialAuth("Google")}
-            >
-              <GoogleIcon />
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="w-16 h-16 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm mx-4"
+                onPress={() => handleSocialAuth("google")}
+                disabled={isLoading}
+              >
+                <GoogleIcon />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="w-16 h-16 bg-black rounded-full items-center justify-center shadow-lg mx-4"
-              onPress={() => handleSocialAuth("Apple")}
-            >
-              <AppleIcon />
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="w-16 h-16 bg-black rounded-full items-center justify-center shadow-lg mx-4"
+                onPress={() => handleSocialAuth("apple")}
+                disabled={isLoading}
+              >
+                <AppleIcon />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
 
-        {/* Divider */}
-        <View className="flex-row items-center mb-6">
-          <View className="flex-1 h-px bg-gray-300" />
-          <Text className="mx-4 text-gray-500 text-sm">or</Text>
-          <View className="flex-1 h-px bg-gray-300" />
-        </View>
+        {/* Divider - Only show for signin and signup */}
+        {(authMode === "signin" || authMode === "signup") && (
+          <View className="flex-row items-center mb-6">
+            <View className="flex-1 h-px bg-gray-300" />
+            <Text className="mx-4 text-gray-500 text-sm">or</Text>
+            <View className="flex-1 h-px bg-gray-300" />
+          </View>
+        )}
 
-        {/* Email Form */}
+        {/* Auth Forms */}
         <View className="mb-6">
-          {isSignUp && (
+          {/* Full Name - Only for signup */}
+          {authMode === "signup" && (
             <View className="mb-4">
               <Text className="text-sm font-semibold text-gray-700 mb-2">
                 Full Name
@@ -270,56 +390,68 @@ export default function AuthScreen() {
                   placeholder="Enter your full name"
                   placeholderTextColor="#9ca3af"
                   autoCapitalize="words"
+                  editable={!isLoading}
                 />
               </View>
             </View>
           )}
 
-          <View className="mb-4">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Email Address
-            </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-              <Mail size={20} color="#6b7280" />
-              <TextInput
-                className="flex-1 ml-3 text-base text-gray-900"
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Enter your email"
-                placeholderTextColor="#9ca3af"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+          {/* Email - Show for all modes except verify-otp */}
+          {authMode !== "verify-otp" && (
+            <View className="mb-4">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">
+                Email Address
+              </Text>
+              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                <Mail size={20} color="#6b7280" />
+                <TextInput
+                  className="flex-1 ml-3 text-base text-gray-900"
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Enter your email"
+                  placeholderTextColor="#9ca3af"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  editable={!isLoading}
+                />
+              </View>
             </View>
-          </View>
+          )}
 
-          <View className="mb-4">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Password
-            </Text>
-            <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-              <Lock size={20} color="#6b7280" />
-              <TextInput
-                className="flex-1 ml-3 text-base text-gray-900"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Enter your password"
-                placeholderTextColor="#9ca3af"
-                secureTextEntry={!showPassword}
-                autoCapitalize="none"
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                {showPassword ? (
-                  <EyeOff size={20} color="#6b7280" />
-                ) : (
-                  <Eye size={20} color="#6b7280" />
-                )}
-              </TouchableOpacity>
+          {/* Password - Only for signin and signup */}
+          {(authMode === "signin" || authMode === "signup") && (
+            <View className="mb-4">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </Text>
+              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                <Lock size={20} color="#6b7280" />
+                <TextInput
+                  className="flex-1 ml-3 text-base text-gray-900"
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#9ca3af"
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  editable={!isLoading}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color="#6b7280" />
+                  ) : (
+                    <Eye size={20} color="#6b7280" />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          )}
 
-          {isSignUp && (
+          {/* Confirm Password - Only for signup */}
+          {authMode === "signup" && (
             <View className="mb-4">
               <Text className="text-sm font-semibold text-gray-700 mb-2">
                 Confirm Password
@@ -334,6 +466,7 @@ export default function AuthScreen() {
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
+                  editable={!isLoading}
                 />
                 <TouchableOpacity
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -347,6 +480,28 @@ export default function AuthScreen() {
               </View>
             </View>
           )}
+
+          {/* OTP Code - Only for verify-otp */}
+          {authMode === "verify-otp" && (
+            <View className="mb-4">
+              <Text className="text-sm font-semibold text-gray-700 mb-2">
+                Verification Code
+              </Text>
+              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                <Smartphone size={20} color="#6b7280" />
+                <TextInput
+                  className="flex-1 ml-3 text-base text-gray-900 text-center tracking-widest"
+                  value={otpCode}
+                  onChangeText={setOtpCode}
+                  placeholder="000000"
+                  placeholderTextColor="#9ca3af"
+                  keyboardType="numeric"
+                  maxLength={6}
+                  editable={!isLoading}
+                />
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Submit Button */}
@@ -354,50 +509,136 @@ export default function AuthScreen() {
           className={`py-4 px-6 rounded-xl flex-row justify-center items-center mb-6 ${
             isLoading ? "bg-gray-400" : "bg-blue-600"
           }`}
-          onPress={handleEmailAuth}
+          onPress={
+            authMode === "otp"
+              ? handleOTPAuth
+              : authMode === "verify-otp"
+                ? handleVerifyOTP
+                : authMode === "forgot-password"
+                  ? handleForgotPassword
+                  : handleEmailAuth
+          }
           disabled={isLoading}
         >
           {isLoading ? (
-            <Text className="text-white font-semibold text-base">
-              {isSignUp ? "Creating Account..." : "Signing In..."}
-            </Text>
+            <>
+              <ActivityIndicator size="small" color="white" />
+              <Text className="text-white font-semibold text-base ml-2">
+                {authMode === "signup"
+                  ? "Creating Account..."
+                  : authMode === "otp"
+                    ? "Sending Magic Link..."
+                    : authMode === "verify-otp"
+                      ? "Verifying Code..."
+                      : authMode === "forgot-password"
+                        ? "Sending Reset Link..."
+                        : "Signing In..."}
+              </Text>
+            </>
           ) : (
             <>
               <CheckCircle size={20} color="white" />
               <Text className="text-white font-semibold text-base ml-2">
-                {isSignUp ? "Create Account" : "Sign In"}
+                {authMode === "signup"
+                  ? "Create Account"
+                  : authMode === "otp"
+                    ? "Send Magic Link"
+                    : authMode === "verify-otp"
+                      ? "Verify Code"
+                      : authMode === "forgot-password"
+                        ? "Send Reset Link"
+                        : "Sign In"}
               </Text>
             </>
           )}
         </TouchableOpacity>
 
-        {/* Toggle Sign Up/Sign In */}
-        <View className="flex-row justify-center items-center mb-8">
-          <Text className="text-gray-600">
-            {isSignUp ? "Already have an account?" : "Don't have an account?"}
-          </Text>
-          <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
-            <Text className="text-blue-600 font-semibold ml-2">
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </Text>
-          </TouchableOpacity>
+        {/* Navigation Links */}
+        <View className="items-center mb-8">
+          {authMode === "signin" && (
+            <>
+              <View className="flex-row justify-center items-center mb-4">
+                <Text className="text-gray-600">Don't have an account?</Text>
+                <TouchableOpacity onPress={() => setAuthMode("signup")}>
+                  <Text className="text-blue-600 font-semibold ml-2">
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View className="flex-row justify-center items-center mb-4">
+                <TouchableOpacity
+                  onPress={() => setAuthMode("forgot-password")}
+                >
+                  <Text className="text-blue-600 font-semibold">
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+                <Text className="text-gray-400 mx-2">•</Text>
+                <TouchableOpacity onPress={() => setAuthMode("otp")}>
+                  <Text className="text-blue-600 font-semibold">
+                    Use Magic Link
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+
+          {authMode === "signup" && (
+            <>
+              <View className="flex-row justify-center items-center mb-4">
+                <Text className="text-gray-600">Already have an account?</Text>
+                <TouchableOpacity onPress={() => setAuthMode("signin")}>
+                  <Text className="text-blue-600 font-semibold ml-2">
+                    Sign In
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <Text className="text-xs text-gray-500 text-center mb-4 leading-relaxed">
+                By creating an account, you agree to our{" "}
+                <Text className="text-blue-600">Terms of Service</Text> and{" "}
+                <Text className="text-blue-600">Privacy Policy</Text>.
+              </Text>
+            </>
+          )}
+
+          {authMode === "otp" && (
+            <View className="flex-row justify-center items-center mb-4">
+              <TouchableOpacity onPress={() => setAuthMode("signin")}>
+                <Text className="text-blue-600 font-semibold">
+                  Back to Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {authMode === "verify-otp" && (
+            <View className="items-center">
+              <View className="flex-row justify-center items-center mb-4">
+                <TouchableOpacity onPress={() => handleOTPAuth()}>
+                  <Text className="text-blue-600 font-semibold">
+                    Resend Code
+                  </Text>
+                </TouchableOpacity>
+                <Text className="text-gray-400 mx-2">•</Text>
+                <TouchableOpacity onPress={() => setAuthMode("otp")}>
+                  <Text className="text-blue-600 font-semibold">
+                    Change Email
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {authMode === "forgot-password" && (
+            <View className="flex-row justify-center items-center mb-4">
+              <TouchableOpacity onPress={() => setAuthMode("signin")}>
+                <Text className="text-blue-600 font-semibold">
+                  Back to Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-
-        {!isSignUp && (
-          <TouchableOpacity className="items-center mb-8">
-            <Text className="text-blue-600 font-semibold">
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {isSignUp && (
-          <Text className="text-xs text-gray-500 text-center mb-8 leading-relaxed">
-            By creating an account, you agree to our{" "}
-            <Text className="text-blue-600">Terms of Service</Text> and{" "}
-            <Text className="text-blue-600">Privacy Policy</Text>.
-          </Text>
-        )}
       </ScrollView>
       <View className="h-8" />
 

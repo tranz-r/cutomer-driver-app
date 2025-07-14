@@ -37,6 +37,7 @@ import {
 
 import { router, useRouter } from "expo-router";
 import SlideOutMenu from "./components/SlideOutMenu";
+import { useAuth } from "./contexts/AuthContext";
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
 
@@ -62,6 +63,7 @@ type Booking = {
 
 export default function CustomerDashboard() {
   const navigation = useRouter();
+  const { user, loading: authLoading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<"active" | "pending" | "history">(
     "active",
   );
@@ -73,11 +75,12 @@ export default function CustomerDashboard() {
 
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
-  // Mock user data
-  const user = {
-    name: "John Smith",
-    email: "john.smith@email.com",
-    phone: "+44 7700 900123",
+  // User data from auth context
+  const userData = {
+    name:
+      user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User",
+    email: user?.email || "user@example.com",
+    phone: user?.user_metadata?.phone || "+44 7700 900123",
     totalBookings: 12,
     memberSince: "2023",
   };
@@ -280,12 +283,13 @@ export default function CustomerDashboard() {
       {
         text: "Logout",
         style: "destructive",
-        onPress: () => {
+        onPress: async () => {
           try {
-            // Clear any stored auth data here
+            await signOut();
             navigation.replace("/landing");
           } catch (error) {
-            console.log("Navigation not available in this context");
+            console.log("Error signing out:", error);
+            Alert.alert("Error", "Failed to sign out. Please try again.");
           }
         },
       },
@@ -294,15 +298,11 @@ export default function CustomerDashboard() {
 
   // Check if user needs to authenticate when component loads
   useEffect(() => {
-    // Simulate checking if user is authenticated
-    // In a real app, this would check stored auth tokens
-    const isAuthenticated = true; // Set to true for now since user just authenticated
-
-    if (!isAuthenticated) {
+    if (!authLoading && !user) {
       // Redirect to auth if not authenticated
       navigation.replace("/auth");
     }
-  }, []);
+  }, [user, authLoading]);
 
   const renderBookingCard = (booking: Booking) => (
     <View
@@ -524,7 +524,7 @@ export default function CustomerDashboard() {
           <View className="flex-row justify-between items-center mb-4">
             <View className="flex-1">
               <Text className="text-2xl font-bold text-white mb-2">
-                Hello, {user.name.split(" ")[0]}! 👋
+                Hello, {userData.name.split(" ")[0]}! 👋
               </Text>
               <Text className="text-sm text-white">
                 Manage your bookings and account
@@ -559,7 +559,7 @@ export default function CustomerDashboard() {
           <View className="flex-row items-center mt-2">
             <View className="bg-white/15 rounded-full px-3 py-1 mr-3">
               <Text className="text-white text-xs font-medium">
-                Member since {user.memberSince}
+                Member since {userData.memberSince}
               </Text>
             </View>
             <View className="bg-white/15 rounded-full px-3 py-1">
@@ -591,7 +591,7 @@ export default function CustomerDashboard() {
             <View className="flex-row items-center justify-between">
               <View>
                 <Text className="text-2xl font-bold text-gray-900 mb-1">
-                  {user.totalBookings}
+                  {userData.totalBookings}
                 </Text>
                 <Text className="text-sm text-gray-600">Total Moves</Text>
               </View>
