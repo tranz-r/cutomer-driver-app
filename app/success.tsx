@@ -16,8 +16,10 @@ import {
   Phone,
   ArrowRight,
   Hash,
+  Menu,
 } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 export default function SuccessScreen() {
   const { confirmation } = useLocalSearchParams();
@@ -25,6 +27,7 @@ export default function SuccessScreen() {
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const fadeAnimation = useRef(new Animated.Value(0)).current;
   const slideAnimation = useRef(new Animated.Value(50)).current;
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   useEffect(() => {
     // Set confirmation number from params or generate a new one
@@ -75,13 +78,21 @@ export default function SuccessScreen() {
 
       {/* Header */}
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Booking Complete
-          </Text>
-          <Text className="text-sm text-white">
-            Your move has been successfully confirmed
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Booking Complete
+            </Text>
+            <Text className="text-sm text-white">
+              Your move has been successfully confirmed
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -219,6 +230,11 @@ export default function SuccessScreen() {
         </TouchableOpacity>
       </View>
       <View className="h-8" />
+
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
+      />
     </SafeAreaView>
   );
 }

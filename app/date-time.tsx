@@ -16,10 +16,12 @@ import {
   CheckCircle,
   Circle,
   X,
+  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 type TimeSlot = {
   id: string;
@@ -35,6 +37,7 @@ export default function DateTimeScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showHoursPicker, setShowHoursPicker] = useState(false);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const timeSlots: TimeSlot[] = [
     { id: "morning", time: "8:00 - 12:00", period: "Morning" },
@@ -146,6 +149,12 @@ export default function DateTimeScreen() {
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
               Date & Time
@@ -474,6 +483,11 @@ export default function DateTimeScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
+      />
+
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

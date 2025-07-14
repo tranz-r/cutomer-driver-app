@@ -18,9 +18,11 @@ import {
   EyeOff,
   ArrowLeft,
   CheckCircle,
+  Menu,
 } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Svg, { Path, G } from "react-native-svg";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 // Facebook Icon Component
 const FacebookIcon = () => (
@@ -68,6 +70,7 @@ export default function AuthScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -187,15 +190,23 @@ export default function AuthScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#2563eb" translucent={false} />
       <View className="bg-blue-600 pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Authentication
-          </Text>
-          <Text className="text-sm text-blue-200">
-            {isSignUp
-              ? "Create your account to get started"
-              : "Sign in to your account"}
-          </Text>
+        <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-white mb-1">
+              Authentication
+            </Text>
+            <Text className="text-sm text-blue-200">
+              {isSignUp
+                ? "Create your account to get started"
+                : "Sign in to your account"}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -389,6 +400,11 @@ export default function AuthScreen() {
         )}
       </ScrollView>
       <View className="h-8" />
+
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
+      />
     </SafeAreaView>
   );
 }

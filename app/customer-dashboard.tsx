@@ -32,9 +32,11 @@ import {
   Package,
   LogOut,
   Shield,
+  Menu,
 } from "lucide-react-native";
 
 import { router, useRouter } from "expo-router";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
 
@@ -68,7 +70,8 @@ export default function CustomerDashboard() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [additionalHours, setAdditionalHours] = useState("1");
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
+
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   // Mock user data
   const user = {
@@ -530,6 +533,12 @@ export default function CustomerDashboard() {
             <View className="flex-row items-center">
               <TouchableOpacity
                 className="relative p-3 rounded-full bg-white/20 mr-3"
+                onPress={() => setShowSlideOutMenu(true)}
+              >
+                <Menu size={20} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="relative p-3 rounded-full bg-white/20 mr-3"
                 onPress={() => setShowNotifications(true)}
               >
                 <Bell size={20} color="white" />
@@ -843,10 +852,9 @@ export default function CustomerDashboard() {
         </View>
       </Modal>
 
-      {/* Inventory Cart Modal */}
-      <InventoryCartModal
-        visible={showInventoryCartModal}
-        onClose={() => setShowInventoryCartModal(false)}
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
       />
 
       <View className="h-8" />

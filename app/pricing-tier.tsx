@@ -21,10 +21,12 @@ import {
   Smartphone,
   X,
   Info,
+  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 type PricingTier = {
   id: string;
@@ -51,6 +53,7 @@ export default function PricingTierScreen() {
     info: string;
   } | null>(null);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const pricingTiers: PricingTier[] = [
     {
@@ -313,6 +316,12 @@ export default function PricingTierScreen() {
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
               Choose Your Service
@@ -444,6 +453,11 @@ export default function PricingTierScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
+      />
+
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

@@ -22,12 +22,14 @@ import {
   Trash2,
   Edit,
   Camera,
+  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
 import { useCart } from "./contexts/CartContext";
 import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
+import SlideOutMenu from "./components/SlideOutMenu";
 
 type Item = {
   id: string;
@@ -51,6 +53,7 @@ export default function BuildInventoryScreen() {
     null,
   );
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
   const { addItem, getTotalItems } = useCart();
 
   // Helper function to get dimensions from item data
@@ -192,6 +195,12 @@ export default function BuildInventoryScreen() {
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
               Build Your Inventory
@@ -434,6 +443,11 @@ export default function BuildInventoryScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
+      />
+
+      <SlideOutMenu
+        visible={showSlideOutMenu}
+        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );
