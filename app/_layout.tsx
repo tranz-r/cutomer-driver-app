@@ -4,62 +4,38 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
-import { Platform } from "react-native";
 import { CartProvider } from "./contexts/CartContext";
 import { AuthProvider } from "./contexts/AuthContext";
-
-// Mock document for Hermes engine compatibility
-if (typeof document === "undefined") {
-  const mockElement = {
-    appendChild: () => {},
-    removeChild: () => {},
-    setAttribute: () => {},
-    getAttribute: () => null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    style: {},
-    innerHTML: "",
-    textContent: "",
-  };
-
-  global.document = {
-    createElement: () => mockElement,
-    getElementById: () => mockElement,
-    getElementsByTagName: () => [mockElement],
-    querySelector: () => mockElement,
-    querySelectorAll: () => [mockElement],
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    body: mockElement,
-    head: mockElement,
-    documentElement: mockElement,
-  };
-}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
-    if (process.env.EXPO_PUBLIC_TEMPO && Platform.OS === "web") {
-      const { TempoDevtools } = require("tempo-devtools");
-      TempoDevtools.init();
+    if (process.env.EXPO_PUBLIC_TEMPO && Platform.OS !== "web") {
+      try {
+        const { TempoDevtools } = require("tempo-devtools");
+        TempoDevtools.init();
+      } catch (err) {
+        console.log("TempoDevtools not available:", err);
+      }
     }
   }, []);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded || error) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, error]);
 
-  if (!loaded) {
+  if (!loaded && !error) {
     return null;
   }
 

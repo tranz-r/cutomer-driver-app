@@ -8,42 +8,36 @@ const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPER_BASE_ANON_KEY!;
 // Create a custom storage adapter for React Native
 const customStorage = {
   getItem: async (key: string) => {
-    // Check if we're in a browser environment
-    if (typeof window !== "undefined" && window.localStorage) {
-      return window.localStorage.getItem(key);
-    }
-    // Fallback to AsyncStorage for React Native
     try {
+      if (Platform.OS === "web") {
+        return localStorage.getItem(key);
+      }
       return await AsyncStorage.getItem(key);
     } catch (error) {
-      console.warn("Storage getItem error:", error);
+      console.error("Storage getItem error:", error);
       return null;
     }
   },
   setItem: async (key: string, value: string) => {
-    // Check if we're in a browser environment
-    if (typeof window !== "undefined" && window.localStorage) {
-      window.localStorage.setItem(key, value);
-      return;
-    }
-    // Fallback to AsyncStorage for React Native
     try {
+      if (Platform.OS === "web") {
+        localStorage.setItem(key, value);
+        return;
+      }
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.warn("Storage setItem error:", error);
+      console.error("Storage setItem error:", error);
     }
   },
   removeItem: async (key: string) => {
-    // Check if we're in a browser environment
-    if (typeof window !== "undefined" && window.localStorage) {
-      window.localStorage.removeItem(key);
-      return;
-    }
-    // Fallback to AsyncStorage for React Native
     try {
+      if (Platform.OS === "web") {
+        localStorage.removeItem(key);
+        return;
+      }
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.warn("Storage removeItem error:", error);
+      console.error("Storage removeItem error:", error);
     }
   },
 };
@@ -53,7 +47,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storage: customStorage,
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: Platform.OS === "web",
+    flowType: "pkce",
   },
 });
 
@@ -105,9 +100,6 @@ export const verifyOTP = async (email: string, token: string) => {
 export const signInWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: {
-      redirectTo: Platform.OS === "web" ? window.location.origin : undefined,
-    },
   });
   return { data, error };
 };
@@ -115,9 +107,6 @@ export const signInWithGoogle = async () => {
 export const signInWithFacebook = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "facebook",
-    options: {
-      redirectTo: Platform.OS === "web" ? window.location.origin : undefined,
-    },
   });
   return { data, error };
 };
@@ -125,9 +114,6 @@ export const signInWithFacebook = async () => {
 export const signInWithApple = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "apple",
-    options: {
-      redirectTo: Platform.OS === "web" ? window.location.origin : undefined,
-    },
   });
   return { data, error };
 };
@@ -138,9 +124,6 @@ export const signOut = async () => {
 };
 
 export const resetPassword = async (email: string) => {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo:
-      Platform.OS === "web" ? `${window.location.origin}/auth` : undefined,
-  });
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
   return { data, error };
 };
