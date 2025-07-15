@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -304,343 +305,356 @@ export default function AuthScreen() {
         </View>
       </View>
 
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        {/* Title */}
-        <View className="items-center mb-8">
-          <Text className="text-2xl font-bold text-gray-900 mb-2">
-            {authMode === "signup"
-              ? "Join Tranzr"
-              : authMode === "otp"
-                ? "Magic Link"
-                : authMode === "verify-otp"
-                  ? "Enter OTP"
-                  : authMode === "forgot-password"
-                    ? "Reset Password"
-                    : "Sign In"}
-          </Text>
-          {authMode === "otp" && (
-            <Text className="text-sm text-gray-600 text-center">
-              We'll send you a magic link to sign in without a password
-            </Text>
-          )}
-          {authMode === "verify-otp" && (
-            <Text className="text-sm text-gray-600 text-center">
-              Enter the 6-digit code we sent to {email}
-            </Text>
-          )}
-        </View>
-
-        {/* Social Login Buttons - Only show for signin and signup */}
-        {(authMode === "signin" || authMode === "signup") && (
-          <View className="mb-6">
-            <Text className="text-center text-gray-600 mb-6">
-              Continue with social
-            </Text>
-            <View className="flex-row justify-center items-center">
-              <TouchableOpacity
-                className="w-16 h-16 bg-[#1877F2] rounded-full items-center justify-center shadow-lg mx-4"
-                onPress={() => handleSocialAuth("facebook")}
-                disabled={isLoading}
-              >
-                <FacebookIcon />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="w-16 h-16 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm mx-4"
-                onPress={() => handleSocialAuth("google")}
-                disabled={isLoading}
-              >
-                <GoogleIcon />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                className="w-16 h-16 bg-black rounded-full items-center justify-center shadow-lg mx-4"
-                onPress={() => handleSocialAuth("apple")}
-                disabled={isLoading}
-              >
-                <AppleIcon />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {/* Divider - Only show for signin and signup */}
-        {(authMode === "signin" || authMode === "signup") && (
-          <View className="flex-row items-center mb-6">
-            <View className="flex-1 h-px bg-gray-300" />
-            <Text className="mx-4 text-gray-500 text-sm">or</Text>
-            <View className="flex-1 h-px bg-gray-300" />
-          </View>
-        )}
-
-        {/* Auth Forms */}
-        <View className="mb-6">
-          {/* Full Name - Only for signup */}
-          {authMode === "signup" && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Full Name
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <User size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={fullName}
-                  onChangeText={setFullName}
-                  placeholder="Enter your full name"
-                  placeholderTextColor="#9ca3af"
-                  autoCapitalize="words"
-                  editable={!isLoading}
-                />
-              </View>
-            </View>
-          )}
-
-          {/* Email - Show for all modes except verify-otp */}
-          {authMode !== "verify-otp" && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Email Address
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Mail size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="Enter your email"
-                  placeholderTextColor="#9ca3af"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  editable={!isLoading}
-                />
-              </View>
-            </View>
-          )}
-
-          {/* Password - Only for signin and signup */}
-          {(authMode === "signin" || authMode === "signup") && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Lock size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Enter your password"
-                  placeholderTextColor="#9ca3af"
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff size={20} color="#6b7280" />
-                  ) : (
-                    <Eye size={20} color="#6b7280" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
-          {/* Confirm Password - Only for signup */}
-          {authMode === "signup" && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Confirm Password
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Lock size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900"
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  placeholder="Confirm your password"
-                  placeholderTextColor="#9ca3af"
-                  secureTextEntry={!showConfirmPassword}
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff size={20} color="#6b7280" />
-                  ) : (
-                    <Eye size={20} color="#6b7280" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
-          {/* OTP Code - Only for verify-otp */}
-          {authMode === "verify-otp" && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Verification Code
-              </Text>
-              <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
-                <Smartphone size={20} color="#6b7280" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-gray-900 text-center tracking-widest"
-                  value={otpCode}
-                  onChangeText={setOtpCode}
-                  placeholder="000000"
-                  placeholderTextColor="#9ca3af"
-                  keyboardType="numeric"
-                  maxLength={6}
-                  editable={!isLoading}
-                />
-              </View>
-            </View>
-          )}
-        </View>
-
-        {/* Submit Button */}
-        <TouchableOpacity
-          className={`py-4 px-6 rounded-xl flex-row justify-center items-center mb-6 ${
-            isLoading ? "bg-gray-400" : "bg-blue-600"
-          }`}
-          onPress={
-            authMode === "otp"
-              ? handleOTPAuth
-              : authMode === "verify-otp"
-                ? handleVerifyOTP
-                : authMode === "forgot-password"
-                  ? handleForgotPassword
-                  : handleEmailAuth
-          }
-          disabled={isLoading}
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 20}
+      >
+        <ScrollView
+          className="flex-1 px-4"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
+          keyboardShouldPersistTaps="handled"
         >
-          {isLoading ? (
-            <>
-              <ActivityIndicator size="small" color="white" />
-              <Text className="text-white font-semibold text-base ml-2">
-                {authMode === "signup"
-                  ? "Creating Account..."
-                  : authMode === "otp"
-                    ? "Sending Magic Link..."
-                    : authMode === "verify-otp"
-                      ? "Verifying Code..."
-                      : authMode === "forgot-password"
-                        ? "Sending Reset Link..."
-                        : "Signing In..."}
+          {/* Title */}
+          <View className="items-center mb-8">
+            <Text className="text-2xl font-bold text-gray-900 mb-2">
+              {authMode === "signup"
+                ? "Join Tranzr"
+                : authMode === "otp"
+                  ? "Magic Link"
+                  : authMode === "verify-otp"
+                    ? "Enter OTP"
+                    : authMode === "forgot-password"
+                      ? "Reset Password"
+                      : "Sign In"}
+            </Text>
+            {authMode === "otp" && (
+              <Text className="text-sm text-gray-600 text-center">
+                We'll send you a magic link to sign in without a password
               </Text>
-            </>
-          ) : (
-            <>
-              <CheckCircle size={20} color="white" />
-              <Text className="text-white font-semibold text-base ml-2">
-                {authMode === "signup"
-                  ? "Create Account"
-                  : authMode === "otp"
-                    ? "Send Magic Link"
-                    : authMode === "verify-otp"
-                      ? "Verify Code"
-                      : authMode === "forgot-password"
-                        ? "Send Reset Link"
-                        : "Sign In"}
+            )}
+            {authMode === "verify-otp" && (
+              <Text className="text-sm text-gray-600 text-center">
+                Enter the 6-digit code we sent to {email}
               </Text>
-            </>
-          )}
-        </TouchableOpacity>
+            )}
+          </View>
 
-        {/* Navigation Links */}
-        <View className="items-center mb-8">
-          {authMode === "signin" && (
-            <>
-              <View className="flex-row justify-center items-center mb-4">
-                <Text className="text-gray-600">Don't have an account?</Text>
-                <TouchableOpacity onPress={() => setAuthMode("signup")}>
-                  <Text className="text-blue-600 font-semibold ml-2">
-                    Sign Up
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View className="flex-row justify-center items-center mb-4">
+          {/* Social Login Buttons - Only show for signin and signup */}
+          {(authMode === "signin" || authMode === "signup") && (
+            <View className="mb-6">
+              <Text className="text-center text-gray-600 mb-6">
+                Continue with social
+              </Text>
+              <View className="flex-row justify-center items-center">
                 <TouchableOpacity
-                  onPress={() => setAuthMode("forgot-password")}
+                  className="w-16 h-16 bg-[#1877F2] rounded-full items-center justify-center shadow-lg mx-4"
+                  onPress={() => handleSocialAuth("facebook")}
+                  disabled={isLoading}
                 >
-                  <Text className="text-blue-600 font-semibold">
-                    Forgot Password?
-                  </Text>
+                  <FacebookIcon />
                 </TouchableOpacity>
-                <Text className="text-gray-400 mx-2">•</Text>
-                <TouchableOpacity onPress={() => setAuthMode("otp")}>
-                  <Text className="text-blue-600 font-semibold">
-                    Use Magic Link
-                  </Text>
+
+                <TouchableOpacity
+                  className="w-16 h-16 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm mx-4"
+                  onPress={() => handleSocialAuth("google")}
+                  disabled={isLoading}
+                >
+                  <GoogleIcon />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="w-16 h-16 bg-black rounded-full items-center justify-center shadow-lg mx-4"
+                  onPress={() => handleSocialAuth("apple")}
+                  disabled={isLoading}
+                >
+                  <AppleIcon />
                 </TouchableOpacity>
               </View>
-            </>
+            </View>
           )}
 
-          {authMode === "signup" && (
-            <>
+          {/* Divider - Only show for signin and signup */}
+          {(authMode === "signin" || authMode === "signup") && (
+            <View className="flex-row items-center mb-6">
+              <View className="flex-1 h-px bg-gray-300" />
+              <Text className="mx-4 text-gray-500 text-sm">or</Text>
+              <View className="flex-1 h-px bg-gray-300" />
+            </View>
+          )}
+
+          {/* Auth Forms */}
+          <View className="mb-6">
+            {/* Full Name - Only for signup */}
+            {authMode === "signup" && (
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Full Name
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <User size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={fullName}
+                    onChangeText={setFullName}
+                    placeholder="Enter your full name"
+                    placeholderTextColor="#9ca3af"
+                    autoCapitalize="words"
+                    editable={!isLoading}
+                  />
+                </View>
+              </View>
+            )}
+
+            {/* Email - Show for all modes except verify-otp */}
+            {authMode !== "verify-otp" && (
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Email Address
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <Mail size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="Enter your email"
+                    placeholderTextColor="#9ca3af"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    editable={!isLoading}
+                  />
+                </View>
+              </View>
+            )}
+
+            {/* Password - Only for signin and signup */}
+            {(authMode === "signin" || authMode === "signup") && (
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Password
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <Lock size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#9ca3af"
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={20} color="#6b7280" />
+                    ) : (
+                      <Eye size={20} color="#6b7280" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {/* Confirm Password - Only for signup */}
+            {authMode === "signup" && (
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Confirm Password
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <Lock size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    placeholder="Confirm your password"
+                    placeholderTextColor="#9ca3af"
+                    secureTextEntry={!showConfirmPassword}
+                    autoCapitalize="none"
+                    editable={!isLoading}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={20} color="#6b7280" />
+                    ) : (
+                      <Eye size={20} color="#6b7280" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {/* OTP Code - Only for verify-otp */}
+            {authMode === "verify-otp" && (
+              <View className="mb-4">
+                <Text className="text-sm font-semibold text-gray-700 mb-2">
+                  Verification Code
+                </Text>
+                <View className="flex-row items-center border border-gray-300 rounded-xl p-4 bg-gray-50">
+                  <Smartphone size={20} color="#6b7280" />
+                  <TextInput
+                    className="flex-1 ml-3 text-base text-gray-900 text-center tracking-widest"
+                    value={otpCode}
+                    onChangeText={setOtpCode}
+                    placeholder="000000"
+                    placeholderTextColor="#9ca3af"
+                    keyboardType="numeric"
+                    maxLength={6}
+                    editable={!isLoading}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            className={`py-4 px-6 rounded-xl flex-row justify-center items-center mb-6 ${
+              isLoading ? "bg-gray-400" : "bg-blue-600"
+            }`}
+            onPress={
+              authMode === "otp"
+                ? handleOTPAuth
+                : authMode === "verify-otp"
+                  ? handleVerifyOTP
+                  : authMode === "forgot-password"
+                    ? handleForgotPassword
+                    : handleEmailAuth
+            }
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <ActivityIndicator size="small" color="white" />
+                <Text className="text-white font-semibold text-base ml-2">
+                  {authMode === "signup"
+                    ? "Creating Account..."
+                    : authMode === "otp"
+                      ? "Sending Magic Link..."
+                      : authMode === "verify-otp"
+                        ? "Verifying Code..."
+                        : authMode === "forgot-password"
+                          ? "Sending Reset Link..."
+                          : "Signing In..."}
+                </Text>
+              </>
+            ) : (
+              <>
+                <CheckCircle size={20} color="white" />
+                <Text className="text-white font-semibold text-base ml-2">
+                  {authMode === "signup"
+                    ? "Create Account"
+                    : authMode === "otp"
+                      ? "Send Magic Link"
+                      : authMode === "verify-otp"
+                        ? "Verify Code"
+                        : authMode === "forgot-password"
+                          ? "Send Reset Link"
+                          : "Sign In"}
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          {/* Navigation Links */}
+          <View className="items-center mb-8">
+            {authMode === "signin" && (
+              <>
+                <View className="flex-row justify-center items-center mb-4">
+                  <Text className="text-gray-600">Don't have an account?</Text>
+                  <TouchableOpacity onPress={() => setAuthMode("signup")}>
+                    <Text className="text-blue-600 font-semibold ml-2">
+                      Sign Up
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View className="flex-row justify-center items-center mb-4">
+                  <TouchableOpacity
+                    onPress={() => setAuthMode("forgot-password")}
+                  >
+                    <Text className="text-blue-600 font-semibold">
+                      Forgot Password?
+                    </Text>
+                  </TouchableOpacity>
+                  <Text className="text-gray-400 mx-2">•</Text>
+                  <TouchableOpacity onPress={() => setAuthMode("otp")}>
+                    <Text className="text-blue-600 font-semibold">
+                      Use Magic Link
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+
+            {authMode === "signup" && (
+              <>
+                <View className="flex-row justify-center items-center mb-4">
+                  <Text className="text-gray-600">
+                    Already have an account?
+                  </Text>
+                  <TouchableOpacity onPress={() => setAuthMode("signin")}>
+                    <Text className="text-blue-600 font-semibold ml-2">
+                      Sign In
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <Text className="text-xs text-gray-500 text-center mb-4 leading-relaxed">
+                  By creating an account, you agree to our{" "}
+                  <Text className="text-blue-600">Terms of Service</Text> and{" "}
+                  <Text className="text-blue-600">Privacy Policy</Text>.
+                </Text>
+              </>
+            )}
+
+            {authMode === "otp" && (
               <View className="flex-row justify-center items-center mb-4">
-                <Text className="text-gray-600">Already have an account?</Text>
                 <TouchableOpacity onPress={() => setAuthMode("signin")}>
-                  <Text className="text-blue-600 font-semibold ml-2">
-                    Sign In
+                  <Text className="text-blue-600 font-semibold">
+                    Back to Sign In
                   </Text>
                 </TouchableOpacity>
               </View>
-              <Text className="text-xs text-gray-500 text-center mb-4 leading-relaxed">
-                By creating an account, you agree to our{" "}
-                <Text className="text-blue-600">Terms of Service</Text> and{" "}
-                <Text className="text-blue-600">Privacy Policy</Text>.
-              </Text>
-            </>
-          )}
+            )}
 
-          {authMode === "otp" && (
-            <View className="flex-row justify-center items-center mb-4">
-              <TouchableOpacity onPress={() => setAuthMode("signin")}>
-                <Text className="text-blue-600 font-semibold">
-                  Back to Sign In
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            {authMode === "verify-otp" && (
+              <View className="items-center">
+                <View className="flex-row justify-center items-center mb-4">
+                  <TouchableOpacity onPress={() => handleOTPAuth()}>
+                    <Text className="text-blue-600 font-semibold">
+                      Resend Code
+                    </Text>
+                  </TouchableOpacity>
+                  <Text className="text-gray-400 mx-2">•</Text>
+                  <TouchableOpacity onPress={() => setAuthMode("otp")}>
+                    <Text className="text-blue-600 font-semibold">
+                      Change Email
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
 
-          {authMode === "verify-otp" && (
-            <View className="items-center">
+            {authMode === "forgot-password" && (
               <View className="flex-row justify-center items-center mb-4">
-                <TouchableOpacity onPress={() => handleOTPAuth()}>
+                <TouchableOpacity onPress={() => setAuthMode("signin")}>
                   <Text className="text-blue-600 font-semibold">
-                    Resend Code
-                  </Text>
-                </TouchableOpacity>
-                <Text className="text-gray-400 mx-2">•</Text>
-                <TouchableOpacity onPress={() => setAuthMode("otp")}>
-                  <Text className="text-blue-600 font-semibold">
-                    Change Email
+                    Back to Sign In
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          )}
-
-          {authMode === "forgot-password" && (
-            <View className="flex-row justify-center items-center mb-4">
-              <TouchableOpacity onPress={() => setAuthMode("signin")}>
-                <Text className="text-blue-600 font-semibold">
-                  Back to Sign In
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-      <View className="h-8" />
+            )}
+          </View>
+        </ScrollView>
+        <View className="h-8" />
+      </KeyboardAvoidingView>
 
       <SlideOutMenu
         visible={showSlideOutMenu}

@@ -21,17 +21,23 @@ export default function RootLayout() {
   useEffect(() => {
     if (process.env.EXPO_PUBLIC_TEMPO && Platform.OS !== "web") {
       try {
-        const { TempoDevtools } = require("tempo-devtools");
-        TempoDevtools.init();
+        // Only initialize TempoDevtools if window is available (web environment)
+        if (typeof window !== "undefined" && window.addEventListener) {
+          const { TempoDevtools } = require("tempo-devtools");
+          TempoDevtools.init();
+        }
       } catch (err) {
-        console.log("TempoDevtools not available:", err);
+        // Silently handle TempoDevtools initialization errors
+        console.log("TempoDevtools not available:", err.message || err);
       }
     }
   }, []);
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch((err) => {
+        console.log("Error hiding splash screen:", err);
+      });
     }
   }, [loaded, error]);
 

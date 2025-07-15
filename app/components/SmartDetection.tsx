@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { ChevronRight } from "lucide-react-native";
+import { ChevronRight, Menu } from "lucide-react-native";
 import { router } from "expo-router";
 import MediaUploader from "./MediaUploader";
 import DetectedItemsList from "./DetectedItemsList";
@@ -16,7 +16,11 @@ interface MediaItem {
   id: string;
 }
 
-export default function SmartDetection() {
+interface SmartDetectionProps {
+  onMenuPress?: () => void;
+}
+
+export default function SmartDetection({ onMenuPress }: SmartDetectionProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDetectedItems, setShowDetectedItems] = useState(false);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -82,6 +86,12 @@ export default function SmartDetection() {
     <View className="flex-1">
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={onMenuPress}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
               Smart Detection

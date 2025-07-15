@@ -254,7 +254,8 @@ const DetectedItemsList = ({
         </TouchableOpacity>
 
         <Text className="text-gray-500 text-xs text-center mt-2">
-          Didn't detect something? Add it manually above
+          Didn't detect something? search and add items from our extensive
+          database
         </Text>
       </View>
     </View>
