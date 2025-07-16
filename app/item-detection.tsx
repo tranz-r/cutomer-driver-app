@@ -22,6 +22,12 @@ export default function ItemDetectionScreen() {
       <StatusBar style="light" backgroundColor="#7080cc" />
       <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            className="bg-white/20 p-3 rounded-full mr-3"
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
               Inventory Options Capture
@@ -30,12 +36,6 @@ export default function ItemDetectionScreen() {
               Choose how you want to build your inventory
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
         </View>
       </View>
 

@@ -35,11 +35,26 @@ import {
   Menu,
 } from "lucide-react-native";
 
-import { router, useRouter } from "expo-router";
+import { router, useRouter, Redirect } from "expo-router";
 import SlideOutMenu from "./components/SlideOutMenu";
-import { useAuth } from "./contexts/AuthContext";
+import { supabase } from '../lib/supabase';
+import { Session } from '@supabase/supabase-js';
 
 type BookingStatus = "active" | "pending" | "completed" | "cancelled";
+
+type DriverLocation = {
+  lat: number;
+  lng: number;
+  address: string;
+  eta: string;
+  status: string;
+  pickupLat: number;
+  pickupLng: number;
+  deliveryLat: number;
+  deliveryLng: number;
+  speed: string;
+  lastUpdated: string;
+};
 
 type Booking = {
   id: string;
@@ -59,28 +74,48 @@ type Booking = {
   driverName?: string;
   driverPhone?: string;
   rating?: number;
+  driverLocation?: DriverLocation;
 };
 
 export default function CustomerDashboard() {
   const navigation = useRouter();
-  const { user, loading: authLoading, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<"active" | "pending" | "history">(
-    "active",
-  );
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"active" | "pending" | "history">("active");
   const [showExtendModal, setShowExtendModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [additionalHours, setAdditionalHours] = useState("1");
   const [showNotifications, setShowNotifications] = useState(false);
-
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
-  // User data from auth context
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
+
+  if (loading) {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Loading...</Text></View>;
+  }
+
+  if (!session) {
+    return <Redirect href="/auth" />;
+  }
+
+  // User data from session
   const userData = {
     name:
-      user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User",
-    email: user?.email || "user@example.com",
-    phone: user?.user_metadata?.phone || "+44 7700 900123",
+      session?.user?.user_metadata?.full_name || session?.user?.email?.split("@")[0] || "User",
+    email: session?.user?.email || "user@example.com",
+    phone: session?.user?.user_metadata?.phone || "+44 7700 900123",
     totalBookings: 12,
     memberSince: "2023",
   };
@@ -285,7 +320,7 @@ export default function CustomerDashboard() {
         style: "destructive",
         onPress: async () => {
           try {
-            await signOut();
+            await supabase.auth.signOut();
             navigation.replace("/landing");
           } catch (error) {
             console.log("Error signing out:", error);
@@ -295,14 +330,6 @@ export default function CustomerDashboard() {
       },
     ]);
   };
-
-  // Check if user needs to authenticate when component loads
-  useEffect(() => {
-    if (!authLoading && !user) {
-      // Redirect to auth if not authenticated
-      navigation.replace("/auth");
-    }
-  }, [user, authLoading]);
 
   const renderBookingCard = (booking: Booking) => (
     <View
