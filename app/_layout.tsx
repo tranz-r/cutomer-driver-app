@@ -22,8 +22,8 @@ export default function RootLayout() {
       try {
         // Only initialize TempoDevtools if window is available (web environment)
         if (typeof window !== "undefined" && window.addEventListener) {
-          // const { TempoDevtools } = require("tempo-devtools");
-          // TempoDevtools.init();
+          const { TempoDevtools } = require("tempo-devtools");
+          TempoDevtools.init();
         }
       } catch (err) {
         // Silently handle TempoDevtools initialization errors
