@@ -1,13 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useRef, useEffect, RefObject } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, TextInput as RNTextInput } from 'react-native';
 
 const OTP_LENGTH = 6;
-const RESEND_TIME = 120; // seconds
+const RESEND_TIME = 60; // seconds
 
-export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwitchAccount, onChangeEmail }) {
-  const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(''));
-  const [timer, setTimer] = useState(RESEND_TIME);
-  const inputRefs = useRef([]);
+type EmailOtpVerifyScreenProps = {
+  email: string;
+  onVerify: (otp: string) => void;
+  onResend: () => void;
+  onSwitchAccount: () => void;
+  onChangeEmail: () => void;
+};
+
+export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwitchAccount, onChangeEmail }: EmailOtpVerifyScreenProps) {
+  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
+  const [timer, setTimer] = useState<number>(RESEND_TIME);
+  const inputRefs = useRef<RefObject<RNTextInput | null>[]>(
+    Array.from({ length: OTP_LENGTH }, () => React.createRef<RNTextInput>())
+  );
 
   useEffect(() => {
     if (timer > 0) {
@@ -16,18 +26,24 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
     }
   }, [timer]);
 
-  const handleChange = (text, idx) => {
+  const handleChange = (text: string, idx: number) => {
     if (!/^[0-9]?$/.test(text)) return;
     const newOtp = [...otp];
     newOtp[idx] = text;
     setOtp(newOtp);
     if (text && idx < OTP_LENGTH - 1) {
-      inputRefs.current[idx + 1]?.focus();
+      inputRefs.current[idx + 1]?.current?.focus();
     }
   };
 
   const handleVerify = () => {
     onVerify && onVerify(otp.join(''));
+  };
+
+  // When user presses resend, reset timer
+  const handleResendPress = () => {
+    setTimer(RESEND_TIME);
+    onResend && onResend();
   };
 
   return (
@@ -42,9 +58,9 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
       </Text>
       <View className="flex-row justify-center mb-6">
         {otp.map((digit, idx) => (
-          <TextInput
+          <RNTextInput
             key={idx}
-            ref={el => (inputRefs.current[idx] = el)}
+            ref={inputRefs.current[idx]}
             className="border border-gray-300 rounded-xl mx-1 text-center text-xl"
             style={{ width: 48, height: 56 }}
             maxLength={1}
@@ -57,7 +73,7 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
       </View>
       <View className="flex-row justify-center items-center mb-4">
         <Text className="text-gray-500 mr-2">Didn't get it?</Text>
-        <TouchableOpacity disabled={timer > 0} onPress={onResend}>
+        <TouchableOpacity disabled={timer > 0} onPress={handleResendPress}>
           <Text className={`font-semibold ${timer > 0 ? 'text-gray-400' : 'text-[#70AECC]'}`}>
             Resend code
           </Text>
@@ -71,7 +87,7 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
         style={{ backgroundColor: '#70AECC' }}
         className="py-4 rounded-xl mb-4"
         onPress={handleVerify}
-        disabled={otp.some(d => !d)}
+        disabled={otp.some(d => !d) || timer === 0}
       >
         <Text className="text-white text-center font-semibold text-lg">Verify OTP</Text>
       </TouchableOpacity>

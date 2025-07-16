@@ -20,7 +20,6 @@ export default function OtpVerifyScreen() {
     if (error) {
       Alert.alert('Error', error.message);
     } else if (session) {
-      Alert.alert('Success', 'You are now signed in!');
       router.replace('/customer-dashboard');
     }
   };
