@@ -8,6 +8,7 @@ import { Platform } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 import { CartProvider } from "./contexts/CartContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -49,61 +50,38 @@ export default function RootLayout() {
   }
 
   return (
-    <CartProvider>
+    <SafeAreaProvider>
+          <CartProvider>
       <ThemeProvider value={DefaultTheme}>
         <Stack
-          screenOptions={({ route }) => ({
+          screenOptions={({ route }) => ({ 
             headerShown: !route.name.startsWith("tempobook"),
           })}
         >
           <Stack.Screen name="splash" options={{ headerShown: false }} />
           <Stack.Screen name="landing" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="item-detection"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="build-inventory"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="smart-detection"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="van-selection"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="origin-destination"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="date-time" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="customer-details"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="pricing-tier"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="summary" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
-          <Stack.Screen name="payment" options={{ headerShown: false }} />
-          <Stack.Screen name="success" options={{ headerShown: false }} />
-          <Stack.Screen name="otp-send" options={{ headerShown: false }} />
-          <Stack.Screen name="otp-verify" options={{ headerShown: false }} />
-          <Stack.Screen name="signup" options={{ headerShown: false }} />
-          <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
-          
-          <Stack.Screen
-            name="customer-dashboard"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="item-detection" options={{ headerShown: false, headerTitle: "Item Detection" }} />
+          <Stack.Screen name="build-inventory" options={{ headerShown: false, headerTitle: "Build Inventory" }} />
+          <Stack.Screen name="smart-detection" options={{ headerShown: false, headerTitle: "Smart Detection" }} />
+          <Stack.Screen name="van-selection" options={{ headerShown: false, headerTitle: "Van Selection" }} />
+          <Stack.Screen name="origin-destination" options={{ headerShown: false, headerTitle: "Origin & Destination" }} />
+          <Stack.Screen name="date-time" options={{ headerShown: false, headerTitle: "Date & Time" }} />
+          <Stack.Screen name="customer-details" options={{ headerShown: false, headerTitle: "Customer Details" }} />
+          <Stack.Screen name="pricing-tier" options={{ headerShown: false, headerTitle: "Pricing Tier" }} />
+          <Stack.Screen name="summary" options={{ headerShown: false, headerTitle: "Summary" }} />
+          <Stack.Screen name="auth" options={{ headerShown: false, headerTitle: "Login" }} />
+          <Stack.Screen name="payment" options={{ headerShown: false, headerTitle: "Payment" }} />
+          <Stack.Screen name="success" options={{ headerShown: false, headerTitle: "Success" }} />
+          <Stack.Screen name="otp-send" options={{ headerShown: false, headerTitle: "OTP Send" }} />
+          <Stack.Screen name="otp-verify" options={{ headerShown: false, headerTitle: "OTP Verify" }} />
+          <Stack.Screen name="signup" options={{ headerShown: false, headerTitle: "Signup" }} />
+          <Stack.Screen name="forgot-password" options={{ headerShown: false, headerTitle: "Forgot Password" }} />
+          <Stack.Screen name="customer-dashboard" options={{ headerShown: false, headerTitle: "Customer Dashboard" }} />
+          <Stack.Screen name="index" options={{ headerShown: false, headerTitle: "Index" }} />
         </Stack>
-        <StatusBar style="auto" />
+        <StatusBar style="auto" translucent={false} backgroundColor="#7080cc" />
       </ThemeProvider>
     </CartProvider>
+    </SafeAreaProvider>
   );
 }
