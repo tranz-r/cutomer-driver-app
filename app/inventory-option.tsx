@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View, Text, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import VanSvg from "./components/VanSvg";
 import InventorySvg from "./components/InventorySvg";
@@ -13,9 +13,9 @@ export default function InventoryOptionScreen() {
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   return (
-    <>
+    <SafeAreaView className="flex-1 bg-white">
       {/* Menu Button */}
-      <View className="absolute top-16 left-4 z-50">
+      <View className="absolute top-4 left-4 z-50">
         <TouchableOpacity
           onPress={() => setShowSlideOutMenu(true)}
           className="bg-white/90 p-3 rounded-full shadow-lg border border-gray-200"
@@ -112,6 +112,6 @@ export default function InventoryOptionScreen() {
         visible={showSlideOutMenu}
         onClose={() => setShowSlideOutMenu(false)}
       />
-    </>
+    </SafeAreaView>
   );
 }

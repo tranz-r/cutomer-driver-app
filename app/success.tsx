@@ -8,7 +8,8 @@ import {
   Easing,
   ScrollView,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   CheckCircle,
   Calendar,
@@ -28,6 +29,7 @@ export default function SuccessScreen() {
   const fadeAnimation = useRef(new Animated.Value(0)).current;
   const slideAnimation = useRef(new Animated.Value(50)).current;
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // Set confirmation number from params or generate a new one
@@ -74,10 +76,15 @@ export default function SuccessScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" translucent={false} />
 
       {/* Header */}
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View
+        style={{
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }}
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}
@@ -87,10 +94,10 @@ export default function SuccessScreen() {
           </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
-              Booking Complete
+              Booking Confirmed!
             </Text>
             <Text className="text-sm text-white">
-              Your move has been successfully confirmed
+              Your move has been successfully scheduled.
             </Text>
           </View>
         </View>

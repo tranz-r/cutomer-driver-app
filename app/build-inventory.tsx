@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   ChevronRight,
   Package,
@@ -42,6 +43,7 @@ type Item = {
 };
 
 export default function BuildInventoryScreen() {
+  const insets = useSafeAreaInsets();
   const [items, setItems] = useState<Item[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItemQuantities, setSelectedItemQuantities] = useState<{
@@ -192,8 +194,13 @@ export default function BuildInventoryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View 
+        style={{ 
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }} 
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}
@@ -256,7 +263,6 @@ export default function BuildInventoryScreen() {
                     <TouchableOpacity
                       className="bg-green-500 px-6 py-4 rounded-xl flex-row items-center justify-center shadow-sm"
                       onPress={() => router.push("/smart-detection")}
-                      chris
                     >
                       <Camera size={24} color="white" className="mr-2" />
                       <Text className="text-white font-bold text-base ml-2">

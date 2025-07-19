@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity } from "react-native";
-import { StatusBar } from "expo-status-bar";
+
 import { Menu } from "lucide-react-native";
 import SmartDetection from "./components/SmartDetection";
 import SlideOutMenu from "./components/SlideOutMenu";
@@ -10,7 +10,6 @@ export default function SmartDetectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
 
       <SmartDetection onMenuPress={() => setShowSlideOutMenu(true)} />
 

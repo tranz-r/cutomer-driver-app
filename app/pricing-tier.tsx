@@ -6,8 +6,10 @@ import {
   ScrollView,
   SafeAreaView,
   Modal,
+  Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   ChevronRight,
   ChevronDown,
@@ -45,6 +47,7 @@ type PricingTier = {
 };
 
 export default function PricingTierScreen() {
+  const insets = useSafeAreaInsets();
   const [selectedTier, setSelectedTier] = useState<string>("eco-plus");
   const [expandedTier, setExpandedTier] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -313,8 +316,13 @@ export default function PricingTierScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View
+        style={{
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }}
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}
@@ -324,10 +332,10 @@ export default function PricingTierScreen() {
           </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
-              Choose Your Service
+              Choose Your Plan
             </Text>
             <Text className="text-sm text-white">
-              Select the service level that best fits your needs
+              Select the pricing tier that best fits your needs.
             </Text>
           </View>
           <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />

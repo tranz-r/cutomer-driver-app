@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import { Eye, EyeOff } from 'lucide-react-native';
@@ -70,7 +70,8 @@ export default function SignUp() {
   }
 
   return (
-    <View className="flex-1 bg-white px-6 justify-center">
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 px-6 justify-center">
       {/* Illustration */}
       <View className="items-center mb-8">
         {/* <Image source={require('../assets/images/auth-illustration.png')} className="w-44 h-32" resizeMode="contain" /> */}
@@ -137,9 +138,10 @@ export default function SignUp() {
       <TouchableOpacity className="items-center mb-4" onPress={() => router.push('/otp-send')}>
         <Text className="text-[#70AECC] underline font-bold text-base mt-1">Sign up with One Time Password (OTP)</Text>
       </TouchableOpacity>
-      <TouchableOpacity className="items-center" onPress={() => router.replace('/auth')}>
-        <Text className="text-green-700 text-center font-semibold text-base">Already have an account? Sign in</Text>
-      </TouchableOpacity>
-    </View>
+              <TouchableOpacity className="items-center" onPress={() => router.replace('/auth')}>
+          <Text className="text-green-700 text-center font-semibold text-base">Already have an account? Sign in</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 } 

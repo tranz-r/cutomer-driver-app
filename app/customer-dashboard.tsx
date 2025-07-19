@@ -11,7 +11,8 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   Calendar,
   Clock,
@@ -78,6 +79,7 @@ type Booking = {
 };
 
 export default function CustomerDashboard() {
+  const insets = useSafeAreaInsets();
   const navigation = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -543,10 +545,15 @@ export default function CustomerDashboard() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <StatusBar style="light" backgroundColor="#7080cc" />
 
       {/* Header */}
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-8">
+      <View 
+        style={{ 
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }} 
+        className="pb-8"
+      >
         <View className="px-4">
           <View className="flex-row justify-between items-center mb-4">
             <View className="flex-1">

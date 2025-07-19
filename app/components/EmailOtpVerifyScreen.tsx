@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, RefObject } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, TextInput as RNTextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, TextInput as RNTextInput, SafeAreaView } from 'react-native';
 
 const OTP_LENGTH = 6;
 const RESEND_TIME = 60; // seconds
@@ -47,7 +47,8 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
   };
 
   return (
-    <View className="flex-1 bg-white px-6 justify-center">
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 px-6 justify-center">
       {/* Illustration */}
       <View className="items-center mb-8">
         {/* <Image source={require('../assets/images/otp-illustration.png')} style={{ width: 180, height: 120 }} resizeMode="contain" /> */}
@@ -95,5 +96,6 @@ export default function EmailOtpVerifyScreen({ email, onVerify, onResend, onSwit
         <Text className="text-center text-green-700 underline">Change the email address</Text>
       </TouchableOpacity>
     </View>
+  </SafeAreaView>
   );
 } 

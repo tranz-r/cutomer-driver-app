@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, Animated, Easing, Dimensions } from "react-native";
+import { View, Text, Animated, Easing, Dimensions, SafeAreaView } from "react-native";
 import { router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { Truck } from "lucide-react-native";
 import Svg, { Path } from "react-native-svg";
 
@@ -130,16 +129,18 @@ export default function SplashScreen() {
   });
 
   return (
-    <Animated.View
-      className="flex-1 justify-center items-center px-4"
-      style={{
-        backgroundColor: backgroundGradient.interpolate({
-          inputRange: [0, 1],
-          outputRange: ["#7080cc", "#7080cc"],
-        }),
-      }}
-    >
-      <StatusBar style="light" />
+    <SafeAreaView className="flex-1" style={{
+      backgroundColor: "#7080cc",
+    }}>
+      <Animated.View
+        className="flex-1 justify-center items-center px-4"
+        style={{
+          backgroundColor: backgroundGradient.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["#7080cc", "#7080cc"],
+          }),
+        }}
+      >
 
       <View className="items-center w-full max-w-sm">
         {/* Animated Logo */}
@@ -254,5 +255,6 @@ export default function SplashScreen() {
         </View>
       </View>
     </Animated.View>
+    </SafeAreaView>
   );
 }

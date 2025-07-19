@@ -1,6 +1,18 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { ChevronRight, Menu } from "lucide-react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Modal,
+  Image,
+  Animated,
+} from "react-native";
+import { ChevronRight, Menu, ChevronLeft } from "lucide-react-native";
 import { router } from "expo-router";
 import MediaUploader from "./MediaUploader";
 import DetectedItemsList from "./DetectedItemsList";
@@ -9,6 +21,7 @@ import { useCart } from "../contexts/CartContext";
 
 import InventoryCartIcon from "./InventoryCartIcon";
 import InventoryCartModal from "./InventoryCartModal";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MediaItem {
   uri: string;
@@ -21,6 +34,7 @@ interface SmartDetectionProps {
 }
 
 export default function SmartDetection({ onMenuPress }: SmartDetectionProps) {
+  const insets = useSafeAreaInsets();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDetectedItems, setShowDetectedItems] = useState(false);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -84,7 +98,13 @@ export default function SmartDetection({ onMenuPress }: SmartDetectionProps) {
 
   return (
     <View className="flex-1">
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View
+        style={{
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }}
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={onMenuPress}

@@ -5,8 +5,12 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { ChevronRight, Menu } from "lucide-react-native";
 import { router } from "expo-router";
 import VanSvg from "./components/VanSvg";
@@ -16,11 +20,17 @@ import SlideOutMenu from "./components/SlideOutMenu";
 
 export default function ItemDetectionScreen() {
   const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View
+        style={{
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }}
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}
@@ -30,10 +40,10 @@ export default function ItemDetectionScreen() {
           </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-2xl font-bold text-white mb-1">
-              Inventory Options Capture
+              Item Detection
             </Text>
             <Text className="text-sm text-white">
-              Choose how you want to build your inventory
+              Use AI to detect items from photos.
             </Text>
           </View>
         </View>

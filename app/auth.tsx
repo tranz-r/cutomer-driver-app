@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Image, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import GoogleAuth from './components/GoogleAuth';
@@ -27,7 +27,8 @@ export default function Auth() {
   }
 
   return (
-    <View className="flex-1 bg-white px-6 justify-center">
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 px-6 justify-center">
       {/* Illustration */}
       <View className="items-center mb-8">
         {/* <Image source={require('../assets/images/auth-illustration.png')} className="w-44 h-32" resizeMode="contain" /> */}
@@ -69,7 +70,7 @@ export default function Auth() {
         onPress={signInWithEmail}
         disabled={loading}
       >
-        <Text className="text-white text-center font-bold text-base">Sign in</Text>
+        <Text className="text-white text-center font-bold text-base">Log In</Text>
       </TouchableOpacity>
       {/* Forgot password and Sign up links */}
       <View className="mb-4">
@@ -93,6 +94,7 @@ export default function Auth() {
       <View className="items-center mt-4">
         <GoogleAuth />
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }

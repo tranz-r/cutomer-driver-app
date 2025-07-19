@@ -6,7 +6,6 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import {
   Clock,
@@ -91,7 +90,6 @@ export default function LandingScreen() {
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: "#7080cc" }}>
-      <StatusBar style="light" backgroundColor="#7080cc" />
 
       {/* Main Content */}
       <View className="flex-1 justify-center items-center px-8">

@@ -6,8 +6,10 @@ import {
   ScrollView,
   SafeAreaView,
   Modal,
+  Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   ChevronRight,
   Calendar,
@@ -30,6 +32,7 @@ type TimeSlot = {
 };
 
 export default function DateTimeScreen() {
+  const insets = useSafeAreaInsets();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedHours, setSelectedHours] = useState(3);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("morning");
@@ -146,8 +149,13 @@ export default function DateTimeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View
+        style={{
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }}
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}
@@ -160,7 +168,7 @@ export default function DateTimeScreen() {
               Date & Time
             </Text>
             <Text className="text-sm text-white">
-              Select your preferred moving date, duration, and time slot.
+              Choose your preferred moving date and time.
             </Text>
           </View>
           <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />

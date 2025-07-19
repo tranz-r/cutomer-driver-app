@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import {
   CheckCircle,
   MapPin,
@@ -21,6 +22,7 @@ import { router } from "expo-router";
 import SlideOutMenu from "./components/SlideOutMenu";
 
 export default function SummaryScreen() {
+  const insets = useSafeAreaInsets();
   // Mock data - in real app this would come from previous screens
   const bookingData = {
     name: "John Doe",
@@ -73,8 +75,13 @@ export default function SummaryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
+      <View 
+        style={{ 
+          backgroundColor: "#7080cc",
+          paddingTop: insets.top
+        }} 
+        className="pb-6"
+      >
         <View className="px-4 flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => setShowSlideOutMenu(true)}

@@ -91,6 +91,11 @@ export default function RootLayout() {
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           <Stack.Screen name="payment" options={{ headerShown: false }} />
           <Stack.Screen name="success" options={{ headerShown: false }} />
+          <Stack.Screen name="otp-send" options={{ headerShown: false }} />
+          <Stack.Screen name="otp-verify" options={{ headerShown: false }} />
+          <Stack.Screen name="signup" options={{ headerShown: false }} />
+          <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+          
           <Stack.Screen
             name="customer-dashboard"
             options={{ headerShown: false }}
