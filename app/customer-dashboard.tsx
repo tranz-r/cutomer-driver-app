@@ -109,7 +109,7 @@ export default function CustomerDashboard() {
   }
 
   if (!session) {
-    return <Redirect href="/auth" />;
+    return <Redirect href="/login" />;
   }
 
   // User data from session

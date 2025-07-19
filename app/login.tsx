@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import GoogleAuth from './components/GoogleAuth';
 import { Eye, EyeOff } from 'lucide-react-native';
 
-export default function Auth() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -97,4 +97,4 @@ export default function Auth() {
       </View>
     </SafeAreaView>
   );
-}
+} 

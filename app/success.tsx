@@ -70,8 +70,8 @@ export default function SuccessScreen() {
   }, [confirmation]);
 
   const handleGoToDashboard = () => {
-    // Navigate to auth screen with redirect parameter
-    router.push("/auth?redirectTo=dashboard");
+    // Navigate to login screen with redirect parameter
+    router.push("/login?redirectTo=dashboard");
   };
 
   return (
