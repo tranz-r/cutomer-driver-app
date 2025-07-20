@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, Image, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { supabase } from '../lib/supabase';
-import GoogleAuth from './components/GoogleAuth';
+import { supabase } from '../../lib/supabase';
+import GoogleAuth from '../components/GoogleAuth';
 import { Eye, EyeOff } from 'lucide-react-native';
 
 export default function Login() {

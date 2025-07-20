@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { supabase } from '../lib/supabase';
-import EmailOtpVerifyScreen from './components/EmailOtpVerifyScreen';
+import { supabase } from '../../lib/supabase';
+import EmailOtpVerifyScreen from '../components/EmailOtpVerifyScreen';
 
 export default function OtpVerifyScreen() {
   const router = useRouter();

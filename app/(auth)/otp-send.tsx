@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { supabase } from '../lib/supabase';
-import EmailOtpSendScreen from './components/EmailOtpSendScreen';
+import { supabase } from '../../lib/supabase';
+import EmailOtpSendScreen from '../components/EmailOtpSendScreen';
 
 export default function OtpSendScreen() {
   const router = useRouter();
