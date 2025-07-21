@@ -81,7 +81,7 @@ export default function Login() {
           <Text className="text-green-700 text-center font-semibold text-base">Don't have an account? Sign up</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity className="items-center mb-4" onPress={() => router.push('/otp-send')}>
+              <TouchableOpacity className="items-center mb-4" onPress={() => router.push('/otp-send')}>
         <Text className="text-[#70AECC] underline font-bold text-base mt-1">Sign in with One Time Password (OTP)</Text>
       </TouchableOpacity>
       {/* Divider */}

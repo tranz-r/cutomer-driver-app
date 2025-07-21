@@ -135,7 +135,7 @@ export default function SignUp() {
       >
         <Text className="text-white text-center font-bold text-base">Sign up</Text>
       </TouchableOpacity>
-      <TouchableOpacity className="items-center mb-4" onPress={() => router.push('/otp-send')}>
+              <TouchableOpacity className="items-center mb-4" onPress={() => router.push('/otp-send')}>
         <Text className="text-[#70AECC] underline font-bold text-base mt-1">Sign up with One Time Password (OTP)</Text>
       </TouchableOpacity>
               <TouchableOpacity className="items-center" onPress={() => router.replace('/login')}>

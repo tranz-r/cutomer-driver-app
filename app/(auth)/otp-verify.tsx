@@ -43,8 +43,8 @@ export default function OtpVerifyScreen() {
       email={email as string}
       onVerify={handleVerify}
       onResend={handleResend}
-      onSwitchAccount={() => router.replace('/otp-send')}
-      onChangeEmail={() => router.replace('/otp-send')}
+              onSwitchAccount={() => router.replace('/otp-send')}
+        onChangeEmail={() => router.replace('/otp-send')}
     />
   );
 } 

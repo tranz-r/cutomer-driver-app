@@ -69,13 +69,8 @@ export default function RootLayout() {
             <Stack.Screen name="customer-details" options={{ headerShown: false, headerTitle: "Customer Details" }} />
             <Stack.Screen name="pricing-tier" options={{ headerShown: false, headerTitle: "Pricing Tier" }} />
             <Stack.Screen name="summary" options={{ headerShown: false, headerTitle: "Summary" }} />
-            <Stack.Screen name="login" options={{ headerShown: false, headerTitle: "Login" }} />
             <Stack.Screen name="payment" options={{ headerShown: false, headerTitle: "Payment" }} />
             <Stack.Screen name="success" options={{ headerShown: false, headerTitle: "Success" }} />
-            <Stack.Screen name="otp-send" options={{ headerShown: false, headerTitle: "OTP Send" }} />
-            <Stack.Screen name="otp-verify" options={{ headerShown: false, headerTitle: "OTP Verify" }} />
-            <Stack.Screen name="signup" options={{ headerShown: false, headerTitle: "Signup" }} />
-            <Stack.Screen name="forgot-password" options={{ headerShown: false, headerTitle: "Forgot Password" }} />
             <Stack.Screen name="customer-dashboard" options={{ headerShown: false, headerTitle: "Customer Dashboard" }} />
             <Stack.Screen name="index" options={{ headerShown: false, headerTitle: "Index" }} />
           </Stack>
