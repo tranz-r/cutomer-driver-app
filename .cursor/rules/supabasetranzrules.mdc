@@ -246,12 +246,12 @@ export default function UserTypeModal({ visible, onClose, onSelectUserType }: Us
 **GOAL**: Complete RBAC with Google auth
 **FILES TO MODIFY**: `app/components/GoogleAuth.tsx`
 
-#### Google Auth Flow:
+#### Social Auth Flow:
 ```typescript
-// 1. Google authentication (existing)
+// 1. Social authentication (e.g Google, Facebook, Apple)
 // 2. Check getUserRole() from JWT
-// 3. If new user -> show UserTypeModal -> assignUserRole()
-// 4. Navigate to dashboard
+// 3. If no role for user -> show UserTypeModal -> assignUserRole() -> Refresh Session with JWT
+// 4. Navigate to appropriate dashboard
 ```
 
 **SUCCESS CRITERIA**:

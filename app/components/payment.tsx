@@ -8,8 +8,7 @@ import {
   Modal,
   Alert,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { StatusBar } from "expo-status-bar";
 import {
   CheckCircle,
   MapPin,
@@ -21,14 +20,11 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import { Platform } from "react-native";
 
-// STRIPE INTEGRATION - COMMENTED OUT FOR WEB COMPATIBILITY
-// Uncomment the following lines for native development builds:
-// import { useStripe } from '@stripe/stripe-react-native';
+import { useStripe } from '@stripe/stripe-react-native';
 
 export default function Payment() {
-  const insets = useSafeAreaInsets();
+
   // Mock data - in real app this would come from previous screens
   const bookingData = {
     name: "John Doe",
@@ -57,17 +53,11 @@ export default function Payment() {
     },
   };
 
-  // STRIPE INTEGRATION - COMMENTED OUT FOR WEB COMPATIBILITY
-  // Uncomment the following lines for native development builds:
-  // const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
 
-  // STRIPE API URL - COMMENTED OUT FOR WEB COMPATIBILITY
-  // const API_URL = process.env.EXPO_PUBLIC_STRIPE_INTENT_BASE_URL;
+  const API_URL = process.env.EXPO_PUBLIC_STRIPE_INTENT_BASE_URL;
 
-  // STRIPE PAYMENT FUNCTIONS - COMMENTED OUT FOR WEB COMPATIBILITY
-  // Uncomment the following functions for native development builds:
-  /*
   const fetchPaymentSheetParams = async () => {
     console.log("fetching payment sheet params");
     const response = await fetch(`${API_URL}/api/v1/checkout/payment-sheet`, {
@@ -76,6 +66,7 @@ export default function Payment() {
         amount: bookingData.quote.total,
         email: bookingData.email,
         name: bookingData.name
+
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -105,6 +96,8 @@ export default function Payment() {
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      //methods that complete payment after a delay, like SEPA Debit and Sofort.
       allowsDelayedPaymentMethods: true,
       defaultBillingDetails: {
         name: bookingData.name,
@@ -138,37 +131,11 @@ export default function Payment() {
   useEffect(() => {
     initializePaymentSheet();
   }, []);
-  */
-
-  // MOCK PAYMENT FUNCTION - FOR WEB COMPATIBILITY
-  const handleMockPayment = async () => {
-    setLoading(true);
-
-    // Simulate payment processing
-    setTimeout(() => {
-      setLoading(false);
-      Alert.alert(
-        "Payment Successful!",
-        "Your booking has been confirmed. You will receive a confirmation email shortly.",
-        [
-          {
-            text: "OK",
-            onPress: () => router.push("/success"),
-          },
-        ],
-      );
-    }, 2000);
-  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View
-        style={{
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }}
-        className="pb-6"
-      >
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
         <View className="px-4">
           <Text className="text-2xl font-bold text-white mb-1">
             Booking Summary
@@ -349,33 +316,24 @@ export default function Payment() {
             </View>
           </View>
 
-          {/* Mock Payment Notice */}
-          <View className="bg-yellow-50 rounded-xl p-4 mb-6 border border-yellow-200">
-            <Text className="text-sm text-yellow-800 text-center font-medium">
-              🧪 Mock Payment Mode - No real payment will be processed
-            </Text>
-          </View>
-
           {/* Complete Booking Button */}
           <TouchableOpacity
             className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
-            disabled={loading}
+            disabled={!loading}
             style={{
-              backgroundColor: loading ? "#A0AEC0" : "#70AECC",
-              opacity: loading ? 0.6 : 1,
+              backgroundColor: loading ? "#70AECC" : "#A0AEC0", // faded color if disabled
+              opacity: loading ? 1 : 0.6,
             }}
-            onPress={handleMockPayment}
+            onPress={openPaymentSheet}
           >
             <Text className="text-white text-center font-bold text-lg mr-2">
-              {loading ? "Processing..." : "Complete Booking (Mock)"}
+              Checkout
             </Text>
             <CheckCircle size={20} color="white" />
           </TouchableOpacity>
 
           <Text className="text-center text-sm text-gray-500 mt-3">
-            {loading
-              ? "Simulating payment processing..."
-              : "Mock payment - for testing purposes"}
+            Proceed to secure payment
           </Text>
         </View>
       </ScrollView>
