@@ -99,6 +99,14 @@ export default function Payment() {
       // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
       //methods that complete payment after a delay, like SEPA Debit and Sofort.
       allowsDelayedPaymentMethods: true,
+      googlePay: {
+        merchantCountryCode: 'GB',
+        currencyCode: 'GBP',
+        testEnv: true, // Set to true for testing, false for production
+      },
+      applePay: {
+        merchantCountryCode: 'GB',
+      },
       defaultBillingDetails: {
         name: bookingData.name,
         email: bookingData.email,
