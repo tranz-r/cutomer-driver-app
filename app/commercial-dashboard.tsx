@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getUserRole } from '../lib/hybrid-rbac';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-export default function CustomerDashboard() {
+export default function CommercialDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -11,7 +11,7 @@ export default function CustomerDashboard() {
   useEffect(() => {
     const checkRole = async () => {
       const role = await getUserRole();
-      if (role !== 'customer') {
+      if (role !== 'commercial_client') {
         router.replace('/login');
       } else {
         setAuthorized(true);
@@ -28,10 +28,10 @@ export default function CustomerDashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🛍️ Customer Dashboard</Text>
-      <Text style={styles.subtitle}>Welcome, Customer!</Text>
-      <Text style={styles.info}>Book new moves, track your orders, and manage your account here.</Text>
-      {/* Add more creative customer features here */}
+      <Text style={styles.title}>🏢 Commercial Client Dashboard</Text>
+      <Text style={styles.subtitle}>Welcome, Business User!</Text>
+      <Text style={styles.info}>Manage your company’s bookings, view analytics, and access exclusive business features here.</Text>
+      {/* Add more creative commercial client features here */}
     </View>
   );
 }
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 12,
   },
-});
+}); 

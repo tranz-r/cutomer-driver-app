@@ -32,10 +32,10 @@ export default function GoogleAuth() {
         router.replace('/customer-dashboard');
         break;
       case 'driver':
-        router.replace('/customer-dashboard'); // Use existing route for now
+        router.replace('/driver-dashboard');
         break;
       case 'commercial_client':
-        router.replace('/customer-dashboard'); // Use existing route for now
+        router.replace('/commercial-dashboard');
         break;
       default:
         router.replace('/customer-dashboard');

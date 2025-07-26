@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getUserRole } from '../lib/hybrid-rbac';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-export default function CustomerDashboard() {
+export default function DriverDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -11,7 +11,7 @@ export default function CustomerDashboard() {
   useEffect(() => {
     const checkRole = async () => {
       const role = await getUserRole();
-      if (role !== 'customer') {
+      if (role !== 'driver') {
         router.replace('/login');
       } else {
         setAuthorized(true);
@@ -28,10 +28,10 @@ export default function CustomerDashboard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🛍️ Customer Dashboard</Text>
-      <Text style={styles.subtitle}>Welcome, Customer!</Text>
-      <Text style={styles.info}>Book new moves, track your orders, and manage your account here.</Text>
-      {/* Add more creative customer features here */}
+      <Text style={styles.title}>🚚 Driver Dashboard</Text>
+      <Text style={styles.subtitle}>Welcome, Driver!</Text>
+      <Text style={styles.info}>Here you can view your assigned jobs, accept new deliveries, and track your earnings.</Text>
+      {/* Add more creative driver features here */}
     </View>
   );
 }
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 12,
   },
-});
+}); 
