@@ -1,0 +1,269 @@
+# Session Management Rules for Customer Driver App
+
+## OVERVIEW
+This document defines the session management strategy for the Tranzr app, ensuring seamless user experience with automatic navigation based on authentication state and user roles.
+
+## SESSION MANAGEMENT PRINCIPLES
+
+### 1. **Automatic Session Detection**
+- ✅ Check for active session on app load
+- ✅ Listen for authentication state changes
+- ✅ Handle session persistence across app restarts
+- ✅ Provide loading states during session checks
+
+### 2. **Role-Based Navigation**
+- ✅ Automatically navigate users to appropriate dashboard based on role
+- ✅ Handle users without assigned roles (redirect to role selection)
+- ✅ Support all user roles: customer, driver, commercial_client, admin
+
+### 3. **Session Context Architecture**
+- ✅ Global session state management
+- ✅ Centralized authentication logic
+- ✅ Consistent session handling across all screens
+- ✅ Proper error handling and fallbacks
+
+### 4. **Header-Based Navigation System**
+- ✅ SlideOutMenu consistently positioned in top-left header
+- ✅ Same header pattern across all authenticated screens
+- ✅ Consistent styling and behavior throughout the app
+- ✅ Role-aware menu options and logout functionality
+
+## IMPLEMENTATION DETAILS
+
+### Session Context (`lib/contexts/SessionContext.tsx`)
+
+#### Core Functions:
+```typescript
+interface SessionContextType {
+  session: any;                    // Current session object
+  isLoading: boolean;              // Loading state during session checks
+  signOut: () => Promise<void>;    // Sign out and redirect to auth
+  refreshSession: () => Promise<void>; // Refresh session and check role
+  navigateToDashboard: (role: AppRole) => void; // Role-based navigation
+}
+```
+
+#### Session Flow:
+1. **App Load**: Check for existing session
+2. **Session Found**: Verify user role and navigate to dashboard
+3. **No Session**: Redirect to OTP send screen
+4. **No Role**: Redirect to OTP send for role selection
+5. **Auth Changes**: Listen and handle sign in/out events
+
+### Header Navigation Pattern
+
+#### Consistent Header Structure:
+```typescript
+// Header component pattern used across all screens
+<View
+  style={{
+    backgroundColor: "#7080cc",
+    paddingTop: insets.top
+  }}
+  className="pb-6"
+>
+  <View className="px-4 flex-row items-center justify-between">
+    <TouchableOpacity
+      onPress={() => setShowSlideOutMenu(true)}
+      className="bg-white/20 p-3 rounded-full mr-3"
+    >
+      <Menu size={24} color="white" />
+    </TouchableOpacity>
+    <View className="flex-1">
+      <Text className="text-2xl font-bold text-white mb-1">
+        Screen Title
+      </Text>
+      <Text className="text-sm text-white">
+        Screen description
+      </Text>
+    </View>
+  </View>
+</View>
+```
+
+#### Features:
+- **Consistent Positioning**: Menu button always in top-left
+- **App Theme Colors**: #7080cc background with white text
+- **Safe Area Handling**: Proper insets for different devices
+- **Unified Styling**: Same button style and layout across screens
+
+### Navigation Logic
+
+#### Dashboard Mapping:
+```typescript
+const navigateToDashboard = (role: AppRole) => {
+  switch (role) {
+    case 'customer':
+      router.replace('/customer-dashboard');
+      break;
+    case 'driver':
+      router.replace('/driver-dashboard');
+      break;
+    case 'commercial_client':
+      router.replace('/commercial-dashboard');
+      break;
+    default:
+      router.replace('/customer-dashboard');
+  }
+};
+```
+
+#### Fallback Behavior:
+- **No Session**: `/otp-send`
+- **No Role**: `/otp-send` (for role selection)
+- **Error State**: `/otp-send`
+
+### Integration Points
+
+#### 1. **Root Layout (`app/_layout.tsx`)**
+- Wraps entire app with `SessionProvider`
+- Enables global session management
+- Handles automatic navigation on app load
+- **No global navigation wrapper** - each screen manages its own header
+
+#### 2. **Auth Screens**
+- Use `useSession()` hook for session state
+- Show loading states during session checks
+- Prevent unnecessary redirects when already on auth screen
+- **No header menu** on authentication screens
+
+#### 3. **Dashboard Screens**
+- Inherit session context automatically
+- Role guards handled by session context
+- Automatic redirects for unauthorized access
+- **Consistent header with menu button**
+
+#### 4. **Navigation Components**
+- `SlideOutMenu` uses `signOut()` for logout
+- Consistent logout behavior across app
+- Proper cleanup and redirect on logout
+- **Header-based accessibility** through consistent menu button
+
+## SESSION RULES
+
+### DO:
+- ✅ Always check session state before rendering protected screens
+- ✅ Show loading indicators during session checks
+- ✅ Handle authentication errors gracefully
+- ✅ Maintain session state across app restarts
+- ✅ Use role-based navigation consistently
+- ✅ Provide clear feedback for authentication states
+- ✅ Use consistent header pattern on all authenticated screens
+- ✅ Position menu button in top-left header consistently
+
+### DON'T:
+- ❌ Block UI during session checks without loading state
+- ❌ Allow access to dashboards without role verification
+- ❌ Forget to handle authentication errors
+- ❌ Mix different session management approaches
+- ❌ Navigate users without proper role validation
+- ❌ Show menu on authentication screens
+- ❌ Use different header patterns across screens
+- ❌ Position menu button inconsistently
+
+### ERROR HANDLING:
+- **Network Errors**: Retry with exponential backoff
+- **Invalid Session**: Clear session and redirect to auth
+- **Role Fetch Errors**: Redirect to role selection
+- **Navigation Errors**: Fallback to OTP send screen
+
+## SECURITY CONSIDERATIONS
+
+### Session Validation:
+- ✅ Verify JWT token validity
+- ✅ Check token expiration
+- ✅ Validate user role claims
+- ✅ Handle token refresh automatically
+
+### Access Control:
+- ✅ Role-based dashboard access
+- ✅ Automatic redirects for unauthorized users
+- ✅ Secure logout with session cleanup
+- ✅ Protection against session hijacking
+
+### Navigation Security:
+- ✅ Menu only visible to authenticated users
+- ✅ Role-based menu options
+- ✅ Secure logout functionality
+- ✅ Session cleanup on logout
+
+## PERFORMANCE OPTIMIZATION
+
+### Session Checks:
+- ✅ Cache session state to minimize API calls
+- ✅ Use JWT claims for fast role checks
+- ✅ Implement proper loading states
+- ✅ Optimize navigation timing
+
+### Memory Management:
+- ✅ Clean up session listeners on unmount
+- ✅ Proper context provider cleanup
+- ✅ Avoid memory leaks in session management
+
+### Navigation Performance:
+- ✅ Consistent header rendering
+- ✅ Optimized menu animations
+- ✅ Efficient menu state management
+
+## TESTING SCENARIOS
+
+### Session States:
+- [ ] Fresh app install (no session)
+- [ ] Returning user with valid session
+- [ ] User with expired session
+- [ ] User without assigned role
+- [ ] Network connectivity issues
+- [ ] App background/foreground transitions
+
+### Navigation Flows:
+- [ ] Direct dashboard access with valid session
+- [ ] Role-based dashboard routing
+- [ ] Logout and session cleanup
+- [ ] Error handling and fallbacks
+- [ ] Cross-screen session consistency
+
+### Header Navigation:
+- [ ] Menu button visibility on all authenticated screens
+- [ ] Consistent header styling across screens
+- [ ] Menu functionality from any screen
+- [ ] Logout from any screen
+- [ ] Navigation between different sections
+
+## MONITORING AND DEBUGGING
+
+### Logging:
+- ✅ Session state changes
+- ✅ Navigation events
+- ✅ Authentication errors
+- ✅ Role assignment status
+- ✅ Menu interaction events
+
+### Debug Information:
+- ✅ Current session state
+- ✅ User role information
+- ✅ Navigation history
+- ✅ Error stack traces
+- ✅ Header rendering state
+
+## FUTURE ENHANCEMENTS
+
+### Planned Features:
+- [ ] Session timeout handling
+- [ ] Biometric authentication
+- [ ] Multi-device session management
+- [ ] Offline session support
+- [ ] Session analytics and insights
+
+### Navigation Enhancements:
+- [ ] Customizable header themes
+- [ ] Quick actions in header
+- [ ] Advanced navigation patterns
+- [ ] Header accessibility improvements
+- [ ] Dynamic header content
+
+### Scalability:
+- [ ] Support for additional user roles
+- [ ] Custom dashboard routing rules
+- [ ] Advanced session policies
+- [ ] Enterprise session management
+- [ ] Multi-tenant navigation support

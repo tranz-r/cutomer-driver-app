@@ -3,11 +3,22 @@ import { View, Text, TextInput, TouchableOpacity, Alert, SafeAreaView, KeyboardA
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 import GoogleAuth from '../components/GoogleAuth';
+import { useSession } from '../../lib/contexts/SessionContext';
 
 export default function OtpSendScreen() {
   const router = useRouter();
+  const { session, isLoading } = useSession();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Show loading screen while checking session
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 16, color: '#6B7280' }}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
   const handleSendOtp = async () => {
     if (!email.trim()) {

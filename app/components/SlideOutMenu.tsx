@@ -15,8 +15,10 @@ import {
   MessageCircle,
   User,
   ChevronRight,
+  LogOut,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import { useSession } from "../../lib/contexts/SessionContext";
 
 type SlideOutMenuProps = {
   visible: boolean;
@@ -27,6 +29,7 @@ const { width: screenWidth } = Dimensions.get("window");
 const MENU_WIDTH = screenWidth * 0.8; // 80% of screen width
 
 export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
+  const { signOut } = useSession();
   const slideAnimation = useRef(new Animated.Value(-MENU_WIDTH)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
 
@@ -102,6 +105,16 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
       onPress: () => {
         onClose();
         router.push("/otp-send");
+      },
+    },
+    {
+      id: "logout",
+      title: "Logout",
+      subtitle: "Sign out of your account",
+      icon: <LogOut size={24} color="#ef4444" />,
+      onPress: async () => {
+        onClose();
+        await signOut();
       },
     },
   ];
