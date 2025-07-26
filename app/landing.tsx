@@ -119,22 +119,12 @@ export default function LandingScreen() {
           onPress={() => router.push("/otp-send")}
         >
           <Text className="text-white text-center font-semibold text-lg mr-2">
-            Login
+            Sign In / Sign Up
           </Text>
           <ChevronRight size={20} color="white" />
         </TouchableOpacity>
 
-        {/* Sign Up Button */}
-        <TouchableOpacity
-        style={{ backgroundColor: "#70AECC" }}
-          className="bg-yellow-500 py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
-          onPress={() => router.push("/otp-send")}
-        >
-          <Text className="text-white text-center font-semibold text-lg mr-2">
-            Sign up for a new account
-          </Text>
-          <ChevronRight size={20} color="white" />
-        </TouchableOpacity>
+
 
         {/* Driver Option */}
         {/* <TouchableOpacity

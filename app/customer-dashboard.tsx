@@ -17,7 +17,7 @@ export default function CustomerDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'customer') {
-        router.replace('/otp-send');
+        router.replace('/landing');
       } else {
         setAuthorized(true);
       }

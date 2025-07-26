@@ -57,7 +57,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     try {
       await supabase.auth.signOut();
       setSession(null);
-      // Don't redirect after sign out - let user stay on current screen
+      // Navigate to landing screen after sign out
+      router.replace('/landing');
     } catch (error) {
       console.error('Error signing out:', error);
     }
