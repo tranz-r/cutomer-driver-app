@@ -49,32 +49,43 @@ export default function LoginScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ 
         backgroundColor: '#7080cc', 
-        paddingHorizontal: 24, 
-        paddingVertical: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        paddingBottom: 24
       }}>
-        <TouchableOpacity
-          onPress={() => setShowSlideOutMenu(true)}
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            padding: 12,
-            borderRadius: 25
-          }}
-        >
-          <Menu size={24} color="white" />
-        </TouchableOpacity>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={{ 
-            fontSize: 20, 
-            fontWeight: 'bold', 
-            color: 'white'
-          }}>
-            Sign In
-          </Text>
+        <View style={{ 
+          paddingHorizontal: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <TouchableOpacity
+            onPress={() => setShowSlideOutMenu(true)}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              padding: 12,
+              borderRadius: 25,
+              marginRight: 12
+            }}
+          >
+            <Menu size={24} color="white" />
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Text style={{ 
+              fontSize: 24, 
+              fontWeight: 'bold', 
+              color: 'white',
+              marginBottom: 4
+            }}>
+              Sign In
+            </Text>
+            <Text style={{ 
+              fontSize: 14, 
+              color: 'white',
+              opacity: 0.9
+            }}>
+              Access your account securely
+            </Text>
+          </View>
         </View>
-        <View style={{ width: 40 }} />
       </View>
 
       <KeyboardAvoidingView 

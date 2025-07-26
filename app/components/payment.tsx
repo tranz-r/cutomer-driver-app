@@ -148,23 +148,27 @@ export default function Payment() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
       {/* Header with Menu Button */}
-      <View 
-        className="bg-[#7080cc] px-6 py-4 flex-row items-center justify-between"
-        style={{ paddingTop: insets.top }}
-      >
-        <TouchableOpacity
-          onPress={() => setShowSlideOutMenu(true)}
-          className="bg-white/20 p-3 rounded-full"
+              <View 
+          className="bg-[#7080cc] pb-6"
+          style={{ paddingTop: insets.top }}
         >
-          <Menu size={24} color="white" />
-        </TouchableOpacity>
-        <View className="flex-1 items-center">
-          <Text className="text-xl font-bold text-white">
-            Booking Summary
-          </Text>
+          <View className="px-4 flex-row items-center justify-between">
+            <TouchableOpacity
+              onPress={() => setShowSlideOutMenu(true)}
+              className="bg-white/20 p-3 rounded-full mr-3"
+            >
+              <Menu size={24} color="white" />
+            </TouchableOpacity>
+            <View className="flex-1">
+              <Text className="text-2xl font-bold text-white mb-1">
+                Booking Summary
+              </Text>
+              <Text className="text-sm text-white">
+                Review your booking details before payment
+              </Text>
+            </View>
+          </View>
         </View>
-        <View className="w-10" />
-      </View>
 
       {/* Scrollable Content */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
