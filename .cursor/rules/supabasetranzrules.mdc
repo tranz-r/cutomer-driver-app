@@ -96,11 +96,49 @@ $$;
 -- Grant permissions
 GRANT usage ON schema public TO supabase_auth_admin;
 GRANT execute ON function public.custom_access_token_hook TO supabase_auth_admin;
+GRANT SELECT ON public.user_roles TO supabase_auth_admin;
+
+-- Enable RLS and create security policies
+ALTER TABLE public.role_permissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+
+-- Role permissions policies
+CREATE POLICY "Allow auth admin to read role permissions" ON public.role_permissions
+AS PERMISSIVE FOR SELECT
+TO supabase_auth_admin
+USING (true);
+
+CREATE POLICY "Allow users to read role permissions" ON public.role_permissions
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (true);
+
+CREATE POLICY "Deny all operations on role permissions" ON public.role_permissions
+AS RESTRICTIVE FOR ALL
+TO public
+USING (false);
+
+-- User roles policies
+CREATE POLICY "Allow auth admin to read user roles" ON public.user_roles
+AS PERMISSIVE FOR SELECT
+TO supabase_auth_admin
+USING (true);
+
+CREATE POLICY "Allow users to read own roles" ON public.user_roles
+AS PERMISSIVE FOR SELECT
+TO authenticated
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Deny all operations on user roles" ON public.user_roles
+AS RESTRICTIVE FOR ALL
+TO public
+USING (false);
 ```
 
 **SUCCESS CRITERIA**:
 - ✅ Auth hook enabled in Supabase dashboard
 - ✅ JWT tokens contain user_role claim
+- ✅ RLS enabled with proper security policies
 - ✅ Existing app authentication still works
 
 ### PHASE 3: .NET Backend Implementation
