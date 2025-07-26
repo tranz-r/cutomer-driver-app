@@ -203,9 +203,19 @@ export default function UserTypeModal({ visible, onClose, onSelectUserType }: Us
 **GOAL**: Extend RBAC to OTP auth
 **FILES TO MODIFY**: `app/(auth)/otp-send.tsx`, `app/(auth)/otp-verify.tsx`
 
+#### OTP Flow:
+```typescript
+// 1. User enters email -> OTP sent
+// 2. User receives OTP -> Screen to verify OTP
+// 3. User verifies OTP -> Authentication complete
+// 4. Check if user has role -> If no role, show UserTypeModal
+// 5. Update user role -> Refresh JWT -> Navigate to appropriate screen
+```
+
 **SUCCESS CRITERIA**:
-- ✅ OTP signup with role selection
-- ✅ OTP login with role checking
+- ✅ OTP send flow (no role selection yet)
+- ✅ OTP verify with role checking after authentication
+- ✅ Role selection modal for users without roles
 - ✅ Same .NET integration as email
 
 ### PHASE 7: Social Auth Integration

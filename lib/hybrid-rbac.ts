@@ -51,8 +51,10 @@ export async function assignUserRole(userId: string, role: AppRole): Promise<boo
       return false;
     }
     
-    const result = await response.json();
-    return result.success;
+    // If we get a 200 OK response, consider it successful
+    // The role assignment was successful on the server
+    console.log('Role assignment successful:', response.status);
+    return true;
   } catch (error) {
     console.error('Error assigning role:', error);
     return false;

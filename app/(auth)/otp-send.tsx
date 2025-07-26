@@ -20,7 +20,7 @@ export default function OtpSendScreen() {
     if (error) {
       Alert.alert('Error', error.message);
     } else {
-      Alert.alert('OTP Sent', 'Check your email for the verification code.');
+      //Alert.alert('OTP Sent', 'Check your email for the verification code.');
       router.push({ pathname: '/otp-verify', params: { email } });
     }
   };
