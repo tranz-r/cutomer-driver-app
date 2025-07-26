@@ -17,7 +17,7 @@ export default function CustomerDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'customer') {
-        router.replace('/landing');
+        router.replace('/login');
       } else {
         setAuthorized(true);
       }

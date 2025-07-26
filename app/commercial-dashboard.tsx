@@ -17,7 +17,7 @@ export default function CommercialDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'commercial_client') {
-        router.replace('/landing');
+        router.replace('/login');
       } else {
         setAuthorized(true);
       }

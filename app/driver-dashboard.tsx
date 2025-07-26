@@ -17,7 +17,7 @@ export default function DriverDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'driver') {
-        router.replace('/landing');
+        router.replace('/login');
       } else {
         setAuthorized(true);
       }

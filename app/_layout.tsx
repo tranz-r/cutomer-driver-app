@@ -76,7 +76,7 @@ export default function RootLayout() {
               <Stack.Screen name="customer-dashboard" options={{ headerShown: false, headerTitle: "Customer Dashboard" }} />
               <Stack.Screen name="driver-dashboard" options={{ headerShown: false, headerTitle: "Driver Dashboard" }} />
               <Stack.Screen name="commercial-dashboard" options={{ headerShown: false, headerTitle: "Commercial Dashboard" }} />
-              <Stack.Screen name="otp-send" options={{ headerShown: false, headerTitle: "Sign In" }} />
+              <Stack.Screen name="login" options={{ headerShown: false, headerTitle: "Sign In" }} />
               <Stack.Screen name="otp-verify" options={{ headerShown: false, headerTitle: "Verify OTP" }} />
               <Stack.Screen name="index" options={{ headerShown: false, headerTitle: "Index" }} />
             </Stack>

@@ -116,7 +116,7 @@ export default function LandingScreen() {
         <TouchableOpacity
         style={{ backgroundColor: "#7080cc" }}
           className=" py-4 px-8 rounded-xl w-full mb-4 flex-row justify-center items-center"
-          onPress={() => router.push("/otp-send")}
+          onPress={() => router.push("/login")}
         >
           <Text className="text-white text-center font-semibold text-lg mr-2">
             Sign In / Sign Up

@@ -104,7 +104,7 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
       icon: <User size={24} color="#8b5cf6" />,
       onPress: () => {
         onClose();
-        router.push("/otp-send");
+        router.push("/login");
       },
     },
     {

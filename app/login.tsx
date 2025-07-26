@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import GoogleAuth from './components/GoogleAuth';
 import { useSession } from '../lib/contexts/SessionContext';
 
-export default function OtpSendScreen() {
+export default function LoginScreen() {
   const router = useRouter();
   const { session, isLoading } = useSession();
   const [email, setEmail] = useState('');

@@ -71,7 +71,7 @@ export default function SuccessScreen() {
 
   const handleGoToDashboard = () => {
     // Navigate to OTP screen with redirect parameter
-    router.push("/otp-send");
+            router.push("/login");
   };
 
   return (
