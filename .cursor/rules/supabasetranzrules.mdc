@@ -13,7 +13,7 @@ This rule defines the step-by-step implementation plan for Supabase RBAC with .N
 - READ operations: Direct Supabase client (fast, JWT claims)
 - WRITE operations: .NET backend API (secure, service role)
 - User roles: customer, driver, commercial_client, admin
-- Auth methods: Email/Password, OTP, Social (Google)
+- Auth methods: Email/Password, OTP, Social (Google, Facebook, Apple)
 
 ## PHASE IMPLEMENTATION ORDER
 
@@ -51,17 +51,9 @@ CREATE TABLE public.role_permissions (
 
 #### .NET API Endpoints (Document Only):
 ```
-POST /api/users/assign-role
-- Body: { userId: string, role: string, metadata?: object }
-- Auth: Service role key
-- Returns: { success: boolean, message: string }
-
-GET /api/users/{userId}/roles
-- Auth: Service role key
-- Returns: { roles: string[], permissions: string[] }
-
-DELETE /api/users/{userId}/roles/{role}
-- Auth: Service role key
+POST /api/v1/auth/role
+- Body: { userId: string, role: string }
+- Auth: JWT Bearer
 - Returns: { success: boolean, message: string }
 ```
 
@@ -76,6 +68,7 @@ DELETE /api/users/{userId}/roles/{role}
 **FILES TO MODIFY**: None (database functions only)
 
 #### Auth Hook Function (Supabase SQL Editor):
+Follow this stripe documentation strictly: https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac
 ```sql
 CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
 RETURNS jsonb
@@ -205,35 +198,8 @@ export default function UserTypeModal({ visible, onClose, onSelectUserType }: Us
 - ✅ Role selection works
 - ✅ No integration yet (standalone component)
 
-### PHASE 6: Email/Password Integration
-**GOAL**: Integrate RBAC with email auth
-**FILES TO MODIFY**: `app/(auth)/signup.tsx`, `app/(auth)/login.tsx`
 
-#### Signup Flow:
-```typescript
-// 1. Show UserTypeModal before signup
-// 2. Store selected role in state
-// 3. Create Supabase account
-// 4. Call assignUserRole() with .NET API
-// 5. Refresh session for new JWT
-// 6. Navigate to role-appropriate dashboard
-```
-
-#### Login Flow:
-```typescript
-// 1. Authenticate with Supabase
-// 2. Check getUserRole() from JWT
-// 3. If no role -> show modal -> assignUserRole()
-// 4. Navigate to dashboard
-```
-
-**SUCCESS CRITERIA**:
-- ✅ Email signup with role selection works
-- ✅ Email login checks roles properly
-- ✅ .NET API integration working
-- ✅ JWT claims populated correctly
-
-### PHASE 7: OTP Integration
+### PHASE 6: OTP Integration
 **GOAL**: Extend RBAC to OTP auth
 **FILES TO MODIFY**: `app/(auth)/otp-send.tsx`, `app/(auth)/otp-verify.tsx`
 
@@ -242,7 +208,7 @@ export default function UserTypeModal({ visible, onClose, onSelectUserType }: Us
 - ✅ OTP login with role checking
 - ✅ Same .NET integration as email
 
-### PHASE 8: Social Auth Integration
+### PHASE 7: Social Auth Integration
 **GOAL**: Complete RBAC with Google auth
 **FILES TO MODIFY**: `app/components/GoogleAuth.tsx`
 
@@ -259,7 +225,7 @@ export default function UserTypeModal({ visible, onClose, onSelectUserType }: Us
 - ✅ Existing Google users work seamlessly
 - ✅ All auth methods support RBAC
 
-### PHASE 9: Dashboard Protection
+### PHASE 8: Dashboard Protection
 **GOAL**: Secure dashboards with role guards
 **FILES TO MODIFY**: `app/customer-dashboard.tsx`, etc.
 
