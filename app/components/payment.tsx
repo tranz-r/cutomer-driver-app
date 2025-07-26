@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CheckCircle,
   MapPin,
@@ -20,9 +21,13 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import { Menu } from 'lucide-react-native';
 import { useStripe } from '@stripe/stripe-react-native';
+import SlideOutMenu from './SlideOutMenu';
 
 export default function Payment() {
+  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
+  const insets = useSafeAreaInsets();
 
   // Mock data - in real app this would come from previous screens
   const bookingData = {
@@ -140,7 +145,27 @@ export default function Payment() {
   }, []);
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar style="light" backgroundColor="#7080cc" />
+      {/* Header with Menu Button */}
+      <View 
+        className="bg-[#7080cc] px-6 py-4 flex-row items-center justify-between"
+        style={{ paddingTop: insets.top }}
+      >
+        <TouchableOpacity
+          onPress={() => setShowSlideOutMenu(true)}
+          className="bg-white/20 p-3 rounded-full"
+        >
+          <Menu size={24} color="white" />
+        </TouchableOpacity>
+        <View className="flex-1 items-center">
+          <Text className="text-xl font-bold text-white">
+            Booking Summary
+          </Text>
+        </View>
+        <View className="w-10" />
+      </View>
+
       {/* Scrollable Content */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6 pb-0">
@@ -267,7 +292,7 @@ export default function Payment() {
       <View className="bg-white border-t border-gray-100 shadow-lg">
         <View className="px-4 py-4">
           {/* Price Breakdown */}
-          <View className="bg-white rounded-2xl p-6 mb-4 shadow-2xl border border-gray-100" style={{ elevation: 12 }}>
+          <View className="bg-white rounded-2xl p-6 mb-4 shadow-2xl border border-gray-100">
             <View className="flex-row items-center justify-between mb-6">
               <View className="flex-row items-center">
                 <View className="w-3 h-3 bg-blue-500 rounded-full mr-3"></View>
@@ -342,12 +367,8 @@ export default function Payment() {
 
           {/* Complete Booking Button */}
           <TouchableOpacity
-            className="py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg"
+            className={`py-4 px-6 rounded-xl flex-row justify-center items-center shadow-lg ${loading ? 'bg-[#70AECC] opacity-100' : 'bg-[#A0AEC0] opacity-60'}`}
             disabled={!loading}
-            style={{
-              backgroundColor: loading ? "#70AECC" : "#A0AEC0", // faded color if disabled
-              opacity: loading ? 1 : 0.6,
-            }}
             onPress={openPaymentSheet}
           >
             <Text className="text-white text-center font-bold text-lg mr-2">
@@ -361,6 +382,12 @@ export default function Payment() {
           </Text>
         </View>
       </View>
-    </View>
+
+      {/* Slideout Menu */}
+      <SlideOutMenu 
+        visible={showSlideOutMenu} 
+        onClose={() => setShowSlideOutMenu(false)} 
+      />
+    </SafeAreaView>
   );
 }
