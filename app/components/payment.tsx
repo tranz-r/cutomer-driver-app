@@ -20,7 +20,6 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
-
 import { useStripe } from '@stripe/stripe-react-native';
 
 export default function Payment() {
@@ -141,18 +140,7 @@ export default function Payment() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
-      <View style={{ backgroundColor: "#7080cc" }} className="pt-24 pb-6">
-        <View className="px-4">
-          <Text className="text-2xl font-bold text-white mb-1">
-            Booking Summary
-          </Text>
-          <Text className="text-sm text-white">
-            Review your booking details before completing your reservation.
-          </Text>
-        </View>
-      </View>
+    <View className="flex-1 bg-white">
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6">
@@ -346,6 +334,6 @@ export default function Payment() {
         </View>
       </ScrollView>
       <View className="h-8" />
-    </SafeAreaView>
+    </View>
   );
 }

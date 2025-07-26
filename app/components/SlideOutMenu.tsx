@@ -8,15 +8,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from "react-native";
-import {
-  X,
-  FileText,
-  Calendar,
-  MessageCircle,
-  User,
-  ChevronRight,
-  LogOut,
-} from "lucide-react-native";
+import { Menu, X, ChevronRight, User, LogOut } from 'lucide-react-native';
 import { router } from "expo-router";
 import { useSession } from "../../lib/contexts/SessionContext";
 
@@ -70,7 +62,7 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
       id: "quote",
       title: "Quote",
       subtitle: "Get a moving quote",
-      icon: <FileText size={24} color="#3b82f6" />,
+      icon: <Menu size={24} color="#3b82f6" />,
       onPress: () => {
         onClose();
         router.push("/item-detection");
@@ -80,7 +72,7 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
       id: "booking",
       title: "Booking",
       subtitle: "Manage your bookings",
-      icon: <Calendar size={24} color="#10b981" />,
+      icon: <Menu size={24} color="#10b981" />,
       onPress: () => {
         onClose();
         router.push("/customer-dashboard");
@@ -90,7 +82,7 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
       id: "messages",
       title: "Messages",
       subtitle: "Chat with support",
-      icon: <MessageCircle size={24} color="#f59e0b" />,
+      icon: <Menu size={24} color="#f59e0b" />,
       onPress: () => {
         onClose();
         // TODO: Navigate to messages screen when implemented

@@ -57,7 +57,7 @@ export default function RootLayout() {
           <ThemeProvider value={DefaultTheme}>
             <Stack
               screenOptions={({ route }) => ({
-                headerShown: !route.name.startsWith("tempobook") && !route.name.startsWith("(auth)"),
+                headerShown: !route.name.startsWith("tempobook"),
               })}
             >
               <Stack.Screen name="splash" options={{ headerShown: false }} />
