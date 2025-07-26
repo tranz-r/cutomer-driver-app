@@ -43,17 +43,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         const userRole = await getUserRole();
         if (userRole) {
           navigateToDashboard(userRole);
-        } else {
-          // User has no role, redirect to OTP send for role selection
-          router.replace('/otp-send');
         }
-      } else {
-        // No session, redirect to OTP send
-        router.replace('/otp-send');
+        // If no role, don't redirect - let user stay on current screen
       }
+      // If no session, don't redirect - let user stay on current screen
     } catch (error) {
       console.error('Error refreshing session:', error);
-      router.replace('/otp-send');
+      // Don't redirect on error - let user stay on current screen
     }
   };
 
@@ -61,7 +57,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     try {
       await supabase.auth.signOut();
       setSession(null);
-      router.replace('/otp-send');
+      // Don't redirect after sign out - let user stay on current screen
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -78,7 +74,6 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
       setSession(session);
       
       if (session && event === 'SIGNED_IN') {
@@ -86,13 +81,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         const userRole = await getUserRole();
         if (userRole) {
           navigateToDashboard(userRole);
-        } else {
-          // User has no role, redirect to OTP send for role selection
-          router.replace('/otp-send');
         }
-      } else if (event === 'SIGNED_OUT') {
-        router.replace('/otp-send');
+        // If no role, don't redirect - let user stay on current screen
       }
+      // Don't auto-redirect on sign out - let user stay on current screen
     });
 
     return () => subscription.unsubscribe();
@@ -105,22 +97,19 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         try {
           const userRole = await getUserRole();
           if (userRole) {
+            // Only navigate if user has a role and is not already on the correct screen
             navigateToDashboard(userRole);
-          } else {
-            // User has no role, redirect to OTP send for role selection
-            router.replace('/otp-send');
           }
+          // Don't redirect if no role - let user stay on current screen
         } catch (error) {
           console.error('Error checking user role:', error);
-          router.replace('/otp-send');
+          // Don't redirect on error - let user stay on current screen
         }
       };
       
       checkSessionAndRole();
-    } else if (!isLoading && !session) {
-      // No session, redirect to OTP send
-      router.replace('/otp-send');
     }
+    // Don't auto-redirect if no session - let user stay on current screen
   }, [isLoading, session]);
 
   const value = {
