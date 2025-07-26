@@ -267,52 +267,75 @@ export default function Payment() {
       <View className="bg-white border-t border-gray-100 shadow-lg">
         <View className="px-4 py-4">
           {/* Price Breakdown */}
-          <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-4 border border-blue-100">
-            <Text className="text-xl font-bold text-gray-900 mb-4">
-              Price Breakdown
-            </Text>
-            <View className="space-y-3">
-              <View className="flex-row justify-between items-center">
+          <View className="bg-white rounded-2xl p-6 mb-4 shadow-2xl border border-gray-100" style={{ elevation: 12 }}>
+            <View className="flex-row items-center justify-between mb-6">
+              <View className="flex-row items-center">
+                <View className="w-3 h-3 bg-blue-500 rounded-full mr-3"></View>
+                <Text className="text-xl font-bold text-gray-900">
+                  Payment Summary
+                </Text>
+              </View>
+              <View className="bg-blue-50 px-3 py-1 rounded-full">
+                <Text className="text-sm font-semibold text-blue-600">
+                  Secure Payment
+                </Text>
+              </View>
+            </View>
+            
+            <View className="space-y-4">
+              <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
                 <Text className="text-base text-gray-600">
-                  Base Rate (£{bookingData.quote.baseRate}/hour ×{" "}
-                  {bookingData.duration.split(" ")[0]} hours):
+                  Base Rate (£{bookingData.quote.baseRate}/hour × {bookingData.duration.split(" ")[0]} hours)
                 </Text>
                 <Text className="text-base font-semibold text-gray-900">
                   £{bookingData.quote.subtotal.toFixed(2)}
                 </Text>
               </View>
+              
               {bookingData.isFlexibleTime && bookingData.quote.discount > 0 && (
-                <View className="flex-row justify-between items-center">
-                  <Text className="text-base text-green-600">
-                    Flexible Time Discount ({bookingData.quote.flexibleDiscount}
-                    %):
-                  </Text>
+                <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
+                  <View className="flex-row items-center">
+                    <Text className="text-base text-green-600">
+                      Flexible Time Discount
+                    </Text>
+                    <View className="bg-green-100 px-2 py-1 rounded-full ml-2">
+                      <Text className="text-xs font-semibold text-green-700">
+                        {bookingData.quote.flexibleDiscount}% OFF
+                      </Text>
+                    </View>
+                  </View>
                   <Text className="text-base font-semibold text-green-600">
                     -£{bookingData.quote.discount.toFixed(2)}
                   </Text>
                 </View>
               )}
-              <View className="flex-row justify-between items-center">
-                <Text className="text-base text-gray-600">Subtotal:</Text>
+              
+              <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
+                <Text className="text-base text-gray-600">Subtotal</Text>
                 <Text className="text-base font-semibold text-gray-900">
                   £{bookingData.quote.discountedTotal.toFixed(2)}
                 </Text>
               </View>
-              <View className="flex-row justify-between items-center">
-                <Text className="text-base text-gray-600">VAT (20%):</Text>
+              
+              <View className="flex-row justify-between items-center py-2 border-b border-gray-100">
+                <Text className="text-base text-gray-600">VAT (20%)</Text>
                 <Text className="text-base font-semibold text-gray-900">
                   £{bookingData.quote.vat.toFixed(2)}
                 </Text>
               </View>
-              <View className="border-t border-blue-200 pt-3">
+              
+              <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mt-4">
                 <View className="flex-row justify-between items-center">
                   <Text className="text-xl font-bold text-gray-900">
-                    Total Amount:
+                    Total Amount
                   </Text>
-                  <Text className="text-xl font-bold text-blue-600">
+                  <Text className="text-2xl font-bold text-blue-600">
                     £{bookingData.quote.total.toFixed(2)}
                   </Text>
                 </View>
+                <Text className="text-sm text-gray-500 mt-1">
+                  All taxes included • Secure payment
+                </Text>
               </View>
             </View>
           </View>
