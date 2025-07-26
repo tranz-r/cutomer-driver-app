@@ -141,9 +141,9 @@ export default function Payment() {
 
   return (
     <View className="flex-1 bg-white">
-
+      {/* Scrollable Content */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-6">
+        <View className="px-4 py-6 pb-0">
           {/* Service Details */}
           <View className="bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100">
             <Text className="text-lg font-bold text-gray-900 mb-4">
@@ -260,9 +260,14 @@ export default function Payment() {
               </View>
             </View>
           </View>
+        </View>
+      </ScrollView>
 
+      {/* Fixed Bottom Section */}
+      <View className="bg-white border-t border-gray-100 shadow-lg">
+        <View className="px-4 py-4">
           {/* Price Breakdown */}
-          <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8 border border-blue-100">
+          <View className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-4 border border-blue-100">
             <Text className="text-xl font-bold text-gray-900 mb-4">
               Price Breakdown
             </Text>
@@ -332,8 +337,7 @@ export default function Payment() {
             Proceed to secure payment
           </Text>
         </View>
-      </ScrollView>
-      <View className="h-8" />
+      </View>
     </View>
   );
 }
