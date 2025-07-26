@@ -12,7 +12,7 @@ export default function DriverDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'driver') {
-        router.replace('/login');
+        router.replace('/otp-send');
       } else {
         setAuthorized(true);
       }

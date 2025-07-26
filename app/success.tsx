@@ -70,8 +70,8 @@ export default function SuccessScreen() {
   }, [confirmation]);
 
   const handleGoToDashboard = () => {
-    // Navigate to login screen with redirect parameter
-    router.push("/login?redirectTo=dashboard");
+    // Navigate to OTP screen with redirect parameter
+    router.push("/otp-send");
   };
 
   return (

@@ -13,7 +13,7 @@ This rule defines the step-by-step implementation plan for Supabase RBAC with .N
 - READ operations: Direct Supabase client (fast, JWT claims)
 - WRITE operations: .NET backend API (secure, service role)
 - User roles: customer, driver, commercial_client, admin
-- Auth methods: Email/Password, OTP, Social (Google, Facebook, Apple)
+- Auth methods: OTP, Social (Google, Facebook, Apple)
 
 ## PHASE IMPLEMENTATION ORDER
 

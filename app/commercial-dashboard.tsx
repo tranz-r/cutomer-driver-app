@@ -12,7 +12,7 @@ export default function CommercialDashboard() {
     const checkRole = async () => {
       const role = await getUserRole();
       if (role !== 'commercial_client') {
-        router.replace('/login');
+        router.replace('/otp-send');
       } else {
         setAuthorized(true);
       }

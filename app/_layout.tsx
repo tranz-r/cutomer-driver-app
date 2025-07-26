@@ -72,6 +72,8 @@ export default function RootLayout() {
             <Stack.Screen name="payment" options={{ headerShown: false, headerTitle: "Payment" }} />
             <Stack.Screen name="success" options={{ headerShown: false, headerTitle: "Success" }} />
             <Stack.Screen name="customer-dashboard" options={{ headerShown: false, headerTitle: "Customer Dashboard" }} />
+            <Stack.Screen name="driver-dashboard" options={{ headerShown: false, headerTitle: "Driver Dashboard" }} />
+            <Stack.Screen name="commercial-dashboard" options={{ headerShown: false, headerTitle: "Commercial Dashboard" }} />
             <Stack.Screen name="index" options={{ headerShown: false, headerTitle: "Index" }} />
           </Stack>
           <StatusBar style="auto" translucent={false} backgroundColor="#7080cc" />

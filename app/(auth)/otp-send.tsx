@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { View } from 'react-native';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 import EmailOtpSendScreen from '../components/EmailOtpSendScreen';
+import GoogleAuth from '../components/GoogleAuth';
 
 export default function OtpSendScreen() {
   const router = useRouter();
@@ -20,12 +22,16 @@ export default function OtpSendScreen() {
     if (error) {
       Alert.alert('Error', error.message);
     } else {
-      //Alert.alert('OTP Sent', 'Check your email for the verification code.');
       router.push({ pathname: '/otp-verify', params: { email } });
     }
   };
 
   return (
-    <EmailOtpSendScreen onSend={handleSend} />
+    <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center' }}>
+      <EmailOtpSendScreen onSend={handleSend} />
+      <View style={{ alignItems: 'center', marginTop: 16 }}>
+        <GoogleAuth />
+      </View>
+    </View>
   );
 } 

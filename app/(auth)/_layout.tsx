@@ -8,8 +8,6 @@ export default function AuthLayout() {
         headerBackVisible: false,
       }}
     >
-      <Stack.Screen name="login" />
-      <Stack.Screen name="signup" />
       <Stack.Screen name="otp-send" />
       <Stack.Screen name="otp-verify" />
     </Stack>
