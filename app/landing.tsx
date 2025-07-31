@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react-native";
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
+import { useFonts } from "expo-font";
 
 // Logo SVG Component - Complete tranzr-fun-blackwheel-mini.svg implementation
 const TranzrLogo = ({ width = 200, height = 30, color = "white" }) => (
@@ -86,6 +87,7 @@ const TranzrLogo = ({ width = 200, height = 30, color = "white" }) => (
           fill={color}
           fontSize="77.4105"
           fontWeight="bold"
+          fontFamily="Arial-BoldMT"
           textAnchor="start"
         >
           TRANZR MOVES
@@ -97,6 +99,7 @@ const TranzrLogo = ({ width = 200, height = 30, color = "white" }) => (
           fill={color}
           fontSize="38.4405"
           fontWeight="bold"
+          fontFamily="Arial-BoldMT"
           textAnchor="start"
         >
           REMOVALS & STORAGE
