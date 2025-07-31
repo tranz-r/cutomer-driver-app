@@ -31,15 +31,15 @@ export default function Payment() {
 
   // Mock data - in real app this would come from previous screens
   const bookingData = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "Michael E. Oyibo",
+    email: "mcvavy@gmail.com",
     van: "Luton Van",
     crew: "2 persons",
     date: "Friday, 15 March 2024",
     duration: "4 hours",
     timeSlot: "Morning (8:00 - 12:00)",
     isFlexibleTime: false,
-    origin: "123 High Street, London SW1A 1AA",
+    origin: "82 Lamport Lane, Northampton NN2 7DW",
     destination: "456 Park Lane, London W1K 1QA",
     originFloor: "Ground Floor",
     destinationFloor: "2nd Floor",
