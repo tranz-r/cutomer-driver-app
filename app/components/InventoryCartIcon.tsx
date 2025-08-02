@@ -23,7 +23,7 @@ const InventoryCartIcon = ({
     >
       <ShoppingCart size={24} color={color} />
       {totalItems > 0 && (
-        <View className="absolute -top-1 -right-1 bg-red-500 rounded-full min-w-[20px] h-5 items-center justify-center">
+        <View className="absolute -top-1 -right-1 bg-secondary-400 rounded-full min-w-[20px] h-5 items-center justify-center">
           <Text className="text-white text-xs font-bold">
             {totalItems > 99 ? "99+" : totalItems}
           </Text>

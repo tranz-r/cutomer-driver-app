@@ -18,7 +18,7 @@ export default function HeaderCartButton() {
       >
         <ShoppingCart size={20} color="white" />
         {totalItems > 0 && (
-          <View className="absolute -top-1 -right-1 bg-red-500 rounded-full min-w-[16px] h-4 items-center justify-center">
+          <View className="absolute -top-1 -right-1 bg-secondary-400 rounded-full min-w-[16px] h-4 items-center justify-center">
             <Text className="text-white text-xs font-bold">
               {totalItems > 99 ? "99+" : totalItems}
             </Text>

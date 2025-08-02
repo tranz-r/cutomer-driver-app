@@ -130,14 +130,14 @@ export default function SplashScreen() {
 
   return (
     <SafeAreaView className="flex-1" style={{
-      backgroundColor: "#7080cc",
+              backgroundColor: "#9568b0",
     }}>
       <Animated.View
         className="flex-1 justify-center items-center px-4"
         style={{
           backgroundColor: backgroundGradient.interpolate({
             inputRange: [0, 1],
-            outputRange: ["#7080cc", "#7080cc"],
+            outputRange: ["#9568b0", "#9568b0"],
           }),
         }}
       >

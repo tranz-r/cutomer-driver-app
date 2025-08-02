@@ -142,7 +142,7 @@ export default function Payment() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="light" backgroundColor="#7080cc" />
+      {/* <StatusBar style="light" backgroundColor="#7080cc" /> */}
       {/* Scrollable Content */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6 pb-0">

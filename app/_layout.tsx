@@ -61,7 +61,7 @@ export default function RootLayout() {
               screenOptions={({ route }) => ({
                 headerShown: !route.name.startsWith("tempobook"),
                 headerStyle: {
-                  backgroundColor: '#7080cc',
+                  backgroundColor: '#9568b0',
                 },
                 headerTintColor: 'white',
                 headerTitleStyle: {
@@ -161,7 +161,7 @@ export default function RootLayout() {
               }} />
               <Stack.Screen name="index" options={{ headerShown: false }} />
             </Stack>
-            <StatusBar style="auto" translucent={false} backgroundColor="#7080cc" />
+                              <StatusBar style="auto" translucent={false} backgroundColor="#9568b0" />
           </ThemeProvider>
         </CartProvider>
       </SessionProvider>

@@ -139,7 +139,7 @@ export default function SlideOutMenu({ visible, onClose }: SlideOutMenuProps) {
         {/* Header */}
         <View
           className="pt-16 pb-6 px-6 border-b border-gray-100"
-          style={{ backgroundColor: "#7080cc" }}
+          style={{ backgroundColor: "#9568b0" }}
         >
           <View className="flex-row items-center justify-between">
             <View>
