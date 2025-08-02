@@ -10,10 +10,10 @@ export default function HeaderMenuOnly() {
     <>
       <TouchableOpacity
         onPress={() => setShowSlideOutMenu(true)}
-        className="bg-white/20 p-2 rounded-full"
+        className="bg-white/20 p-3 rounded-full"
         activeOpacity={0.7}
       >
-        <Menu size={20} color="white" />
+        <Menu size={22} color="white" />
       </TouchableOpacity>
       
       <SlideOutMenu

@@ -13,15 +13,15 @@ export default function HeaderRightButtons() {
 
   return (
     <>
-      <View className="flex-row items-center">
+      <View className="flex-row items-center mr-2">
         <TouchableOpacity
           onPress={() => setShowInventoryCartModal(true)}
-          className="relative p-2"
+          className="relative p-3 mr-4"
           activeOpacity={0.7}
         >
-          <ShoppingCart size={20} color="white" />
+          <ShoppingCart size={22} color="white" />
           {totalItems > 0 && (
-            <View className="absolute -top-1 -right-1 bg-red-500 rounded-full min-w-[16px] h-4 items-center justify-center">
+            <View className="absolute -top-0.5 -right-0.5 bg-red-500 rounded-full min-w-[20px] h-[20px] items-center justify-center">
               <Text className="text-white text-xs font-bold">
                 {totalItems > 99 ? "99+" : totalItems}
               </Text>
@@ -31,10 +31,10 @@ export default function HeaderRightButtons() {
         
         <TouchableOpacity
           onPress={() => setShowSlideOutMenu(true)}
-          className="bg-white/20 p-2 rounded-full ml-2"
+          className="bg-white/20 p-3 rounded-full"
           activeOpacity={0.7}
         >
-          <Menu size={20} color="white" />
+          <Menu size={22} color="white" />
         </TouchableOpacity>
       </View>
       

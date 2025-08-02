@@ -67,6 +67,9 @@ export default function RootLayout() {
                 headerTitleStyle: {
                   fontWeight: 'bold',
                 },
+                headerRightContainerStyle: {
+                  paddingRight: 12,
+                },
               })}
             >
               <Stack.Screen name="splash" options={{ headerShown: false }} />
