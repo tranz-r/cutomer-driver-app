@@ -17,10 +17,8 @@ import {
   Phone,
   ArrowRight,
   Hash,
-  Menu,
 } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import SlideOutMenu from "./components/SlideOutMenu";
 
 export default function SuccessScreen() {
   const { confirmation } = useLocalSearchParams();
@@ -28,7 +26,6 @@ export default function SuccessScreen() {
   const scaleAnimation = useRef(new Animated.Value(0)).current;
   const fadeAnimation = useRef(new Animated.Value(0)).current;
   const slideAnimation = useRef(new Animated.Value(50)).current;
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
@@ -76,33 +73,6 @@ export default function SuccessScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-
-      {/* Header */}
-      <View
-        style={{
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }}
-        className="pb-6"
-      >
-        <View className="px-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Booking Confirmed!
-            </Text>
-            <Text className="text-sm text-white">
-              Your move has been successfully scheduled.
-            </Text>
-          </View>
-        </View>
-      </View>
-
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 py-8">
           {/* Success Animation */}
@@ -238,10 +208,6 @@ export default function SuccessScreen() {
       </View>
       <View className="h-8" />
 
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
-      />
     </SafeAreaView>
   );
 }

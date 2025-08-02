@@ -17,12 +17,9 @@ import {
   Users,
   X,
   Package,
-  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
-import SlideOutMenu from "./components/SlideOutMenu";
 
 type VanType = {
   id: string;
@@ -50,7 +47,6 @@ export default function VanSelectionScreen() {
   );
   const [lastTap, setLastTap] = useState<number>(0);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const vanTypes: VanType[] = [
     {
@@ -136,32 +132,6 @@ export default function VanSelectionScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View 
-        style={{ 
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }} 
-        className="pb-6"
-      >
-        <View className="px-6 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Select Van & Crew
-            </Text>
-            <Text className="text-sm text-white">
-              Choose the right van size and crew for your move.
-            </Text>
-          </View>
-          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
-        </View>
-      </View>
-
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 py-6">
           {/* Van Selection */}
@@ -868,11 +838,6 @@ export default function VanSelectionScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
-      />
-
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

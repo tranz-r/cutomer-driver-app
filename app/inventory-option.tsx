@@ -4,26 +4,14 @@ import { useRouter } from "expo-router";
 import VanSvg from "./components/VanSvg";
 import InventorySvg from "./components/InventorySvg";
 import SmartDetectionSvg from "./components/SmartDetectionSvg";
-import SlideOutMenu from "./components/SlideOutMenu";
-import { ChevronRight, Menu } from "lucide-react-native";
+import { ChevronRight } from "lucide-react-native";
 
 export default function InventoryOptionScreen() {
   const router = useRouter();
   const [showMediaUpload, setShowMediaUpload] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Menu Button */}
-      <View className="absolute top-4 left-4 z-50">
-        <TouchableOpacity
-          onPress={() => setShowSlideOutMenu(true)}
-          className="bg-white/90 p-3 rounded-full shadow-lg border border-gray-200"
-        >
-          <Menu size={24} color="#7080cc" />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
@@ -108,10 +96,6 @@ export default function InventoryOptionScreen() {
         </View>
       </ScrollView>
 
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
-      />
     </SafeAreaView>
   );
 }

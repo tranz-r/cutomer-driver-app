@@ -21,12 +21,9 @@ import {
   ArrowDown,
   CheckCircle,
   X,
-  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
-import SlideOutMenu from "./components/SlideOutMenu";
 
 type FloorOption = {
   value: string;
@@ -80,7 +77,6 @@ export default function OriginDestinationScreen() {
   const [showDestinationAddressDropdown, setShowDestinationAddressDropdown] =
     useState(false);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const floorOptions: FloorOption[] = [
     { value: "ground", label: "Ground Floor" },
@@ -187,32 +183,6 @@ export default function OriginDestinationScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View
-        style={{
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }}
-        className="pb-6"
-      >
-        <View className="px-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Pickup & Delivery
-            </Text>
-            <Text className="text-sm text-white">
-              Enter your pickup and delivery addresses.
-            </Text>
-          </View>
-          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
-        </View>
-      </View>
-
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -1167,11 +1137,6 @@ export default function OriginDestinationScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
-      />
-
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

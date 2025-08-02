@@ -12,6 +12,10 @@
       "supportsTablet": true,
       "icon": {
         "light": "./assets/icons/ios-light.png"
+      },
+      "bundleIdentifier": "com.vavy.tranzrmoves",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -23,7 +27,6 @@
       },
       "package": "com.vavy.tranzrmoves"
     },
-
     "plugins": [
       "expo-router",
       [

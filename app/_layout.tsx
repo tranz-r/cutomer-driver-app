@@ -10,6 +10,8 @@ import "../global.css";
 import { CartProvider } from "./contexts/CartContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SessionProvider } from "../lib/contexts/SessionContext";
+import HeaderRightButtons from "./components/HeaderRightButtons";
+import HeaderMenuOnly from "./components/HeaderMenuOnly";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,27 +60,103 @@ export default function RootLayout() {
             <Stack
               screenOptions={({ route }) => ({
                 headerShown: !route.name.startsWith("tempobook"),
+                headerStyle: {
+                  backgroundColor: '#7080cc',
+                },
+                headerTintColor: 'white',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
               })}
             >
               <Stack.Screen name="splash" options={{ headerShown: false }} />
               <Stack.Screen name="landing" options={{ headerShown: false }} />
-              <Stack.Screen name="item-detection" options={{ headerShown: false, headerTitle: "Item Detection" }} />
-              <Stack.Screen name="build-inventory" options={{ headerShown: false, headerTitle: "Build Inventory" }} />
-              <Stack.Screen name="smart-detection" options={{ headerShown: false, headerTitle: "Smart Detection" }} />
-              <Stack.Screen name="van-selection" options={{ headerShown: false, headerTitle: "Van Selection" }} />
-              <Stack.Screen name="origin-destination" options={{ headerShown: false, headerTitle: "Origin & Destination" }} />
-              <Stack.Screen name="date-time" options={{ headerShown: false, headerTitle: "Date & Time" }} />
-              <Stack.Screen name="customer-details" options={{ headerShown: false, headerTitle: "Customer Details" }} />
-              <Stack.Screen name="pricing-tier" options={{ headerShown: false, headerTitle: "Pricing Tier" }} />
-              <Stack.Screen name="summary" options={{ headerShown: false, headerTitle: "Summary" }} />
-              <Stack.Screen name="payment" options={{ headerShown: false, headerTitle: "Payment" }} />
-              <Stack.Screen name="success" options={{ headerShown: false, headerTitle: "Success" }} />
-              <Stack.Screen name="customer-dashboard" options={{ headerShown: false, headerTitle: "Customer Dashboard" }} />
-              <Stack.Screen name="driver-dashboard" options={{ headerShown: false, headerTitle: "Driver Dashboard" }} />
-              <Stack.Screen name="commercial-dashboard" options={{ headerShown: false, headerTitle: "Commercial Dashboard" }} />
-              <Stack.Screen name="login" options={{ headerShown: false, headerTitle: "Sign In" }} />
-              <Stack.Screen name="otp-verify" options={{ headerShown: false, headerTitle: "Verify OTP" }} />
-              <Stack.Screen name="index" options={{ headerShown: false, headerTitle: "Index" }} />
+              <Stack.Screen name="item-detection" options={{ 
+                headerShown: true, 
+                headerTitle: "Item Detection",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="build-inventory" options={{ 
+                headerShown: true, 
+                headerTitle: "Build Your Inventory",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="smart-detection" options={{ 
+                headerShown: true, 
+                headerTitle: "Smart Detection",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="van-selection" options={{ 
+                headerShown: true, 
+                headerTitle: "Van Selection",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="origin-destination" options={{ 
+                headerShown: true, 
+                headerTitle: "Origin & Destination",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="date-time" options={{ 
+                headerShown: true, 
+                headerTitle: "Date & Time",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="customer-details" options={{ 
+                headerShown: true, 
+                headerTitle: "Customer Details",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="pricing-tier" options={{ 
+                headerShown: true, 
+                headerTitle: "Pricing Tier",
+                headerRight: () => <HeaderRightButtons />,
+              }} />
+              <Stack.Screen name="summary" options={{ 
+                headerShown: true, 
+                headerTitle: "Summary",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="payment" options={{ 
+                headerShown: true, 
+                headerTitle: "Payment",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="success" options={{ 
+                headerShown: true, 
+                headerTitle: "Success",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="customer-dashboard" options={{ 
+                headerShown: true, 
+                headerTitle: "Customer Dashboard",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="driver-dashboard" options={{ 
+                headerShown: true, 
+                headerTitle: "Driver Dashboard",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="commercial-dashboard" options={{ 
+                headerShown: true, 
+                headerTitle: "Commercial Dashboard",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="login" options={{ 
+                headerShown: true, 
+                headerTitle: "Sign In",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="otp-verify" options={{ 
+                headerShown: true, 
+                headerTitle: "Verify OTP",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="inventory-option" options={{ 
+                headerShown: true, 
+                headerTitle: "Inventory Options",
+                headerRight: () => <HeaderMenuOnly />,
+              }} />
+              <Stack.Screen name="index" options={{ headerShown: false }} />
             </Stack>
             <StatusBar style="auto" translucent={false} backgroundColor="#7080cc" />
           </ThemeProvider>

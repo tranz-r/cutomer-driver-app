@@ -21,13 +21,9 @@ import {
   X,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import { Menu } from 'lucide-react-native';
 import { useStripe } from '@stripe/stripe-react-native';
-import SlideOutMenu from './SlideOutMenu';
 
 export default function Payment() {
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
-  const insets = useSafeAreaInsets();
 
   // Mock data - in real app this would come from previous screens
   const bookingData = {
@@ -147,29 +143,6 @@ export default function Payment() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="light" backgroundColor="#7080cc" />
-      {/* Header with Menu Button */}
-              <View 
-          className="bg-[#7080cc] pb-6"
-          style={{ paddingTop: insets.top }}
-        >
-          <View className="px-4 flex-row items-center justify-between">
-            <TouchableOpacity
-              onPress={() => setShowSlideOutMenu(true)}
-              className="bg-white/20 p-3 rounded-full mr-3"
-            >
-              <Menu size={24} color="white" />
-            </TouchableOpacity>
-            <View className="flex-1">
-              <Text className="text-2xl font-bold text-white mb-1">
-                Booking Summary
-              </Text>
-              <Text className="text-sm text-white">
-                Review your booking details before payment
-              </Text>
-            </View>
-          </View>
-        </View>
-
       {/* Scrollable Content */}
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6 pb-0">
@@ -387,11 +360,6 @@ export default function Payment() {
         </View>
       </View>
 
-      {/* Slideout Menu */}
-      <SlideOutMenu 
-        visible={showSlideOutMenu} 
-        onClose={() => setShowSlideOutMenu(false)} 
-      />
     </SafeAreaView>
   );
 }

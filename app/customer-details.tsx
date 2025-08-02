@@ -20,12 +20,9 @@ import {
   MapPin,
   CheckCircle,
   Circle,
-  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
-import SlideOutMenu from "./components/SlideOutMenu";
 
 export default function CustomerDetailsScreen() {
   const insets = useSafeAreaInsets();
@@ -42,7 +39,6 @@ export default function CustomerDetailsScreen() {
     useState(false);
   const [sameAsCustomerDelivery, setSameAsCustomerDelivery] = useState(false);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -281,32 +277,6 @@ export default function CustomerDetailsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View
-        style={{
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }}
-        className="pb-6"
-      >
-        <View className="px-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Customer Details
-            </Text>
-            <Text className="text-sm text-white">
-              Please provide your contact information.
-            </Text>
-          </View>
-          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
-        </View>
-      </View>
-
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-4 py-6">
           {/* Customer Details */}
@@ -406,11 +376,6 @@ export default function CustomerDetailsScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
-      />
-
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

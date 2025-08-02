@@ -23,14 +23,11 @@ import {
   Trash2,
   Edit,
   Camera,
-  Menu,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import itemsData from "../Tranzr-Item-data-with-enrichment.json";
 import { useCart } from "./contexts/CartContext";
-import InventoryCartIcon from "./components/InventoryCartIcon";
 import InventoryCartModal from "./components/InventoryCartModal";
-import SlideOutMenu from "./components/SlideOutMenu";
 
 type Item = {
   id: string;
@@ -55,7 +52,6 @@ export default function BuildInventoryScreen() {
     null,
   );
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
   const { addItem, getTotalItems } = useCart();
 
   // Helper function to get dimensions from item data
@@ -194,32 +190,6 @@ export default function BuildInventoryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View 
-        style={{ 
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }} 
-        className="pb-6"
-      >
-        <View className="px-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Build Your Inventory
-            </Text>
-            <Text className="text-sm text-white">
-              Search and add items from our database
-            </Text>
-          </View>
-          <InventoryCartIcon onPress={() => setShowInventoryCartModal(true)} />
-        </View>
-      </View>
-
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -449,11 +419,6 @@ export default function BuildInventoryScreen() {
       <InventoryCartModal
         visible={showInventoryCartModal}
         onClose={() => setShowInventoryCartModal(false)}
-      />
-
-      <SlideOutMenu
-        visible={showSlideOutMenu}
-        onClose={() => setShowSlideOutMenu(false)}
       />
     </SafeAreaView>
   );

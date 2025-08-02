@@ -12,16 +12,14 @@ import {
   Image,
   Animated,
 } from "react-native";
-import { ChevronRight, Menu, ChevronLeft } from "lucide-react-native";
+import { ChevronRight } from "lucide-react-native";
 import { router } from "expo-router";
 import MediaUploader from "./MediaUploader";
 import DetectedItemsList from "./DetectedItemsList";
 import ProcessingIndicator from "./ProcessingIndicator";
 import { useCart } from "../contexts/CartContext";
 
-import InventoryCartIcon from "./InventoryCartIcon";
 import InventoryCartModal from "./InventoryCartModal";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MediaItem {
   uri: string;
@@ -29,12 +27,7 @@ interface MediaItem {
   id: string;
 }
 
-interface SmartDetectionProps {
-  onMenuPress?: () => void;
-}
-
-export default function SmartDetection({ onMenuPress }: SmartDetectionProps) {
-  const insets = useSafeAreaInsets();
+export default function SmartDetection() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDetectedItems, setShowDetectedItems] = useState(false);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -98,32 +91,6 @@ export default function SmartDetection({ onMenuPress }: SmartDetectionProps) {
 
   return (
     <View className="flex-1">
-      <View
-        style={{
-          backgroundColor: "#7080cc",
-          paddingTop: insets.top
-        }}
-        className="pb-6"
-      >
-        <View className="px-4 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={onMenuPress}
-            className="bg-white/20 p-3 rounded-full mr-3"
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-white mb-1">
-              Smart Detection
-            </Text>
-            <Text className="text-sm text-white">
-              AI-powered item detection from photos and videos
-            </Text>
-          </View>
-          <InventoryCartIcon onPress={() => setShowCartModal(true)} />
-        </View>
-      </View>
-
       <ScrollView
         className="flex-1 bg-white"
         showsVerticalScrollIndicator={false}

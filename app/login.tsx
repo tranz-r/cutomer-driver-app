@@ -3,16 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, Alert, SafeAreaView, KeyboardA
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import GoogleAuth from './components/GoogleAuth';
-import SlideOutMenu from './components/SlideOutMenu';
 import { useSession } from '../lib/contexts/SessionContext';
-import { Menu } from 'lucide-react-native';
 
 export default function LoginScreen() {
   const router = useRouter();
   const { session, isLoading } = useSession();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showSlideOutMenu, setShowSlideOutMenu] = useState(false);
 
   // Show loading screen while checking session
   if (isLoading) {
@@ -47,47 +44,6 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <View style={{ 
-        backgroundColor: '#7080cc', 
-        paddingBottom: 24
-      }}>
-        <View style={{ 
-          paddingHorizontal: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
-          <TouchableOpacity
-            onPress={() => setShowSlideOutMenu(true)}
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              padding: 12,
-              borderRadius: 25,
-              marginRight: 12
-            }}
-          >
-            <Menu size={24} color="white" />
-          </TouchableOpacity>
-          <View style={{ flex: 1 }}>
-            <Text style={{ 
-              fontSize: 24, 
-              fontWeight: 'bold', 
-              color: 'white',
-              marginBottom: 4
-            }}>
-              Sign In
-            </Text>
-            <Text style={{ 
-              fontSize: 14, 
-              color: 'white',
-              opacity: 0.9
-            }}>
-              Access your account securely
-            </Text>
-          </View>
-        </View>
-      </View>
-
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -185,10 +141,6 @@ export default function LoginScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      <SlideOutMenu 
-        visible={showSlideOutMenu} 
-        onClose={() => setShowSlideOutMenu(false)} 
-      />
     </SafeAreaView>
   );
 } 
