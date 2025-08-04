@@ -57,54 +57,86 @@ const MediaUploader = ({
   const [showMediaModal, setShowMediaModal] = useState(false);
 
   const takePhoto = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    try {
+      console.log("Starting takePhoto function...");
+      
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      console.log("Permission result:", permissionResult);
 
-    if (permissionResult.granted === false) {
-      alert("You need to allow camera access to take photos");
-      return;
-    }
+      if (permissionResult.granted === false) {
+        console.log("Camera permission denied");
+        alert("You need to allow camera access to take photos");
+        return;
+      }
 
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.8,
-      allowsEditing: true,
-    });
+      console.log("Launching camera...");
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.8,
+        allowsEditing: false,
+        // Remove presentationStyle for iOS compatibility
+      });
 
-    if (!result.canceled) {
-      const newMedia = {
-        uri: result.assets[0].uri,
-        type: "photo" as const,
-        id: Date.now().toString(),
-      };
-      const updatedMedia = [...mediaItems, newMedia];
-      setMediaItems(updatedMedia);
-      onMediaCaptured(updatedMedia);
+      console.log("Camera result:", result);
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        console.log("Photo captured successfully:", result.assets[0]);
+        const newMedia = {
+          uri: result.assets[0].uri,
+          type: "photo" as const,
+          id: Date.now().toString(),
+        };
+        const updatedMedia = [...mediaItems, newMedia];
+        setMediaItems(updatedMedia);
+        onMediaCaptured(updatedMedia);
+      } else {
+        console.log("Photo capture was canceled or failed");
+      }
+    } catch (error) {
+      console.error("Error taking photo:", error);
+      alert(`Failed to take photo: ${error.message}`);
     }
   };
 
   const recordVideo = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    try {
+      console.log("Starting recordVideo function...");
+      
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      console.log("Permission result:", permissionResult);
 
-    if (permissionResult.granted === false) {
-      alert("You need to allow camera access to record videos");
-      return;
-    }
+      if (permissionResult.granted === false) {
+        console.log("Camera permission denied");
+        alert("You need to allow camera access to record videos");
+        return;
+      }
 
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      videoMaxDuration: 60,
-      quality: 0.8,
-    });
+      console.log("Launching camera for video...");
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        videoMaxDuration: 60,
+        quality: 0.8,
+        // Remove presentationStyle for iOS compatibility
+      });
 
-    if (!result.canceled) {
-      const newMedia = {
-        uri: result.assets[0].uri,
-        type: "video" as const,
-        id: Date.now().toString(),
-      };
-      const updatedMedia = [...mediaItems, newMedia];
-      setMediaItems(updatedMedia);
-      onMediaCaptured(updatedMedia);
+      console.log("Video camera result:", result);
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        console.log("Video captured successfully:", result.assets[0]);
+        const newMedia = {
+          uri: result.assets[0].uri,
+          type: "video" as const,
+          id: Date.now().toString(),
+        };
+        const updatedMedia = [...mediaItems, newMedia];
+        setMediaItems(updatedMedia);
+        onMediaCaptured(updatedMedia);
+      } else {
+        console.log("Video capture was canceled or failed");
+      }
+    } catch (error) {
+      console.error("Error recording video:", error);
+      alert(`Failed to record video: ${error.message}`);
     }
   };
 

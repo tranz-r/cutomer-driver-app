@@ -15,7 +15,18 @@
       },
       "bundleIdentifier": "com.vavy.tranzrmoves",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "This app needs access to camera to take photos and record videos of items for smart detection.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to select images and videos for smart detection.",
+        "NSMicrophoneUsageDescription": "This app needs access to microphone to record videos with audio.",
+        "UIBackgroundModes": ["audio"],
+        "UIRequiresPersistentWiFi": false,
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLName": "GoogleSignIn",
+            "CFBundleURLSchemes": ["com.googleusercontent.apps.53650588253-1c6dq2rqqi2baq2mumnef6sucukgb0pa"]
+          }
+        ]
       }
     },
     "android": {
@@ -29,6 +40,13 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app needs access to photo library to select images and videos for smart detection.",
+          "cameraPermission": "This app needs access to camera to take photos and record videos of items for smart detection."
+        }
+      ],
       [
         "@stripe/stripe-react-native",
         {
@@ -48,7 +66,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.YOUR_ACTUAL_CLIENT_ID"
+          "iosUrlScheme": "com.googleusercontent.apps.53650588253-1c6dq2rqqi2baq2mumnef6sucukgb0pa"
         }
       ]
     ],

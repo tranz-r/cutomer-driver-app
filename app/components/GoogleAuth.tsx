@@ -14,7 +14,10 @@ export default function GoogleAuth() {
   const [showRoleModal, setShowRoleModal] = useState(false);
 
   const webClientId = process.env.EXPO_PUBLIC_GOOGLE_AUTH_WEB_CLIENT_ID;
+  const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_AUTH_IOS_CLIENT_ID;
+
   console.log('Google Auth Web Client ID:', webClientId);
+  console.log('Google Auth iOS Client ID:', iosClientId);
   
   // For debugging - remove this after fixing
   if (!webClientId) {
@@ -23,7 +26,8 @@ export default function GoogleAuth() {
   
   GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-    webClientId: webClientId || 'your_actual_client_id_here'
+    webClientId: webClientId,
+    iosClientId: iosClientId
   })
 
   const navigateToDashboard = (role: AppRole) => {
