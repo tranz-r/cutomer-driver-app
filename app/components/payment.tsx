@@ -8,8 +8,9 @@ import {
   Modal,
   Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import * as Linking from 'expo-linking';
+
 import {
   CheckCircle,
   MapPin,
@@ -118,7 +119,8 @@ export default function Payment() {
           postalCode: "SW1A 1AA",
           country: "GB",
         }
-      }
+      },
+      returnURL: Linking.createURL('stripe-redirect'),
     });
 
     if (!error) {

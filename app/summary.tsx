@@ -1,4 +1,5 @@
 import { StripeProvider } from '@stripe/stripe-react-native';
+import * as Linking from 'expo-linking';
 
 import Payment  from "./components/payment";
 
@@ -10,7 +11,7 @@ export default function SummaryScreen() {
     <StripeProvider
       publishableKey={publishableKey!}
       merchantIdentifier="merchant.com.vavy.tranzrmoves" // required for Apple Pay
-      urlScheme="tranzr-moves" // required for 3D Secure and bank redirects
+      urlScheme={Linking.createURL('/')?.split(':')[0]} // required for 3D Secure and bank redirects
     >
       <Payment />
     </StripeProvider>
