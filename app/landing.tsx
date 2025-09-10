@@ -129,7 +129,7 @@ export default function LandingScreen() {
           <TranzrLogo width={336} height={112} color="white" />
         </View>
 
-        {/* Get Quote Button */}
+        {/* Get Instant Quote Button */}
         <TouchableOpacity
           className="bg-black py-4 px-8 rounded-xl w-full mb-8 flex-row justify-center items-center"
           onPress={handleGetStarted}

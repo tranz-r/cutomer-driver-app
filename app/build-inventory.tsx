@@ -29,24 +29,14 @@ import itemsData from "../Tranzr-Item-data-with-enrichment.json";
 import { useCart } from "./contexts/CartContext";
 import InventoryCartModal from "./components/InventoryCartModal";
 
-type Item = {
-  id: string;
-  name: string;
-  height: number;
-  width: number;
-  length: number;
-  volume: number;
-  quantity: number;
-};
+
 
 export default function BuildInventoryScreen() {
   const insets = useSafeAreaInsets();
-  const [items, setItems] = useState<Item[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItemQuantities, setSelectedItemQuantities] = useState<{
     [key: string]: number;
   }>({});
-  const [isEditing, setIsEditing] = useState<string | null>(null);
   const [showInventoryCartModal, setShowInventoryCartModal] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState<string | null>(
     null,
@@ -108,80 +98,7 @@ export default function BuildInventoryScreen() {
     }));
   };
 
-  const handleSelectItem = (selectedItem: any) => {
-    const quantity = selectedItemQuantities[selectedItem.name] || 1;
-    const dimensions = getItemDimensions(selectedItem);
 
-    // Check if item already exists in inventory
-    const existingItemIndex = items.findIndex(
-      (item) => item.name === selectedItem.name,
-    );
-
-    if (existingItemIndex >= 0) {
-      // Update existing item quantity
-      const updatedItems = [...items];
-      updatedItems[existingItemIndex].quantity += quantity;
-      setItems(updatedItems);
-    } else {
-      // Add new item
-      const newItemData: Item = {
-        id: Date.now().toString(),
-        name: selectedItem.name,
-        height: dimensions.height,
-        width: dimensions.width,
-        length: dimensions.length,
-        volume: selectedItem.volume_m3 || 0,
-        quantity: quantity,
-      };
-      setItems([...items, newItemData]);
-    }
-
-    // Reset state
-    setSearchQuery("");
-    setSelectedItemQuantities({});
-    Keyboard.dismiss();
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setItems(items.filter((item) => item.id !== id));
-  };
-
-  const handleUpdateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      handleRemoveItem(id);
-      return;
-    }
-    setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item,
-      ),
-    );
-  };
-
-  const handleUpdateDimensions = (
-    id: string,
-    field: "height" | "width" | "length",
-    value: string,
-  ) => {
-    const numValue = parseFloat(value) || 0;
-    setItems(
-      items.map((item) => {
-        if (item.id === id) {
-          const updatedItem = { ...item, [field]: numValue };
-          // Recalculate volume based on new dimensions
-          const volume =
-            (updatedItem.height * updatedItem.width * updatedItem.length) /
-            1000000; // Convert cm³ to m³
-          return { ...updatedItem, volume };
-        }
-        return item;
-      }),
-    );
-  };
-
-  const totalVolume = items
-    .reduce((sum, item) => sum + item.volume * item.quantity, 0)
-    .toFixed(2);
 
   const handleContinueToVanSelection = () => {
     console.log("Navigating to van-selection...");
@@ -345,18 +262,24 @@ export default function BuildInventoryScreen() {
                             <TouchableOpacity
                               className="bg-purple-500 px-6 py-4 rounded-lg shadow-sm min-w-[100px] min-h-[48px] items-center justify-center"
                               onPress={() => {
-                                handleSelectItem(item);
-                                // Also add to inventory cart
+                                // Add to inventory cart directly with the specified quantity
+                                const itemToAdd = {
+                                  id: `${Date.now()}`,
+                                  name: item.name,
+                                  height: dimensions.height,
+                                  width: dimensions.width,
+                                  length: dimensions.length,
+                                  volume: item.volume_m3 || 0,
+                                };
+                                
+                                // Add the item the specified number of times
                                 for (let i = 0; i < quantity; i++) {
                                   addItem({
-                                    id: `${Date.now()}-${i}`,
-                                    name: item.name,
-                                    height: dimensions.height,
-                                    width: dimensions.width,
-                                    length: dimensions.length,
-                                    volume: item.volume_m3 || 0,
+                                    ...itemToAdd,
+                                    id: `${Date.now()}-${i}`, // Ensure unique IDs
                                   });
                                 }
+                                
                                 // Show confirmation message
                                 setConfirmationMessage(
                                   `Added ${quantity} ${item.name}${quantity > 1 ? "s" : ""} to inventory cart`,

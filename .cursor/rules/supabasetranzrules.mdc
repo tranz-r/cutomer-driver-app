@@ -68,7 +68,7 @@ POST /api/v1/auth/role
 **FILES TO MODIFY**: None (database functions only)
 
 #### Auth Hook Function (Supabase SQL Editor):
-Follow this stripe documentation strictly: https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac
+Follow this supabase documentation strictly: https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac
 ```sql
 CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
 RETURNS jsonb
